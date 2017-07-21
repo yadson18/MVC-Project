@@ -1,0 +1,13 @@
+#!/bin/bash
+# yadson20@gmail.com
+#
+
+# Para iniciar o servidor de testes, na raiz do projeto digite na linha de comando
+# bin/server start
+
+if [ $* == start ];
+then
+  dir=$(pwd; cd ..); 
+  cd $dir;
+  php -S localhost:9000
+fi

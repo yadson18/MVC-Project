@@ -1,0 +1,197 @@
+body{
+	background-color: #eee;
+	font-family: Trebuchet MS,'Exo 2',sans-serif;
+	height: 100%;
+}
+html{
+	height: 100%;
+}
+label{
+	color: #4f4f4f;
+}
+#menu.navbar-default{
+	background-color: #00314b;
+	box-shadow: 0px 0px 15px 1px gray;
+	border: none;
+	border-radius: 0;
+	margin-bottom: 0;
+	border-bottom: solid 1px white;
+}
+#menu.navbar-default .navbar-nav > li a{
+	color: white;
+	font-size: 1.1em;
+	text-shadow: 0.5px 0.5px 0.5px gray;
+}
+#menu.navbar-default .navbar-nav > li a:hover,
+#menu-left div ul li a:hover{
+	text-shadow: 0px 0px 2px white;
+	background-color: #00314b;
+}
+#menu.navbar-default .navbar-header > .navbar-brand{
+	border-right: solid 1px; 
+	color: white;
+	padding: 15px 38px;
+}
+#menu.navbar-default .navbar-header > .navbar-brand img{
+	position: relative; 
+	top: -13px;
+}
+.navbar-header button.navbar-toggle{
+	background-color: white;
+	border-color: white;
+	border-radius: 2px;
+}
+#menu-left{
+	background-color: #00314b;
+	border: none;
+	border-radius: 0;
+	margin-bottom: 0;
+	border-bottom: solid 1px white;
+	position: absolute;
+	min-height: 92.4%;
+	height: 92.4%;
+}
+#menu-left div ul{
+	width: 100%;
+}
+#menu-left div ul li a{
+	color: white;
+	font-size: 1.1em;
+	text-shadow: 0.5px 0.5px 0.5px gray;
+}
+#login-content{
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:11;
+	width:100%;
+	height:100%;
+	min-height: 100%;
+  	display: -webkit-flex;
+  	display: flex;
+  	-webkit-align-items: center;
+  	align-items: center;
+  	background-color: #00314b;
+	filter: alpha(opacity=65);
+}
+#send-file{
+	margin-top: 10%;
+}
+#form-login{
+	box-shadow: 0px 0px 4px 1px gray;
+	background-color: #eee;
+	border-radius: 4px;
+	padding-top: 15px;
+}
+#send-file-content{
+	box-shadow: 1.5px 1.5px 6px 1px gray;
+	background-color: white;
+	border-radius: 4px;
+	padding: 15px 40px;
+	margin-bottom: 20px;
+}
+#send-file-header{
+	padding: 10px 10px 25px 10px;
+	font-size: 1.1em;
+	text-align: center;
+}
+#send-file-header b:nth-child(1){
+	color: #c94442;
+}
+#form-login button,
+#form-send-file .btn-success{
+	font-size: 1.2em;
+} 
+#message.col-md-4,
+#message.col-md-6,
+#message.col-sm-6,
+#message.col-sm-8,
+#message.col-xs-12,
+#presentation-box.col-md-8,
+#presentation-box.col-sm-8,
+#presentation-box.col-xs-12{
+	padding-right: 0;
+	padding-left: 0;
+}
+.file {
+  visibility: hidden;
+  position: absolute;
+}
+#presentation-box{
+	color: black;
+	margin-top: 5%;
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 8px 1px gray;
+	background-color: white;
+}
+#title{
+	background-color: #00314b; 
+	margin: 0px 0px 30px 0px;
+	padding: 15px 0px 15px 20px;
+	border-bottom: solid 1px gray;
+	color: white;
+}
+#sub-title{
+	margin-bottom: 29px;
+	font-size: 1.6em;
+}
+#presentation-body{
+	padding: 5px 20px 20px 20px;
+}
+#presentation-body b{
+	font-size: 1.1em;
+}
+#presentation-body li{
+	margin-bottom: 2px;
+}
+#login-btn.form-control[disabled],
+#send-file-btn.form-control[disabled]{
+	background-color: #5cb85c;
+}
+#danied-access{
+	margin: 0;
+}
+#danied-access #content{
+	text-align: center; 
+	font-family: sans-serif; 
+	background-color: #00314b; 
+	padding: 15px; 
+	color: white; 
+	position: absolute; 
+	height: 95.5%; 
+	width: 97.7%
+}
+#danied-access #content h3{
+	padding: 40px;
+}
+#danied-access #content a{
+	background-color: #5cb85c;
+	padding: 15px;
+	text-decoration: none;
+	border-radius: 6px;
+	font-weight: bold;
+	border: solid 1px white;
+	color: white;
+	box-shadow: 0px 0px 2px 1px gray;
+}
+#danied-access #content a:hover{
+	padding: 17px;
+	color: white;
+	transition: 0.1s;
+}
+#menu .open > a, 
+#menu .open > a:focus, 
+#menu .open > a:hover{
+	background-color: transparent;
+}
+
+#menu .dropdown-menu,
+ul.navbar-left li a:visited,
+#menu .dropdown-menu a:visited{
+	background-color: #00314b;
+}
+#companie{
+	background-color: #00314b;
+	padding: 10px 10px 10px 10px;
+	color: white;
+}

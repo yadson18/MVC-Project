@@ -1,0 +1,6 @@
+# O arquivo .htaccess serve para o apache interpretar as URL's de acordo com as condições abaixo.
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
