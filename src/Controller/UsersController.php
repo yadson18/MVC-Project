@@ -28,10 +28,7 @@
 				return $this->redirectTo(["controller" => "Users", "view" => "login"]);
 			}
 
-			return $this->serializeData([
-				"user" => "loginn",
-				"pass" => "123"
-			]);
+			$this->set("setViewVars");
 		}
 
 		public function logout(){

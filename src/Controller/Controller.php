@@ -5,6 +5,16 @@
 		use Session;
 		use Flash;
 
+		public $templateSystem;
+
+		public function __construct($requestData, $templateSystem){
+			$this->templateSystem = $templateSystem;
+		}
+
+		public function set($method){
+			$this->templateSystem->$method(["pass" => "123"]);
+		}
+
 		public function authorizedToAccess($method, $methods, $loggedUser){
 			if($loggedUser === true){
 				return true;

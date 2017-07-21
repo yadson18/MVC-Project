@@ -62,7 +62,7 @@
     public function classExists($controller, $method, $requestData, $template = null){
       if(class_exists("{$controller}")){
         if(strcmp($controller, "Controller") != 0){
-          $this->classInstance = new $controller($requestData);
+          $this->classInstance = new $controller($requestData, $this);
           if(is_callable([$this->classInstance, $method])){
             if($this->setViewVars($this->classInstance->$method())){
               if($this->getViewVars("redirectTo")){
@@ -87,7 +87,7 @@
           $values = explode("/", $template);  
           $controller = "{$values[0]}Controller";
           $method = $values[1];
-          $this->classInstance = new $controller($requestData);
+          $this->classInstance = new $controller($requestData, $this);
           if(is_callable([$this->classInstance, $method])){
             $this->setViewVars($this->classInstance->$method());  
             $this->setTemplate($template);

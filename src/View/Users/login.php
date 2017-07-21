@@ -26,4 +26,4 @@
 		</div>
 	</div>
 </div> -->
-<?php echo $user; echo $pass; ?>
+<?php var_dump($pass); ?>
