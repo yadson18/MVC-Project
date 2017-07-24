@@ -2,8 +2,7 @@
 <html lang="pt-br">
 	<head>
 		<title>AverbePorto - <?= $this->getTitle() ?></title>
-
-		<link rel="icon" type="image/x-icon" href="/webroot/images/logo-icone.jpg">
+		<link rel="icon" type="image/x-icon" href="/images/logo-icone.jpg">
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<?= $this->css("bootstrap.min.css") ?>
@@ -17,8 +16,7 @@
 		<?= $this->script("pages.js") ?>
 	</head>
 	<body>
-		<?php echo "<pre>"; var_dump($this->getViewVars()); echo "</pre>"; ?>
-		<?php if("Login" != "Login"): ?>
+		<?php if($this->getLoggedUser() && $this->getTitle() != "Login"): ?>
 			<nav class="navbar navbar-default" id="menu">
 	  			<div class="container-fluid">
 		    		<div class="navbar-header">
@@ -29,7 +27,7 @@
 					        <span class="icon-bar"></span>
 				      	</button>
 				      	<a class="navbar-brand" href="#">
-				      		<img src="/webroot/images/logo.gif">
+				      		<img src="/images/logo.gif">
 				      	</a>
 				    </div>
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -46,7 +44,7 @@
 	        				</li>
 	        				<li class="dropdown">
 					          	<a href="#" class="dropdown-toggle text-capitalize" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-					          		<?= "UserName" ?> 
+					          		<?= strtolower($this->getLoggedUser("name")) ?> 
 					          		<i class="fa fa-caret-down" aria-hidden="true"></i>
 					          	</a>
 					          	<ul class="dropdown-menu">
@@ -85,12 +83,8 @@
 	  			</div>
 			</nav>
 		<?php endif; ?>
-		<?php if("Login" != "Login"): ?>
-			<div id="content" class="col-md-10 col-md-offset-2 col-sm-9 col-sm-offset-3 col-xs-12">
-		<?php else: ?>
-			<div id="content">
-		<?php endif; ?>
-				<?= $this->fetchAll() ?>
-			</div>
+		<div id="content">
+			<?= $this->fetchAll() ?>
+		</div>
 	</body>
 </html>

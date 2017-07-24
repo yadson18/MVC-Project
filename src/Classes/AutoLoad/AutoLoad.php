@@ -24,11 +24,11 @@
 		public static function setRootDir($rootDir){
 			if(!empty($rootDir) && is_string($rootDir)){
 				if(is_dir($rootDir)){
-					self::$rootDir = $rootDir;
+					self::$rootDir = WWW_ROOT . $rootDir;
 				}
 			}
 			else{
-				self::$rootDir = $_SERVER['DOCUMENT_ROOT'] . "/src/";
+				self::$rootDir = WWW_ROOT . "src/";
 			}
 		}
 

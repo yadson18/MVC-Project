@@ -6,7 +6,7 @@
          * (string) scriptName, nome do script que deverá ser retornado e carregado.
          */
 		public function script($scriptName){
-      		return "<script type='text/javascript' src='/webroot/js/$scriptName'></script>";
+      		return "<script type='text/javascript' src='/js/$scriptName'></script>";
     	}
 
         /* 
@@ -14,7 +14,7 @@
          * (string) cssName, nome da folha de estilo que deverá ser retornado e carregado.
          */
     	public function css($cssName){
-      		return "<link rel='stylesheet' type='text/css' href='/webroot/css/$cssName'>";
+      		return "<link rel='stylesheet' type='text/css' href='/css/$cssName'>";
     	}
 
         /*
@@ -25,7 +25,7 @@
          */
         public function daniedAccess($message){
             ob_start();
-            include "src/View/FlashMessageTemplates/daniedAccess.php";
+            include WWW_ROOT . "src/View/FlashMessageTemplates/daniedAccess.php";
             echo ob_get_clean();
         }
 	}

@@ -2,9 +2,6 @@
 	session_start();
 	
 	class Controller{
-		use Session;
-		use Flash;
-
 		public $templateSystem;
 
 		public function __construct($requestData, $templateSystem){
@@ -17,6 +14,21 @@
 			}
 		}
 
+		public function flash($method, $message){
+			$methods = ["Error", "Success", "SuccessModal", "Warning"];
+
+			if(in_array($method, $methods) && !empty($message)){
+				$method = "flash{$method}";
+				$this->templateSystem->$method($message);
+				return true;
+			}
+			return false;
+		}
+
+		public function destroyAllData(){
+			$this->templateSystem->destroyData();
+		}
+
 		public function setTitle($title){
 			$this->templateSystem->setTitle($title);
 		}
@@ -25,8 +37,12 @@
 			$this->templateSystem->setLoggedUser($user);
 		} 
 
-		public function authorizedToAccess($method, $methods, $loggedUser){
-			if($loggedUser === true){
+		public function getLoggedUser($index = null){
+			return $this->templateSystem->getLoggedUser($index);
+		}
+
+		public function authorizedToAccess($method, $methods, $user){
+			if(!empty($user)){
 				return true;
 			}
 			else{

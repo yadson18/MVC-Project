@@ -1,31 +1,48 @@
 <?php 
   class TemplateSystem{
     use Html;
+    use Session;
+    use Flash;
 
     private $templateToLoad;
     private $classInstance;
     private $viewVars;
     private $topViewVars;
 
-    public function __construct(){
+    private function __construct(){
       $this->viewVars = [];
       $this->topViewVars = 0;
     }
 
+    public static function setSelfInstance(){
+      if(!self::getData("object")){
+        self::saveData(["object" => new TemplateSystem()]);
+      }
+      return self::getData("object");
+    }
+
+    public static function getSelfInstance(){
+      return self::setSelfInstance();
+    }
+
     public function fetchAll(){ 
       if(is_file($this->getTemplate())){
-        ob_start();
-
-        if(!empty($this->getViewVars())){
-          foreach($this->getViewVars() as $variable){
-            foreach($variable as $variableName => $value){
-              ${$variableName} = $value;
+        if($this->getLoggedUser() && $this->getTitle() === "Login"){
+          header("Location: /AverbePorto/index");
+        }
+        else{
+          ob_start();
+          if(!empty(self::getSelfInstance()->getViewVars())){
+            foreach(self::getSelfInstance()->getViewVars() as $variable){
+              foreach($variable as $variableName => $value){
+                ${$variableName} = $value;
+              }
             }
           }
-        }
 
-        include $this->getTemplate();
-        return ob_get_clean();
+          include $this->getTemplate();
+          return ob_get_clean();
+        }
       }
     } 
 
@@ -41,12 +58,22 @@
       $this->setViewVars(["user" => $user]);
     }
 
-    public function getLoggedUser(){
-      return $this->getViewVars("user");
+    public function getLoggedUser($index = null){
+      if(!empty($this->getViewVars("user"))){
+        if(empty($index)){
+          return $this->getViewVars("user");
+        }
+        else{
+          if(array_key_exists($index, $this->getViewVars("user"))){
+            return $this->getViewVars("user")[$index];
+          }
+        }
+      }
+      return false;
     }
 
     public function setTemplate($template){
-      $this->templateToLoad = "src/View/{$template}.php";
+      $this->templateToLoad = WWW_ROOT . "src/View/{$template}.php";
     }
 
     public function getTemplate(){
@@ -58,12 +85,12 @@
         if(is_array($data)){
           foreach($data as $variableName => $value){
             if(!empty($variableName)){
-              $varExists = $this->getVarIndex($variableName);
-              if($varExists){
-                $this->getViewVars()[$varExists][$variableName] = $value;
+              $varExists = self::getSelfInstance()->getVarIndex($variableName);
+              if($varExists !== false){
+                self::getSelfInstance()->viewVars[$varExists][$variableName] = $value;
               }
               else{
-                $this->viewVars[$this->topViewVars++] = [$variableName => $value];
+                self::getSelfInstance()->viewVars[self::getSelfInstance()->topViewVars++] = [$variableName => $value];
               }
             }
             else{
@@ -77,8 +104,8 @@
     }
 
     public function getVarIndex($variableName){
-      for($i = 0; $i < sizeof($this->getViewVars()); $i++){
-        if(isset($this->getViewVars()[$i][$variableName])){
+      for($i = 0; $i < sizeof(self::getSelfInstance()->getViewVars()); $i++){
+        if(isset(self::getSelfInstance()->getViewVars()[$i][$variableName])){
           return $i;
         }
       }
@@ -86,9 +113,9 @@
     }
 
     public function getViewVars($index = null){
-      if(!empty($this->viewVars)){
+      if(!empty(self::getSelfInstance()->viewVars)){
         if(!empty($index)){
-          foreach($this->viewVars as $variable){
+          foreach(self::getSelfInstance()->viewVars as $variable){
             if(array_key_exists($index, $variable)){
               return $variable[$index];
             }
@@ -96,7 +123,7 @@
           return false;
         }
         else{
-          return $this->viewVars;
+          return self::getSelfInstance()->viewVars;
         }
       }
       return false;
@@ -112,7 +139,7 @@
     public function classExists($controller, $method, $requestData, $template = null){
       if(class_exists("{$controller}")){
         if(strcmp($controller, "Controller") != 0){
-          $this->classInstance = new $controller($requestData, $this);
+          $this->classInstance = new $controller($requestData, self::getSelfInstance());
           if(is_callable([$this->classInstance, $method])){
             if($this->setViewVars($this->classInstance->$method())){
               if($this->getViewVars("redirectTo")){
@@ -127,7 +154,7 @@
             }
           }
           else{
-            echo "Erro 1";
+            return false;
           }
         }
         else if(
@@ -137,7 +164,7 @@
           $values = explode("/", $template);  
           $controller = "{$values[0]}Controller";
           $method = $values[1];
-          $this->classInstance = new $controller($requestData, $this);
+          $this->classInstance = new $controller($requestData, self::getSelfInstance());
           if(is_callable([$this->classInstance, $method])){
             $this->setViewVars($this->classInstance->$method());  
             $this->setTemplate($template);
@@ -158,7 +185,7 @@
       return false;
     }
 
-    public function getValues($uri){
+    public function getArgsControllerMethod($uri){
       if(is_string($uri) && !empty($uri)){
         $args = explode("/", substr($uri, 1));
         $controller = array_shift($args);
@@ -169,7 +196,13 @@
         }
         $controller = ucfirst($controller)."Controller";
         if(is_null($method) || $method == ""){
-          $method = "index";
+          if($controller === "Controller"){
+            $controller = "UsersController";
+            $method = "login";
+          }
+          else{
+            $method = "index";
+          }
         }
 
         return [
@@ -186,7 +219,7 @@
         include $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
       } 
       else{
-        $values = $this->getValues($_SERVER["REQUEST_URI"]);
+        $values = $this->getArgsControllerMethod($_SERVER["REQUEST_URI"]);
         $args = $values["args"];
         $controller = $values["controller"];
         $method = $values["method"];
@@ -196,7 +229,10 @@
           $requestData = (object) $_POST;
           
           if(!$this->classExists($controller, $method, $requestData)){
-            echo "Erro 3";
+            $this->flashDaniedAccess(
+              "Você não está autorizado a acessar esta página, confira se o usuário está logado ou se a URL foi digitada corretamente."
+            );
+            return false;
           }
         }
         else{
@@ -204,20 +240,33 @@
           $requestData = (object) $_GET;
           
           if(!$this->classExists($controller, $method, $requestData, $template)){
-            echo "Erro 4";
+            $this->flashDaniedAccess(
+              "Você não está autorizado a acessar esta página, confira se o usuário está logado ou se a URL foi digitada corretamente."
+            );
+            return false;
           }
-          
-          if(!empty($this->getViewVars())){
-            foreach($this->getViewVars() as $variable){
-              foreach($variable as $variableName => $value){
-                ${$variableName} = $value;
+          else{
+            if($this->classInstance->isAuthorized($method, $this->getLoggedUser())){
+              if(!empty(self::getSelfInstance()->getViewVars())){
+                foreach(self::getSelfInstance()->getViewVars() as $variable){
+                  foreach($variable as $variableName => $value){
+                    ${$variableName} = $value;
+                  }
+                }
               }
+              include WWW_ROOT . "src/View/Default/default.php";         
+              exit();
+            }
+            else{
+              $this->flashDaniedAccess(
+                "Você não está autorizado a acessar esta página, confira se o usuário está logado
+                ou se a URL foi digitada corretamente."
+              );
+              return false;
             }
           }
-          include "src/View/Default/default.php";         
-          exit();
-          call_user_func_array([$this->classInstance, $method], $args);
         }
+        call_user_func_array([$this->classInstance, $method], $args);
       }
     }
   }

@@ -1,7 +1,7 @@
-<div class="container-fluid">
+<div class="container-fluid col-md-10 col-md-offset-2 col-sm-9 col-sm-offset-3 col-xs-12">
 	<div id="presentation-box" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
 		<h3 class="text-capitalize" id="title">
-			Bem-Vindo <?= strtolower($this_->getData('User')['name']) ?>
+			Bem-Vindo <?= strtolower($this->getLoggedUser("name")) ?>
 		</h3>
 		<div>
 			<h4 id="sub-title" class="text-center">Sistema AverbePorto</h4>

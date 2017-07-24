@@ -11,13 +11,6 @@
 			return $_SESSION["id"];
 		}
 
-		public static function getCurrent(){
-			if(isset($_SESSION[self::getId()])){
-				return $_SESSION[self::getId()];
-			}
-			return false;
-		}
-
 		public function saveData($data){
 			if(is_array($data)){
 				foreach($data as $index => $values){
@@ -28,7 +21,14 @@
 			return false;
 		}
 
-		public function sessionDestroy(){
+		public function getData($index){
+			if(isset($_SESSION[self::getId()][$index])){
+				return $_SESSION[self::getId()][$index];
+			}
+			return false;
+		}
+
+		public function destroyData(){
 			if(isset($_SESSION[self::getId()])){
 				unset($_SESSION);
 				session_destroy();

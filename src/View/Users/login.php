@@ -1,11 +1,11 @@
 <div class="container-fluid" id="login-content">
 	<div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-12">
 		<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12" id="message">
-			<?= Flash::showMessage() ?>
+			<?= $this->flashShowMessage() ?>
 		</div>
 		<form method="POST" action="/Users/login" enctype="multipart/form-data" class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12" id="form-login">
-			<div style="text-align: center; margin-bottom: 15px">
-				<img src="/webroot/images/logo.gif">
+			<div id="logo">
+				<img src="/images/logo.gif">
 			</div>
 			<div class="form-group">
 				<label>Usuário</label>

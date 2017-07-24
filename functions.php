@@ -16,4 +16,10 @@
   function formatDate($stringDate){
     return date('d.m.Y', strtotime($stringDate));
   }
+
+  function debug($data){
+    echo "<pre>";
+    var_dump($data);
+    echo "</pre>";
+  }
 ?>

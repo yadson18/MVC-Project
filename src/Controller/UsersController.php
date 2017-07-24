@@ -1,9 +1,9 @@
 <?php  
 	class UsersController extends Controller{
-		public static function authorized($method, $loggedUser){
+		public function isAuthorized($method, $user){
 			$allowedMethods = ["login", "logout"];
 
-			return self::authorizedToAccess($method, $allowedMethods, $loggedUser);
+			return $this->authorizedToAccess($method, $allowedMethods, $user);
 		}
 
 		public function login(){
@@ -24,7 +24,7 @@
 						return $this->redirectTo(["controller" => "AverbePorto"]);
 					}
 				}
-				$this->flashError("Usuário ou senha incorreto, tente novamente.");
+				$this->flash("Error", "Usuário ou senha incorreto, tente novamente.");
 				return $this->redirectTo(["controller" => "Users", "view" => "login"]);
 			}
 
@@ -33,23 +33,8 @@
 
 		public function logout(){
 			if($this->requestMethodIs("GET")){
-				$this->isNotAuthorized();
+				$this->destroyAllData();
 				return $this->redirectTo(["controller" => "Users", "view" => "login"]);
-			}
-		}
-
-		public function isNotAuthorized(){
-			$this->sessionDestroy();
-		}
-
-		public static function checkLoggedUser(){
-			if(isset($_SESSION["logged"])){
-				if($_SESSION["logged"] === false){
-					self::isNotAuthorized();
-				}
-			}
-			else{
-				self::isNotAuthorized();
 			}
 		}
 	}

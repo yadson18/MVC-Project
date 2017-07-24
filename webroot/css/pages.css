@@ -83,6 +83,10 @@ label{
 	border-radius: 4px;
 	padding-top: 15px;
 }
+#form-login #logo{
+	text-align: center; 
+	margin-bottom: 15px;
+}
 #send-file-content{
 	box-shadow: 1.5px 1.5px 6px 1px gray;
 	background-color: white;
