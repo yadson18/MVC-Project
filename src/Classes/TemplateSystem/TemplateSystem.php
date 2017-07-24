@@ -5,19 +5,45 @@
     private $templateToLoad;
     private $classInstance;
     private $viewVars;
+    private $topViewVars;
+
+    public function __construct(){
+      $this->viewVars = [];
+      $this->topViewVars = 0;
+    }
 
     public function fetchAll(){ 
       if(is_file($this->getTemplate())){
         ob_start();
 
-        foreach($this->getViewVars() as $variableName => $value) {
-            ${$variableName} = $value;
+        if(!empty($this->getViewVars())){
+          foreach($this->getViewVars() as $variable){
+            foreach($variable as $variableName => $value){
+              ${$variableName} = $value;
+            }
+          }
         }
 
         include $this->getTemplate();
         return ob_get_clean();
       }
     } 
+
+    public function setTitle($title){
+      $this->setViewVars(["title" => $title]);
+    }
+
+    public function getTitle(){
+      return $this->getViewVars("title");
+    }
+
+    public function setLoggedUser($user){
+      $this->setViewVars(["user" => $user]);
+    }
+
+    public function getLoggedUser(){
+      return $this->getViewVars("user");
+    }
 
     public function setTemplate($template){
       $this->templateToLoad = "src/View/{$template}.php";
@@ -30,8 +56,30 @@
     public function setViewVars($data){
       if(!empty($data)){
         if(is_array($data)){
-          $this->viewVars = $data;
+          foreach($data as $variableName => $value){
+            if(!empty($variableName)){
+              $varExists = $this->getVarIndex($variableName);
+              if($varExists){
+                $this->getViewVars()[$varExists][$variableName] = $value;
+              }
+              else{
+                $this->viewVars[$this->topViewVars++] = [$variableName => $value];
+              }
+            }
+            else{
+              return false;
+            }
+          }
           return true;
+        }
+      }
+      return false;
+    }
+
+    public function getVarIndex($variableName){
+      for($i = 0; $i < sizeof($this->getViewVars()); $i++){
+        if(isset($this->getViewVars()[$i][$variableName])){
+          return $i;
         }
       }
       return false;
@@ -40,8 +88,10 @@
     public function getViewVars($index = null){
       if(!empty($this->viewVars)){
         if(!empty($index)){
-          if(array_key_exists($index, $this->viewVars)){
-            return $this->viewVars[$index];
+          foreach($this->viewVars as $variable){
+            if(array_key_exists($index, $variable)){
+              return $variable[$index];
+            }
           }
           return false;
         }
@@ -157,6 +207,13 @@
             echo "Erro 4";
           }
           
+          if(!empty($this->getViewVars())){
+            foreach($this->getViewVars() as $variable){
+              foreach($variable as $variableName => $value){
+                ${$variableName} = $value;
+              }
+            }
+          }
           include "src/View/Default/default.php";         
           exit();
           call_user_func_array([$this->classInstance, $method], $args);

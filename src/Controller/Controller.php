@@ -11,9 +11,19 @@
 			$this->templateSystem = $templateSystem;
 		}
 
-		public function set($method){
-			$this->templateSystem->$method(["pass" => "123"]);
+		public function setViewVars($data){
+			if(!empty($data) && is_array($data)){
+				$this->templateSystem->setViewVars($data);
+			}
 		}
+
+		public function setTitle($title){
+			$this->templateSystem->setTitle($title);
+		}
+
+		public function setLoggedUser($user){
+			$this->templateSystem->setLoggedUser($user);
+		} 
 
 		public function authorizedToAccess($method, $methods, $loggedUser){
 			if($loggedUser === true){
@@ -44,30 +54,6 @@
 	        return true;
 	      }
 	      return false;
-	    }
-
-	   	public function serializeData($data){
-	   		if(is_array($data) && !empty($data)){
-	   			return $data;
-	   		}
-	   		return false;
-	    }
-
-	    public function save($connection, $table, $values){
-	    	$columns = array();
-	    	$postValues = array();
-
-	    	foreach($values as $index => $value){
-	    		array_push($columns, strtoupper($index));
-	    		array_push($postValues, replace($_POST[$index]));
-	    	}
-
-	    	$saved = $connection->insert($table, $columns, $postValues);
-
-	    	if(!empty($saved)){
-	    		return true;
-	    	}
-	    	return false;
 	    }
 	}
 ?>

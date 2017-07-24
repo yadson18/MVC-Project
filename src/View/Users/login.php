@@ -1,4 +1,4 @@
-<!-- <div class="container-fluid" id="login-content">
+<div class="container-fluid" id="login-content">
 	<div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-12">
 		<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12" id="message">
 			<?= Flash::showMessage() ?>
@@ -25,5 +25,4 @@
 			<p>&copy; SRI Automação</p>
 		</div>
 	</div>
-</div> -->
-<?php var_dump($pass); ?>
+</div>

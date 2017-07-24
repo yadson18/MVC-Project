@@ -7,7 +7,7 @@
 		}
 
 		public function index(){
-			$this->serializeData(["Title" => "Home"]);
+			$this->setTitle("Home");
 		}
 
 		public function sendFile(){

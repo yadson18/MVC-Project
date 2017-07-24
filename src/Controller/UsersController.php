@@ -18,9 +18,9 @@
 
 				if(isset($result["success"]) && isset($result["C"])){
 					if($result["success"] == 1 && !empty($result["C"])){
-						$this->isAuthorized();
-						$result["C"]["p"] = base64_encode($_POST["senha"]);
-						$this->serializeData(["User" => $result["C"]]);
+						$result["C"]["pass"] = $_POST["senha"];
+						
+						$this->setLoggedUser($result["C"]);
 						return $this->redirectTo(["controller" => "AverbePorto"]);
 					}
 				}
@@ -28,7 +28,7 @@
 				return $this->redirectTo(["controller" => "Users", "view" => "login"]);
 			}
 
-			$this->set("setViewVars");
+			$this->setTitle("Login");
 		}
 
 		public function logout(){
@@ -37,11 +37,6 @@
 				return $this->redirectTo(["controller" => "Users", "view" => "login"]);
 			}
 		}
-
-		public function isAuthorized(){
-			$this->serializeData(["Logged" => true]);
-		}
-
 
 		public function isNotAuthorized(){
 			$this->sessionDestroy();

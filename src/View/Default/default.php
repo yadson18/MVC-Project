@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
-		<title>AverbePorto</title>
+		<title>AverbePorto - <?= $this->getTitle() ?></title>
+
 		<link rel="icon" type="image/x-icon" href="/webroot/images/logo-icone.jpg">
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +17,7 @@
 		<?= $this->script("pages.js") ?>
 	</head>
 	<body>
+		<?php echo "<pre>"; var_dump($this->getViewVars()); echo "</pre>"; ?>
 		<?php if("Login" != "Login"): ?>
 			<nav class="navbar navbar-default" id="menu">
 	  			<div class="container-fluid">
