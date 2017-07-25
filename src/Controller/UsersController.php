@@ -8,7 +8,7 @@
 
 		public function login(){
 			if($this->requestMethodIs("POST")){
-				$webservice = new Webservice();
+				$webservice = Webservice::getInstance();
 				$result = $webservice->postRequest([
 					"mod" => "login",
 					"comp" => 5,

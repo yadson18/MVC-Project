@@ -14,15 +14,11 @@
       $this->topViewVars = 0;
     }
 
-    public static function setSelfInstance(){
+    public static function getInstance(){
       if(!self::getData("object")){
         self::saveData(["object" => new TemplateSystem()]);
       }
       return self::getData("object");
-    }
-
-    public static function getSelfInstance(){
-      return self::setSelfInstance();
     }
 
     public function fetchAll(){ 
@@ -32,8 +28,8 @@
         }
         else{
           ob_start();
-          if(!empty(self::getSelfInstance()->getViewVars())){
-            foreach(self::getSelfInstance()->getViewVars() as $variable){
+          if(!empty(self::getInstance()->getViewVars())){
+            foreach(self::getInstance()->getViewVars() as $variable){
               foreach($variable as $variableName => $value){
                 ${$variableName} = $value;
               }
@@ -85,12 +81,12 @@
         if(is_array($data)){
           foreach($data as $variableName => $value){
             if(!empty($variableName)){
-              $varExists = self::getSelfInstance()->getVarIndex($variableName);
+              $varExists = self::getInstance()->getVarIndex($variableName);
               if($varExists !== false){
-                self::getSelfInstance()->viewVars[$varExists][$variableName] = $value;
+                self::getInstance()->viewVars[$varExists][$variableName] = $value;
               }
               else{
-                self::getSelfInstance()->viewVars[self::getSelfInstance()->topViewVars++] = [$variableName => $value];
+                self::getInstance()->viewVars[self::getInstance()->topViewVars++] = [$variableName => $value];
               }
             }
             else{
@@ -104,8 +100,8 @@
     }
 
     public function getVarIndex($variableName){
-      for($i = 0; $i < sizeof(self::getSelfInstance()->getViewVars()); $i++){
-        if(isset(self::getSelfInstance()->getViewVars()[$i][$variableName])){
+      for($i = 0; $i < sizeof(self::getInstance()->getViewVars()); $i++){
+        if(isset(self::getInstance()->getViewVars()[$i][$variableName])){
           return $i;
         }
       }
@@ -113,9 +109,9 @@
     }
 
     public function getViewVars($index = null){
-      if(!empty(self::getSelfInstance()->viewVars)){
+      if(!empty(self::getInstance()->viewVars)){
         if(!empty($index)){
-          foreach(self::getSelfInstance()->viewVars as $variable){
+          foreach(self::getInstance()->viewVars as $variable){
             if(array_key_exists($index, $variable)){
               return $variable[$index];
             }
@@ -123,7 +119,7 @@
           return false;
         }
         else{
-          return self::getSelfInstance()->viewVars;
+          return self::getInstance()->viewVars;
         }
       }
       return false;
@@ -139,7 +135,7 @@
     public function classExists($controller, $method, $requestData, $template = null){
       if(class_exists("{$controller}")){
         if(strcmp($controller, "Controller") != 0){
-          $this->classInstance = new $controller($requestData, self::getSelfInstance());
+          $this->classInstance = new $controller($requestData, self::getInstance());
           if(is_callable([$this->classInstance, $method])){
             if($this->setViewVars($this->classInstance->$method())){
               if($this->getViewVars("redirectTo")){
@@ -164,7 +160,7 @@
           $values = explode("/", $template);  
           $controller = "{$values[0]}Controller";
           $method = $values[1];
-          $this->classInstance = new $controller($requestData, self::getSelfInstance());
+          $this->classInstance = new $controller($requestData, self::getInstance());
           if(is_callable([$this->classInstance, $method])){
             $this->setViewVars($this->classInstance->$method());  
             $this->setTemplate($template);
@@ -247,8 +243,8 @@
           }
           else{
             if($this->classInstance->isAuthorized($method, $this->getLoggedUser())){
-              if(!empty(self::getSelfInstance()->getViewVars())){
-                foreach(self::getSelfInstance()->getViewVars() as $variable){
+              if(!empty(self::getInstance()->getViewVars())){
+                foreach(self::getInstance()->getViewVars() as $variable){
                   foreach($variable as $variableName => $value){
                     ${$variableName} = $value;
                   }

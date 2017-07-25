@@ -1,9 +1,27 @@
 <?php
+    /*
+     * A classe Webservice é usada para conectar-se à webservices, enviar ou requisitar dados, 
+     * através da biblioteca CURL.
+     */
     class Webservice{
+        private static $instance;
         public $cookiePath;
 
-        public function __construct(){
-            $this->cookiePath = $_SERVER["DOCUMENT_ROOT"] . "/webroot/files/cookie.txt";
+        /*
+         * No construtor da classe o caminho até o arquivo cookie.txt é salvo em uma variável estática.
+         *
+         * WWW_ROOT é uma constante onde está salvo o caminho até o diretório raiz do 
+         * projeto, visível globalmente no código.
+         */
+        private function __construct(){
+            $this->cookiePath = WWW_ROOT . "/webroot/files/cookie.txt";
+        }
+
+        public static function getInstance(){
+            if(empty($instance)){
+                self::$instance = new Webservice();
+            }
+            return self::$instance;
         }
 
         public function cookie(){
@@ -22,10 +40,6 @@
                 }
                 return false;
             }
-        }
-
-        public function getCookie(){
-            return substr(strrchr(file_get_contents($this->cookiePath), "portal[ses]"), 12, 32);
         }
 
         public function connection($useCookie){

@@ -199,3 +199,8 @@ ul.navbar-left li a:visited,
 	padding: 10px 10px 10px 10px;
 	color: white;
 }
+#debug{
+	background-color: #FFD700; 
+	font-size: 1em; 
+	color: black; 
+}

@@ -2,6 +2,7 @@
 	/* 
 	 * A classe Connection, serve para conectar-se a vários tipos de bancos de dados 
 	 * através do PDO, tais como MySql, Firebird, PostgreSQL...
+	 *
 	 * Para a lista completa de bancos de dados suportados, consulte o manual do PHP.
 	 */
 	abstract class Connection{
@@ -36,9 +37,11 @@
 		/*
 		 * O método select é usado para fazer buscas no banco de dados, 
 		 * o método só funcionará, caso a conexão com o banco de dados seja estabelecida.
+		 *
 		 *  (string) columns, coluna(s) da(s) tabela(s) ou * para retornar os 
 		 *  dados de todas as colunas da tabela.
 		 *  (string) table, nome(s) da(s) tabela(s) onde os dados serão buscados.
+		 *
 		 * Os dois valores abaixo, são opcionais quando para a coluna for passado o valor *.
 		 *  (string) condition, condição para a busca dos dados (opcional).
 		 *  (array) conditionValues, valores a serem passados para a condição.
@@ -73,9 +76,10 @@
 		/*
 		 * O método insert é usado para inserir dados no banco de dados, 
 		 * o método só funcionará, caso a conexão com o banco de dados seja estabelecida.
-		 * (string) table, nome da tabela onde os dados serão inseridos.
-		 * (array) columns, colunas da tabela onde os dados serão inseridos.
-		 * (array) values, valores a serem inseridos referentes às colunas da tabela.
+		 *
+		 * 	(string) table, nome da tabela onde os dados serão inseridos.
+		 * 	(array) columns, colunas da tabela onde os dados serão inseridos.
+		 * 	(array) values, valores a serem inseridos referentes às colunas da tabela.
 		 */
 		public function insert($table, $columns, $values){
 			if($this->getConnection()){

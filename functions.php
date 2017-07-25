@@ -18,7 +18,7 @@
   }
 
   function debug($data){
-    echo "<pre>";
+    echo "<pre id='debug'>";
     var_dump($data);
     echo "</pre>";
   }

@@ -19,7 +19,11 @@
 		/* 
 		 * Este método salva em uma variável estática, o diretório raiz onde devem ser 
 		 * carregadas as classes.
-		 * (string) rootDir, diretório raiz onde devem ser carregadas as classes.
+		 *
+		 * WWW_ROOT é uma constante onde está salvo o caminho até o diretório raiz do 
+		 * projeto, visível globalmente no código.
+		 *
+		 * 	(string) rootDir, diretório raiz onde devem ser carregadas as classes.
 		 */
 		public static function setRootDir($rootDir){
 			if(!empty($rootDir) && is_string($rootDir)){
@@ -38,10 +42,10 @@
 		}
 
 		/* 
-		 * Este método carrega as classes automaticamente quando for necessário,
-		 * (string) rootDir, diretório raiz onde devem ser carregadas as classes (opcional),
-		 * caso não seja passado nenhum valor, o diretório default para carregamento das
-		 * classes, será o src.
+		 * Este método carrega as classes automaticamente quando for necessário.
+		 *	(string) rootDir, diretório raiz onde devem ser carregadas as classes (opcional),
+		 * 	caso não seja passado nenhum valor, o diretório default para carregamento das
+		 * 	classes, será o src.
 		 */
 		public static function loadClasses($rootDir = null){
 			self::setRootDir($rootDir);

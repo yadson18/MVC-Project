@@ -10,8 +10,6 @@
 		<?= $this->css("font-awesome.min.css") ?>
 
 		<?= $this->script("jquery-3.2.1.min.js") ?>
-		<?= $this->script("jquery.price_format.min.js") ?>
-		<?= $this->script("inputMask.js") ?>
 		<?= $this->script("bootstrap.min.js") ?>
 		<?= $this->script("pages.js") ?>
 	</head>

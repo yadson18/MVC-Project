@@ -36,7 +36,7 @@
 	            $fileSize = filesize($meta["uri"]);
 	            $postFile = new CURLFile($fileName, $fileType, "file");
 
-	            $webservice = new Webservice();
+	            $webservice = Webservice::getInstance();
 
 	            if($this->getAuthorizedUser($webservice)){
 		            $result = $webservice->postRequest([
