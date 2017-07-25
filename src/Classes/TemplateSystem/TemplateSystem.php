@@ -69,7 +69,11 @@
     }
 
     public function setTemplate($template){
-      $this->templateToLoad = WWW_ROOT . "src/View/{$template}.php";
+      if(file_exists(WWW_ROOT . "src/View/{$template}.php")){
+        $this->templateToLoad = WWW_ROOT . "src/View/{$template}.php";
+        return true;
+      }
+      return false;
     }
 
     public function getTemplate(){
@@ -136,34 +140,23 @@
       if(class_exists("{$controller}")){
         if(strcmp($controller, "Controller") != 0){
           $this->classInstance = new $controller($requestData, self::getInstance());
-          if(is_callable([$this->classInstance, $method])){
-            if($this->setViewVars($this->classInstance->$method())){
-              if($this->getViewVars("redirectTo")){
-                header("Location: {$this->getViewVars('redirectTo')}");
+          if($this->authorizedUser($method)){
+            if(is_callable([$this->classInstance, $method])){
+              if($this->setViewVars($this->classInstance->$method())){
+                if($this->getViewVars("redirectTo")){
+                  header("Location: {$this->getViewVars('redirectTo')}");
+                }
+                else{
+                  $this->setTemplate("{$this->getViewName($controller)}/{$method}");
+                }
               }
               else{
                 $this->setTemplate("{$this->getViewName($controller)}/{$method}");
               }
             }
             else{
-              $this->setTemplate("{$this->getViewName($controller)}/{$method}");
+              return false;
             }
-          }
-          else{
-            return false;
-          }
-        }
-        else if(
-          (strcmp($controller, "Controller") == 0) && 
-          (strcmp($method, "index") == 0)
-        ){
-          $values = explode("/", $template);  
-          $controller = "{$values[0]}Controller";
-          $method = $values[1];
-          $this->classInstance = new $controller($requestData, self::getInstance());
-          if(is_callable([$this->classInstance, $method])){
-            $this->setViewVars($this->classInstance->$method());  
-            $this->setTemplate($template);
           }
         }
         else{
@@ -210,6 +203,13 @@
       return false;
     }
 
+    public function authorizedUser($method){
+      if($this->classInstance->isAuthorized($method, $this->getLoggedUser())){
+        return true;
+      }
+      return false;
+    }
+
     public function loadTemplate($template){
       if (is_file($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'])) {
         include $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
@@ -242,7 +242,7 @@
             return false;
           }
           else{
-            if($this->classInstance->isAuthorized($method, $this->getLoggedUser())){
+            if($this->authorizedUser($method)){
               if(!empty(self::getInstance()->getViewVars())){
                 foreach(self::getInstance()->getViewVars() as $variable){
                   foreach($variable as $variableName => $value){
@@ -250,6 +250,7 @@
                   }
                 }
               }
+
               include WWW_ROOT . "src/View/Default/default.php";         
               exit();
             }
@@ -258,10 +259,9 @@
                 "Você não está autorizado a acessar esta página, confira se o usuário está logado
                 ou se a URL foi digitada corretamente."
               );
-              return false;
             }
           }
-        }
+        } 
         call_user_func_array([$this->classInstance, $method], $args);
       }
     }

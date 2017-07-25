@@ -7,6 +7,14 @@ $(document).ready(function() {
 		$(form).submit();
 	}
 
+	function showMessage(element, message){
+		$(element).text(message);
+	}
+
+	function clearMessage(element){
+		$(element).empty();
+	}
+
 	$(this).on("click", ".browse", function(){
 	  var file = $(this).parent().parent().parent().find(".file");
 	  file.trigger("click");
@@ -14,17 +22,24 @@ $(document).ready(function() {
 
 	$(this).on("change", ".file", function(){
 	  $(this).parent().find(".form-control").val($(this).val().replace(/C:\\fakepath\\/i, ''));
+	  clearMessage($("#message-box p.error"));
 	});
 
 	$(".close").on("click", function(){
 		$("#message").empty();
 	});
 
-	$("#send-file-btn, #login-btn").on("click", function(){
+	$("#send-file-btn").on("click", function(){
 		if($(".file").val() !== ""){
 			submitForm("#form-send-file");
 			disableButton("#send-file-btn");
 		}
+		else{
+			showMessage($("#message-box p.error"), "Por favor, selecione um arquivo.");
+		}
+	});
+
+	$("#login-btn").on("click", function(){
 		if(
 			($("#form-login input[name=usuario]").val() != "") && 
 			($("#form-login input[name=senha]").val() != "")
@@ -33,4 +48,5 @@ $(document).ready(function() {
 			disableButton("#login-btn");
 		}
 	});
+
 });

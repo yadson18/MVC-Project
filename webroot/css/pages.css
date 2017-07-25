@@ -204,3 +204,12 @@ ul.navbar-left li a:visited,
 	font-size: 1em; 
 	color: black; 
 }
+#message-box.form-group{
+	margin-bottom: 0;
+}
+#message-box .error{
+	position: relative;
+	top: -10px;
+	color: #c94442;
+	font-size: 1.1em;
+}

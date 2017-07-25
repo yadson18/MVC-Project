@@ -1,7 +1,7 @@
 <?php  
 	class UsersController extends Controller{
 		public function isAuthorized($method, $user){
-			$allowedMethods = ["login", "logout"];
+			$allowedMethods = ["login"];
 
 			return $this->authorizedToAccess($method, $allowedMethods, $user);
 		}

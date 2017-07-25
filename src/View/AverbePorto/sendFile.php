@@ -29,8 +29,11 @@
                     </span>
                 </div>
             </div>
+            <div id="message-box" class="form-group">
+                <i><p class="error"></p></i>
+            </div>
             <div class="form-group">
-                <button class="form-control btn btn-success input-lg" id="send-file-btn" type="submit">
+                <button class="form-control btn btn-success input-lg" id="send-file-btn">
                     Enviar <i class="fa fa-upload" aria-hidden="true"></i>
                 </button>
             </div>
