@@ -1,5 +1,12 @@
 <?php  
 	class UsersController extends Controller{
+		private $usersDB;
+
+		public function __construct($requestData, $templateSystem){
+			parent::__construct($requestData, $templateSystem);
+			$this->usersDB = new UsersDB();
+		}
+
 		public function isAuthorized($method, $user){
 			$allowedMethods = ["login"];
 
@@ -8,21 +15,12 @@
 
 		public function login(){
 			if($this->requestMethodIs("POST")){
-				$webservice = Webservice::getInstance();
-				$result = $webservice->postRequest([
-					"mod" => "login",
-					"comp" => 5,
-					"user" => $_POST["usuario"],
-					"pass" => $_POST["senha"]
-				], false);
-
-				if(isset($result["success"]) && isset($result["C"])){
-					if($result["success"] == 1 && !empty($result["C"])){
-						$result["C"]["pass"] = $_POST["senha"];
-						
-						$this->setLoggedUser($result["C"]);
-						return $this->redirectTo(["controller" => "AverbePorto"]);
-					}
+				$condition = "WHERE LOGIN = ? AND SENHA = ?";
+				$result = $this->usersDB->select("*", "COLABORADOR", $condition, [$_POST["login"], $_POST["senha"]]);
+				
+				if(!empty($result)){
+					$this->setLoggedUser($result);
+					return $this->redirectTo(["controller" => "Sri", "view" => "home"]);
 				}
 				$this->flash("Error", "Usuário ou senha incorreto, tente novamente.");
 				return $this->redirectTo(["controller" => "Users", "view" => "login"]);
@@ -36,6 +34,6 @@
 				$this->destroyAllData();
 				return $this->redirectTo(["controller" => "Users", "view" => "login"]);
 			}
-		}
+		} 
 	}
 ?>

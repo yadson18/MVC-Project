@@ -54,7 +54,8 @@
 			if($this->getConnection()){
 				if(is_string($columns) && is_string($table)){
 					if(empty($condition) && empty($conditionValues)){
-						$query = $this->getConnection()->query("SELECT {$columns} FROM {$table}");
+						$query = $this->getConnection()->prepare("SELECT {$columns} FROM {$table}");
+						$query->execute();
 						
 						return $query->fetchAll(PDO::FETCH_ASSOC);
 					}
@@ -65,6 +66,14 @@
 							);
 							$query->execute($conditionValues);
 						
+							return $query->fetchAll(PDO::FETCH_ASSOC);
+						}
+						if(is_string($condition) && empty($conditionValues)){
+							$query = $this->getConnection()->prepare(
+								"SELECT {$columns} FROM {$table} {$condition}"
+							);
+							$query->execute();
+							
 							return $query->fetchAll(PDO::FETCH_ASSOC);
 						}
 					}
@@ -84,23 +93,20 @@
 		public function insert($table, $columns, $values){
 			if($this->getConnection()){
 				if(is_string($table) && is_array($columns) && is_array($values)){
-					$columnFormat = "";
-					$column = "";
-					
 					for($i = 0; $i < sizeof($columns); $i++){
+						$columnFormat .= $columns[$i];
+						$column .= substr($columns[$i], 1);
+
 						if($i < (sizeof($columns) - 1)){
-							$columnFormat .= ":" . $columns[$i] . ", ";
-							$column .= $columns[$i] . ", ";
-						}
-						else{
-							$columnFormat .= ":" . $columns[$i];
-							$column .= $columns[$i];
+							$columnFormat .= ", ";
+							$column .= ", ";
 						}
 					}
+
 					$query = "INSERT INTO {$table}({$column}) VALUES({$columnFormat})";
 					$query = $this->getConnection()->prepare($query);
 					for($j = 0; $j < sizeof($columns); $j++){
-						$query->bindParam(":" . $columns[$j], $values[$j], PDO::PARAM_STR);
+						$query->bindParam($columns[$j], $values[$j], PDO::PARAM_STR);
 					} 
 					$query->execute();
 					return true;

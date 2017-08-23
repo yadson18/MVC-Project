@@ -71,5 +71,27 @@
 	      }
 	      return false;
 	    }
+
+	    public function get($connection, $columns, $table, $condition = null, $conditionData = null){
+	    	for($i = 0; $i < sizeof($columns); $i++){
+				$columnFormat .= $columns[$i];
+
+				if($i < (sizeof($columns) - 1)){
+					$columnFormat .= ", ";
+				}
+			}
+
+	    	return $connection->select($columnFormat, $table, $condition, $conditionData);
+	    }
+
+	    public function save($connection, $table, $data){
+	    	$top = 0;
+	    	foreach($data as $column => $value){
+	    		$columns[$top] = ":{$column}";
+	    		$values[$top++] = $value;
+	    	}
+
+	    	return $connection->insert($table, $columns, $values);
+	    }
 	}
 ?>

@@ -8,6 +8,7 @@
     private $classInstance;
     private $viewVars;
     private $topViewVars;
+    private $defaultTemplate;
 
     private function __construct(){
       $this->viewVars = [];
@@ -24,7 +25,7 @@
     public function fetchAll(){ 
       if(is_file($this->getTemplate())){
         if($this->getLoggedUser() && $this->getTitle() === "Login"){
-          header("Location: /AverbePorto/index");
+          header("Location: /{$this->defaultTemplate['controller']}/{$this->defaultTemplate['view']}");
         }
         else{
           ob_start();
@@ -41,6 +42,20 @@
         }
       }
     } 
+
+    public function setDefaultTemplate($template){
+      if(is_array($template)){
+        if(array_key_exists("controller", $template)){
+          $this->defaultTemplate["controller"] = $template["controller"];
+        }
+        if(array_key_exists("view", $template)){
+          $this->defaultTemplate["view"] = $template["view"];
+        }
+        else{
+          return false;
+        }
+      }
+    }
 
     public function setTitle($title){
       $this->setViewVars(["title" => $title]);
@@ -186,8 +201,8 @@
         $controller = ucfirst($controller)."Controller";
         if(is_null($method) || $method == ""){
           if($controller === "Controller"){
-            $controller = "UsersController";
-            $method = "login";
+            $controller = $this->defaultTemplate['controller'];
+            $method = $this->defaultTemplate['view'];
           }
           else{
             $method = "index";
@@ -230,6 +245,7 @@
             );
             return false;
           }
+          return true;
         }
         else{
           $this->classInstance = NULL;
@@ -259,7 +275,9 @@
                 "Você não está autorizado a acessar esta página, confira se o usuário está logado
                 ou se a URL foi digitada corretamente."
               );
+              return false;
             }
+            return true;
           }
         } 
         call_user_func_array([$this->classInstance, $method], $args);

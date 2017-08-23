@@ -3,5 +3,10 @@
 	require_once "src/Classes/AutoLoad/AutoLoad.php";
 	AutoLoad::loadClasses();
 	
-	TemplateSystem::getInstance()->loadTemplate("/Users/login");
+	$templateSystem = TemplateSystem::getInstance();
+	$templateSystem->setDefaultTemplate([
+		"controller" => "Pages",
+		"view" => "home"
+	]);
+	$templateSystem->loadTemplate("/Pages/home");
 ?>
