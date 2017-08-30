@@ -72,11 +72,11 @@
     public function getLoggedUser($index = null){
       if(!empty($this->getViewVars("user"))){
         if(empty($index)){
-          return $this->getViewVars("user");
+          return $this->getViewVars("user")[0];
         }
         else{
-          if(array_key_exists($index, $this->getViewVars("user"))){
-            return $this->getViewVars("user")[$index];
+          if(array_key_exists($index, $this->getViewVars("user")[0])){
+            return $this->getViewVars("user")[0][$index];
           }
         }
       }
@@ -201,7 +201,7 @@
         $controller = ucfirst($controller)."Controller";
         if(is_null($method) || $method == ""){
           if($controller === "Controller"){
-            $controller = $this->defaultTemplate['controller'];
+            $controller = "{$this->defaultTemplate['controller']}Controller";
             $method = $this->defaultTemplate['view'];
           }
           else{

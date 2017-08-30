@@ -1,19 +1,7 @@
 <?php 
 	//A classe AutoLoad serve para carregar classes automaticamente no projeto.
 	abstract class AutoLoad{
-		/* 
-		 * Para este atributo, é necessário um array com os diretórios onde encontram-se todas
-		 * as classes do projeto a partir do diretório src ou do diretório especificado pelo 
-		 * método setRootDir. 
-		 */
-		private static $classPaths = [
-			"Classes/Datasource", 
-			"Classes/TemplateSystem",
-			"Classes/TemplateSystem/TemplateTraits",
-			"Classes/Webservice",
-			"Controller", 
-			"Controller/ControllerTraits"
-		];
+		private static $classPaths;
 		private static $rootDir;
 
 		/* 
@@ -36,6 +24,18 @@
 			}
 		}
 
+		/*
+		 * Este método salva em uma variável estática, um array com as pastas 
+		 * onde encontram-se as classes do sistema.
+		 *
+		 *	(array) paths, pastas onde encontram-se as classes.
+		 */
+		public static function setClassesPath($paths){
+			if(is_array($paths)){
+				self::$classPaths = $paths;
+			}
+		}
+
 		// Este método retorna o diretório onde devem ser carregadas as classes.
 		public static function getRootDir(){
 			return self::$rootDir;
@@ -48,7 +48,9 @@
 		 * 	classes, será o src.
 		 */
 		public static function loadClasses($rootDir = null){
+			self::setClassesPath(getClassesPath());
 			self::setRootDir($rootDir);
+
 			spl_autoload_register(function($class_name){
 				foreach(self::$classPaths as $path){
 					if(

@@ -18,5 +18,14 @@
     	public function css($cssName){
       		return "<link rel='stylesheet' type='text/css' href='/css/$cssName'>";
     	}
+
+        /* 
+         * Este método retorna a tag link que carregará o documento Less na View.
+         *  
+         *  (string) lessName, nome do arquivo less que deverá ser retornado e carregado.
+         */
+        public function less($lessName){
+            return "<link rel='stylesheet/less' type='text/css' href='/less/$lessName'/>";
+        }
 	}
 ?>

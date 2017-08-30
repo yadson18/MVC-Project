@@ -3,25 +3,10 @@
         private static $instance;
         private $connection;
 
-        private function __construct(){
+        private function __construct($webserviceConfig){
             try {
                 if(!isset($this->connection)){
-                    $contextOptions = [
-                        "ssl"=>[
-                            "verify_peer"=>false,
-                            "verify_peer_name"=>false,
-                            "crypto_method" => STREAM_CRYPTO_METHOD_TLS_CLIENT
-                        ]
-                    ];
-
-                    $options = [
-                        'soap_version'=>'SOAP_1_2',
-                        'exceptions'=>true,
-                        'trace'=>1,
-                        'cache_wsdl'=>'WSDL_CACHE_NONE',
-                        'stream_context' => stream_context_create($contextOptions)
-                    ];
-                    $this->connection = new SoapClient('Connection URL', $options);
+                    $this->connection = new SoapClient($webserviceConfig["url"], $webserviceConfig["options"]);
                 }
             } 
             catch (Exception $e) {
@@ -31,7 +16,7 @@
         
         public static function getInstance(){
             if(!isset(self::$instance)){
-                self::$instance = new Webservice();
+                self::$instance = new Webservice(getWebServiceConfig());
             }
             return self::$instance;
         }

@@ -1,4 +1,6 @@
 <?php
+  include "app-config/config-functions.php";
+
   function phpToJs($values){
     if(is_array($values)){
       $json = json_encode($values);
