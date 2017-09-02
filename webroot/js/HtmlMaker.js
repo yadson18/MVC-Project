@@ -56,6 +56,9 @@ var HtmlMaker = function(){
 		},
 		span: function(attributes){
 			return this.setTag("span", attributes);
+		},
+		option: function(attributes){
+			return this.setTag("option", attributes);
 		}
 	};
 }

@@ -10,6 +10,17 @@
 			);
 		}
 
+		public function queryOperators($operator){
+			$operators = ["=", "+", "-", "*", "like", "not like", ">", "<", "<>"];
+
+			foreach($operators as $avaliableOperator){
+				if(strtolower($operator) === $avaliableOperator){
+					return true;
+				}
+			}
+			return false;
+		}
+
 		/*
 		 * O método select é usado para fazer buscas no banco de dados, 
 		 * o método só funcionará, caso a conexão com o banco de dados seja estabelecida.
@@ -90,5 +101,22 @@
 			}
 			return false;
 		}
+
+		/*public function delete($table, $condition, $values){
+			if(!empty(self::$connection)){
+				if(is_string($table) && is_string($condition) && is_array($values)){
+					
+
+					$query = "DELETE FROM {$table} {$condition}";
+					$query = self::$connection->prepare($query);
+					for($j = 0; $j < sizeof($columns); $j++){
+						$query->bindParam($columns[$j], $values[$j], PDO::PARAM_STR);
+					} 
+					$query->execute();
+					return true;
+				}
+			}
+			return false;
+		}*/
 	}
 ?>

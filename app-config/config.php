@@ -1,14 +1,14 @@
 <?php  
 	$appConfiguration = [
-		"AppName" => "Nome do app",
+		"AppName" => "Framework ILP",
 		
 		"Databases" => [
-			"tipo da base de dados (Ex: mysql)" => [
-				"nome da base de dados" => [
-					"dbPath" => "caminho até a base de dados",
-					"dbUser" => "usuário",
-					"dbPassword" => "senha",
-					"charset" => "codificação"
+			"dbTypeExample" => [
+				"dbNameExample" => [
+					"dbPath" => "/BD/EXAMPLE.FDB",
+					"dbUser" => "example",
+					"dbPassword" => "secret",
+					"charset" => "utf-8"
 				]
 			]
 		],
@@ -19,7 +19,9 @@
 			"Classes/TemplateSystem/TemplateTraits",
 			"Classes/Webservice",
 			"Controller", 
-			"Controller/ControllerTraits"
+			"Controller/ControllerTraits",
+			"Model",
+			"Model/Interfaces"
 		],
 
 		"Webservice" => [

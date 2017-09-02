@@ -6,7 +6,7 @@
 	 * Para a lista completa de bancos de dados suportados, consulte o manual do PHP.
 	 */
 	abstract class Connection{
-		private static $connection;
+		private static $instance;
 
 		/*
 		 * Para o construtor da classe devem ser passados,

@@ -25,7 +25,7 @@
     public function fetchAll(){ 
       if(is_file($this->getTemplate())){
         if($this->getLoggedUser() && $this->getTitle() === "Login"){
-          header("Location: /{$this->defaultTemplate['controller']}/{$this->defaultTemplate['view']}");
+          header("Location: /Sri/home");
         }
         else{
           ob_start();
@@ -72,11 +72,11 @@
     public function getLoggedUser($index = null){
       if(!empty($this->getViewVars("user"))){
         if(empty($index)){
-          return $this->getViewVars("user")[0];
+          return $this->getViewVars("user");
         }
         else{
-          if(array_key_exists($index, $this->getViewVars("user")[0])){
-            return $this->getViewVars("user")[0][$index];
+          if(property_exists($this->getViewVars("user"), $index)){
+            return $this->getViewVars("user")->{$index};
           }
         }
       }
@@ -155,7 +155,7 @@
       if(class_exists("{$controller}")){
         if(strcmp($controller, "Controller") != 0){
           $this->classInstance = new $controller($requestData, self::getInstance());
-          if($this->authorizedUser($method)){
+          if($this->classInstance->isAuthorized($method, $this->getLoggedUser())){
             if(is_callable([$this->classInstance, $method])){
               if($this->setViewVars($this->classInstance->$method())){
                 if($this->getViewVars("redirectTo")){
@@ -218,14 +218,7 @@
       return false;
     }
 
-    public function authorizedUser($method){
-      if($this->classInstance->isAuthorized($method, $this->getLoggedUser())){
-        return true;
-      }
-      return false;
-    }
-
-    public function loadTemplate($template){
+    public function loadTemplate(){
       if (is_file($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'])) {
         include $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
       } 
@@ -250,7 +243,8 @@
         else{
           $this->classInstance = NULL;
           $requestData = (object) $_GET;
-          
+          $template = "{$this->defaultTemplate['controller']}/{$this->defaultTemplate['view']}";
+
           if(!$this->classExists($controller, $method, $requestData, $template)){
             $this->flashDaniedAccess(
               "Você não está autorizado a acessar esta página, confira se o usuário está logado ou se a URL foi digitada corretamente."
@@ -258,7 +252,7 @@
             return false;
           }
           else{
-            if($this->authorizedUser($method)){
+            if($this->classInstance->isAuthorized($method, $this->getLoggedUser())){
               if(!empty(self::getInstance()->getViewVars())){
                 foreach(self::getInstance()->getViewVars() as $variable){
                   foreach($variable as $variableName => $value){

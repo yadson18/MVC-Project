@@ -17,7 +17,7 @@
     <script type="text/javascript">
         window.onload = function(){
             document.getElementById("redirect-button").addEventListener("click", function(){
-                window.location.href = "/Sri/index";
+                window.location.href = "/User/login";
             });
         };
     </script>
