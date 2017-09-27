@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
-		<title><?= getAppName() . " - " . $this->getTitle() ?></title>
+		<title><?= getAppName() ?></title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<?= $this->css("bootstrap.min.css") ?>
@@ -15,7 +15,7 @@
 		<?= $this->script("HtmlMaker.js") ?>
 
 		<?= $this->less("presentation-style.less") ?>
-		<?= $this->script("less.min.js") ?> -->
+		<?= $this->script("less.min.js") ?>
 	</head>
 	<body>	
 		<nav class="navbar navbar-default navbar-fixed-top" id="home-nav">

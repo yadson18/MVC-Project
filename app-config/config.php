@@ -2,6 +2,11 @@
 	$appConfiguration = [
 		"AppName" => "Framework ILP",
 		
+		"DefaultRoute" => [
+			"controller" => "Example",
+			"view" => "home"
+		],
+
 		"Databases" => [
 			"dbTypeExample" => [
 				"dbNameExample" => [

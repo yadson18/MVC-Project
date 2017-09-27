@@ -18,6 +18,12 @@
     }
   }
 
+  function getDefaultRoute(){
+    global $appConfiguration;
+
+    return $appConfiguration["DefaultRoute"];
+  }
+
   function setDatabaseConfig($dbType, $dbName, $arrayConfig){
     global $appConfiguration;
 

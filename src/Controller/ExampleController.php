@@ -1,7 +1,7 @@
 <?php  
 	class ExampleController extends Controller{
-		public function __construct($requestData, $templateSystem){
-			parent::__construct($requestData, $templateSystem);
+		public function __construct($requestData){
+			parent::__construct($requestData);
 		}
 
 		public function isAuthorized($method, $user){
@@ -10,8 +10,6 @@
 			return $this->authorizedToAccess($method, $allowedMethods, $user);
 		}
 
-		public function home(){
-			$this->setTitle("Welcome");
-		}
+		public function home(){}
 	}
 ?>

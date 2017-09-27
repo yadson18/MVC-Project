@@ -1,4 +1,13 @@
 a2enmod rewrite
+
+modificar o arquivo apache.conf
+	<Directory /var/www/>
+		Options Indexes FollowSymLinks
+		AllowOverride All
+		Require all granted
+	</Directory>
+
+
 apt-get install php-soap
 apt-get install php-interbase
 

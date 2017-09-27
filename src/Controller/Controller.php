@@ -2,11 +2,7 @@
 	session_start();
 	
 	class Controller{
-		public $templateSystem;
-
-		public function __construct($requestData, $templateSystem){
-			$this->templateSystem = $templateSystem;
-		}
+		public function __construct($requestData){}
 
 		public function setViewVars($data){
 			if(!empty($data) && is_array($data)){
