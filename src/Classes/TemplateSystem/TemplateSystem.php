@@ -8,8 +8,11 @@
     private $controllerMethod;
     private $controllerArgs;
     private $templateToLoad;
+    private $viewVars;
 
-    private function __construct(){}
+    private function __construct(){
+      $this->viewVars = [];
+    }
 
     public static function getInstance(){
       if(!isset(self::$instance)){
@@ -27,6 +30,19 @@
       }
     } 
 
+    public function setViewVars($data){
+      if(!empty($data)){
+        if(is_array($data) && is_string(key($data))){
+          $this->viewVars[key($data)] = array_shift($data);
+        }
+        return false;
+      }
+    }
+
+    public function getViewVars(){
+      return $this->viewVars;
+    }
+
     public function setTemplate($template){
       if(file_exists(WWW_ROOT . "src/View/{$template}.php")){
         $this->templateToLoad = WWW_ROOT . "src/View/{$template}.php";
@@ -42,7 +58,7 @@
     public function classExists($controllerName, $controllerMethod, $requestData, $template = null){
       if(is_string($controllerName)){
         if(class_exists($controllerName) && !empty($controllerName)){
-          $this->controllerInstance = new $controllerName($requestData);
+          $this->controllerInstance = new $controllerName($requestData, $this);
 
           if(is_callable([$this->controllerInstance, $controllerMethod])){
             $this->controllerInstance->$controllerMethod();

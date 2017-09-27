@@ -2,12 +2,14 @@
 	session_start();
 	
 	class Controller{
-		public function __construct($requestData){}
+		private $templateSystem;
 
-		public function setViewVars($data){
-			if(!empty($data) && is_array($data)){
-				$this->templateSystem->setViewVars($data);
-			}
+		public function __construct($requestData, $templateSystem){
+			$this->templateSystem = $templateSystem;
+		}
+
+		public function setData($data){
+			$this->templateSystem->setViewVars($data);
 		}
 
 		public function flash($method, $message){

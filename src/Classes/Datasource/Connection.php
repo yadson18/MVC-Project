@@ -17,13 +17,13 @@
 		 *  a instância do PDO, caso contrário retornará falso. 
 		 */
 		public function __construct($dsn, $user, $password){
-			try {
+			try{
 				self::$instance = new PDO($dsn, $user, $password);
 				self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				return self::$instance;
 			}
-			catch (PDOException $e) {
+			catch(PDOException $e){
 				return false;
 			}
 		}
