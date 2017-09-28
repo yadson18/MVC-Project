@@ -35,17 +35,40 @@
       }
       return false;
     }
-
+    
     public function getViewVars(){
       return $this->viewVars;
+    }
+
+    public function setControllerName($controllerName){
+      if(is_string($controllerName) && !empty($controllerName)){
+        $this->controllerName = $controllerName;
+      }
     }
 
     public function getControllerName(){
       return $this->controllerName;
     }
+
+    public function setTemplateName($controllerMethod){
+      if(is_string($controllerMethod) && !empty($controllerMethod)){
+        $this->controllerMethod = $controllerMethod;
+      }
+    }
+
     public function getTemplateName(){
       return $this->controllerMethod;
     }
+
+    public function setControllerArgs($controllerArgs){
+      $this->controllerArgs = $controllerArgs;
+    }
+
+    public function getControllerArgs(){
+      return $this->controllerArgs;
+    }
+
+
 
     public function setTemplate($template){
       if(file_exists(WWW_ROOT . "src/View/{$template}.php")){
