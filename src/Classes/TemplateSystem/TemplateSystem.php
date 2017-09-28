@@ -22,7 +22,6 @@
     }
 
     public function fetchAll(){ 
-
       if(is_file($this->getTemplate())){
         ob_start();
         include $this->getTemplate();
@@ -31,16 +30,21 @@
     } 
 
     public function setViewVars($data){
-      if(!empty($data)){
-        if(is_array($data) && is_string(key($data))){
-          $this->viewVars[key($data)] = array_shift($data);
-        }
-        return false;
+      if(!empty($data) && is_array($data)){
+        array_push($this->viewVars, $data);
       }
+      return false;
     }
 
     public function getViewVars(){
       return $this->viewVars;
+    }
+
+    public function getControllerName(){
+      return $this->controllerName;
+    }
+    public function getTemplateName(){
+      return $this->controllerMethod;
     }
 
     public function setTemplate($template){

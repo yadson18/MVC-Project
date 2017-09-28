@@ -12,7 +12,7 @@
 			$this->templateSystem->setViewVars($data);
 		}
 
-		public function flash($method, $message){
+		/*public function flash($method, $message){
 			$methods = ["Error", "Success", "SuccessModal", "Warning"];
 
 			if(in_array($method, $methods) && !empty($message)){
@@ -21,22 +21,12 @@
 				return true;
 			}
 			return false;
-		}
-
-		public function destroyAllData(){
-			$this->templateSystem->destroyData();
-		}
+		}*/
 
 		public function setTitle($title){
-			$this->templateSystem->setTitle($title);
-		}
-
-		public function setLoggedUser($user){
-			$this->templateSystem->setLoggedUser($user);
-		} 
-
-		public function getLoggedUser($index = null){
-			return $this->templateSystem->getLoggedUser($index);
+			if(is_string($title) && !empty($title)){
+				$this->setData(["title" => $title]);
+			}
 		}
 
 		public function authorizedToAccess($method, $methods, $user){
@@ -54,42 +44,24 @@
 		}
 
 		public function redirectTo($url){
-			if(is_array($url)){
-				if(sizeof($url) == 1){
-					return ["redirectTo" => "/{$url['controller']}/index"];
+			if(!empty($url) && is_array($url)){
+				if(isset($url["controller"]) && !empty($url["controller"])){
+					if(!isset($url["view"])){
+						return ["redirectTo" => "/{$url['controller']}/index"];
+					}
+					else if(isset($url["view"]) && !empty($url["view"])){
+						return ["redirectTo" => "/{$url['controller']}/{$url['view']}"];
+					}
 				}
-				return ["redirectTo" => "/{$url['controller']}/{$url['view']}"];
 			}
 			return false;
 		}
 
 		public function requestMethodIs($requestMethod){
-	      if(strcmp($_SERVER['REQUEST_METHOD'], $requestMethod) == 0){
+	      if($_SERVER["REQUEST_METHOD"] === strtoupper($requestMethod)){
 	        return true;
 	      }
 	      return false;
-	    }
-
-	    public function get($connection, $columns, $table, $condition = null, $conditionData = null){
-	    	for($i = 0; $i < sizeof($columns); $i++){
-				$columnFormat .= $columns[$i];
-
-				if($i < (sizeof($columns) - 1)){
-					$columnFormat .= ", ";
-				}
-			}
-
-	    	return $connection->select($columnFormat, $table, $condition, $conditionData);
-	    }
-
-	    public function save($connection, $table, $data){
-	    	$top = 0;
-	    	foreach($data as $column => $value){
-	    		$columns[$top] = ":{$column}";
-	    		$values[$top++] = $value;
-	    	}
-
-	    	return $connection->insert($table, $columns, $values);
 	    }
 	}
 ?>

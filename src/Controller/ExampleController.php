@@ -11,6 +11,7 @@
 		}
 
 		public function home(){
+			$this->setTitle("Home");
 			$this->setData([
 				"user" => [
 					"yadson", 18

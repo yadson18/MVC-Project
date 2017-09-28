@@ -1,7 +1,7 @@
 <div id="home-container" class="col-md-12 col-sm-12 col-xs-12">
         <?php  
             echo "<br><br><br><br><br>";
-            debug($this->getViewVars()); 
+            debug($this->getControllerName()); 
         ?>
     <div class="banner">
         <h1 class="banner-title">Framework ILP</h1>
