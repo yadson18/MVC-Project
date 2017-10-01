@@ -8,16 +8,16 @@
 		],
 
 		"DefaultErrorPage" => [
-
+			"pagePath" => ""
 		],
 
 		"Databases" => [
 			"dbTypeExample" => [
 				"dbNameExample" => [
 					"dbPath" => "/BD/EXAMPLE.FDB",
-					"dbUser" => "example",
-					"dbPassword" => "secret",
-					"charset" => "utf-8"
+					"dbUser" => "SYSDBA",
+					"dbPassword" => "masterkey",
+					"charset" => "UTF8"
 				]
 			]
 		],
