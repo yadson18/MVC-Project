@@ -1,5 +1,5 @@
 <?php  
-	define("WWW_ROOT", substr($_SERVER["DOCUMENT_ROOT"], 0, strpos($_SERVER["DOCUMENT_ROOT"], "webroot")));
+	define("WWW_ROOT", str_replace("webroot", "", $_SERVER["DOCUMENT_ROOT"]));
 	
 	include "../index.php";
 ?>

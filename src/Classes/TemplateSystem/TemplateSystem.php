@@ -8,11 +8,10 @@
     private $controllerMethod;
     private $controllerArgs;
     private $templateToLoad;
-    private $viewVars;
+    private $pageTitle;
+    private $viewData;
 
-    private function __construct(){
-      $this->viewVars = [];
-    }
+    private function __construct(){}
 
     public static function getInstance(){
       if(!isset(self::$instance)){
@@ -21,26 +20,53 @@
       return self::$instance;
     }
 
-    public function fetchAll(){ 
+    protected function fetchAll(){ 
       if(is_file($this->getTemplate())){
         ob_start();
+
+        /*$viewData = $this->getviewData();
+        if(!empty($viewData)){
+          foreach($viewData as $key => $value) {
+            # code...
+          }
+        }*/
+
         include $this->getTemplate();
         return ob_get_clean();
       }
     } 
 
-    public function setViewVars($data){
-      if(!empty($data) && is_array($data)){
-        array_push($this->viewVars, $data);
+    public function setViewData($variables){
+      if(!empty($variables) && is_array($variables)){
+        $this->viewData = $variables;
+      }
+    }
+
+    public function getviewData(){
+      if(!empty($this->viewData)){
+        return $this->viewData;
       }
       return false;
     }
+
+   /* public function setSessionData($variables){
+      if(!empty($variables) && is_array($variables)){
+        $_SESSION["data"] = call_user_func("serialize", $variables);
+      }
+    }*/
     
-    public function getViewVars(){
-      return $this->viewVars;
+
+    public function setPageTitle($title){
+      if(is_string($title)){
+        $this->pageTitle = $title;
+      }
     }
 
-    public function setControllerName($controllerName){
+    public function getPageTitle(){
+      return $this->pageTitle;
+    }
+
+    protected function setControllerName($controllerName){
       if(is_string($controllerName) && !empty($controllerName)){
         $this->controllerName = $controllerName;
       }
@@ -50,7 +76,7 @@
       return $this->controllerName;
     }
 
-    public function setTemplateName($controllerMethod){
+    protected function setTemplateName($controllerMethod){
       if(is_string($controllerMethod) && !empty($controllerMethod)){
         $this->controllerMethod = $controllerMethod;
       }
@@ -60,7 +86,7 @@
       return $this->controllerMethod;
     }
 
-    public function setControllerArgs($controllerArgs){
+    protected function setControllerArgs($controllerArgs){
       $this->controllerArgs = $controllerArgs;
     }
 
@@ -68,9 +94,7 @@
       return $this->controllerArgs;
     }
 
-
-
-    public function setTemplate($template){
+    protected function setTemplate($template){
       if(file_exists(WWW_ROOT . "src/View/{$template}.php")){
         $this->templateToLoad = WWW_ROOT . "src/View/{$template}.php";
         return true;
@@ -82,7 +106,14 @@
       return $this->templateToLoad;
     }
 
-    public function classExists($controllerName, $controllerMethod, $requestData, $template = null){
+    public function requestMethodIs($requestMethod){
+      if($_SERVER["REQUEST_METHOD"] === strtoupper($requestMethod)){
+        return true;
+      }
+      return false;
+    }
+
+    protected function classExists($controllerName, $controllerMethod, $requestData, $template = null){
       if(is_string($controllerName)){
         if(class_exists($controllerName) && !empty($controllerName)){
           $this->controllerInstance = new $controllerName($requestData, $this);
@@ -101,14 +132,7 @@
       return false;
     }
 
-    public function requestMethodIs($requestMethod){
-      if($_SERVER["REQUEST_METHOD"] === strtoupper($requestMethod)){
-        return true;
-      }
-      return false;
-    }
-
-    public function setUriConfig($uri){
+    protected function setUriConfig($uri){
       if(is_string($uri) && !empty($uri)){
         $args = explode("/", substr($uri, 1));
         $controller = array_shift($args);

@@ -1,7 +1,7 @@
 <?php
 	require_once "functions.php";
 	require_once "src/Classes/AutoLoad/AutoLoad.php";
-	AutoLoad::loadClasses();
 
+	AutoLoad::loadClasses();
 	TemplateSystem::getInstance()->loadTemplate();
 ?>

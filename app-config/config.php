@@ -1,10 +1,14 @@
 <?php  
 	$appConfiguration = [
-		"AppName" => "Framework ILP",
+		"AppName" => "Framework ILP - ",
 		
 		"DefaultRoute" => [
 			"controller" => "Example",
 			"view" => "home"
+		],
+
+		"DefaultErrorPage" => [
+
 		],
 
 		"Databases" => [

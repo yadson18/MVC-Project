@@ -1,11 +1,17 @@
 #!/bin/bash
-# yadson20@hotmail.com
+# yadson20@gmail.com
 #
 
-if [ $* == start ];
-then
+
+if [ $* == start ]; then
   dir=$(pwd; cd ..); 
   cd $dir/webroot;
 
   php -S localhost:9000
+
+elif [ $* == ok ]; then
+	echo "ok";
+
 fi
+
+

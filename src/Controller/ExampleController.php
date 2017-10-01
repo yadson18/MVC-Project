@@ -11,11 +11,10 @@
 		}
 
 		public function home(){
-			$this->setTitle("Home");
-			$this->setData([
-				"user" => [
-					"yadson", 18
-				]
+			$this->setPageTitle("Home");
+			$this->setViewData([
+				0 => ["yadson", 18],
+				0 => ["a", "b", "c"]
 			]);
 		}
 	}

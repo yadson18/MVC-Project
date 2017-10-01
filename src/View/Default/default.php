@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
-		<title><?= getAppName() ?></title>
+		<title><?= getAppName() . $this->getPageTitle()?></title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<?= $this->css("bootstrap.min.css") ?>

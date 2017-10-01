@@ -1,16 +1,24 @@
 <?php 
 	session_start();
 	
-	class Controller{
+	abstract class Controller{
 		private $templateSystem;
 
 		public function __construct($requestData, $templateSystem){
 			$this->templateSystem = $templateSystem;
 		}
 
-		public function setData($data){
-			$this->templateSystem->setViewVars($data);
+		public function setViewData($variables){
+			$this->templateSystem->setViewData($variables);
 		}
+
+		public function setPageTitle($title){
+			$this->templateSystem->setPageTitle($title);
+		}
+
+		public function requestMethodIs($requestMethod){
+			return $this->templateSystem->requestMethodIs($requestMethod);
+	    }
 
 		/*public function flash($method, $message){
 			$methods = ["Error", "Success", "SuccessModal", "Warning"];
@@ -23,7 +31,7 @@
 			return false;
 		}*/
 
-		public function setTitle($title){
+		/*public function setTitle($title){
 			if(is_string($title) && !empty($title)){
 				$this->setData(["title" => $title]);
 			}
@@ -41,7 +49,7 @@
 				}
 			}
 			return false;
-		}
+		}*/
 
 		public function redirectTo($url){
 			if(!empty($url) && is_array($url)){
@@ -56,12 +64,5 @@
 			}
 			return false;
 		}
-
-		public function requestMethodIs($requestMethod){
-	      if($_SERVER["REQUEST_METHOD"] === strtoupper($requestMethod)){
-	        return true;
-	      }
-	      return false;
-	    }
 	}
 ?>
