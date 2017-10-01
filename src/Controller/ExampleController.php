@@ -13,8 +13,9 @@
 		public function home(){
 			$this->setPageTitle("Home");
 			$this->setViewData([
-				0 => ["yadson", 18],
-				0 => ["a", "b", "c"]
+				"user" => [
+					"name" => "Yadson"
+				]
 			]);
 		}
 	}

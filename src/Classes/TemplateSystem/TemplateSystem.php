@@ -24,13 +24,10 @@
       if(is_file($this->getTemplate())){
         ob_start();
 
-        /*$viewData = $this->getviewData();
-        if(!empty($viewData)){
-          foreach($viewData as $key => $value) {
-            # code...
-          }
-        }*/
-
+        foreach($this->getviewData() as $variableName => $value){
+          $$variableName = $value;
+        }
+        
         include $this->getTemplate();
         return ob_get_clean();
       }
@@ -38,7 +35,16 @@
 
     public function setViewData($variables){
       if(!empty($variables) && is_array($variables)){
-        $this->viewData = $variables;
+        $isStringIndex = true;
+
+        foreach($variables as $index => $variable){
+          if(!is_string($index) && $isStringIndex === true){
+            $isStringIndex = false;
+          }
+        }
+        if($isStringIndex){
+          $this->viewData = $variables;
+        }
       }
     }
 
@@ -49,7 +55,7 @@
       return false;
     }
 
-   /* public function setSessionData($variables){
+    /*public function setSessionData($variables){
       if(!empty($variables) && is_array($variables)){
         $_SESSION["data"] = call_user_func("serialize", $variables);
       }
