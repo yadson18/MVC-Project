@@ -20,6 +20,15 @@
     }
   }
 
+  function getDefaultErrorPage(){
+    global $appConfiguration;
+
+    if(isset($appConfiguration["DefaultErrorPage"])){
+      return $appConfiguration["DefaultErrorPage"];
+    }
+    return false;
+  }
+
   function getDefaultRoute(){
     global $appConfiguration;
 

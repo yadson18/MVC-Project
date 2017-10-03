@@ -56,12 +56,6 @@
       return false;
     }
 
-    /*public function setSessionData($variables){
-      if(!empty($variables) && is_array($variables)){
-        $_SESSION["data"] = call_user_func("serialize", $variables);
-      }
-    }*/
-
     public function setPageTitle($title){
       if(is_string($title)){
         $this->pageTitle = $title;
@@ -130,14 +124,11 @@
                 $this->controllerInstance->$controllerMethod();
 
                 $this->setTemplate("{$this->controllerName}/{$controllerMethod}");
+                return true;
               }
             }
           }
-          else{
-            $this->setTemplate(null);
-          }
         }
-        return true;
       }
       return false;
     }
@@ -167,6 +158,13 @@
       return false;
     }
 
+    protected function showDefaultPageError($messageToDisplay){
+      ob_start();
+      $message = $messageToDisplay;
+      include WWW_ROOT . "src/View/ErrorPages/" . getDefaultErrorPage();
+      return ob_get_clean();
+    }
+
     public function loadTemplate(){
       if(is_file($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'])){
         include $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
@@ -193,6 +191,7 @@
             if(!$this->classExists(
               $this->controllerName."Controller", $this->controllerMethod, $requestData, $template
             )){
+              echo $this->showDefaultPageError("Errou");
               return false;
             }
             else{

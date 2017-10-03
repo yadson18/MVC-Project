@@ -7,9 +7,7 @@
 			"view" => "home"
 		],
 
-		"DefaultErrorPage" => [
-			"pagePath" => ""
-		],
+		"DefaultErrorPage" => "daniedAccess.php",
 
 		"Databases" => [
 			"dbTypeExample" => [
