@@ -179,6 +179,7 @@
             if(!$this->classExists(
               $this->controllerName."Controller", $this->controllerMethod, $requestData
             )){
+              echo $this->showDefaultPageError("Errou");
               return false;
             }
           }
