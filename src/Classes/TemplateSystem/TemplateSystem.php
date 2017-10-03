@@ -125,9 +125,13 @@
           $this->controllerInstance = new $controllerName($requestData, $this);
 
           if(is_callable([$this->controllerInstance, $controllerMethod])){
-            $this->controllerInstance->$controllerMethod();
+            if(is_callable([$this->controllerInstance, "isAuthorized"])){
+              if($this->controllerInstance->isAuthorized($controllerMethod)){
+                $this->controllerInstance->$controllerMethod();
 
-            $this->setTemplate("{$this->controllerName}/{$controllerMethod}");
+                $this->setTemplate("{$this->controllerName}/{$controllerMethod}");
+              }
+            }
           }
           else{
             $this->setTemplate(null);

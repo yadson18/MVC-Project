@@ -28,6 +28,7 @@
 			"Classes/TemplateSystem/TemplateTraits",
 			"Classes/Webservice",
 			"Controller", 
+			"Controller/Interfaces",
 			"Controller/ControllerTraits",
 			"Model",
 			"Model/Interfaces"

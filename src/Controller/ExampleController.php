@@ -4,10 +4,10 @@
 			parent::__construct($requestData, $templateSystem);
 		}
 
-		public function isAuthorized($method, $user){
-			$allowedMethods = ["home"];
-
-			return $this->authorizedToAccess($method, $allowedMethods, $user);
+		public function isAuthorized($method){
+			return $this->notAlowed($method, [
+				""
+			]);
 		}
 
 		public function home(){

@@ -1,7 +1,7 @@
 <?php 
 	session_start();
 	
-	abstract class Controller{
+	abstract class Controller implements ControllerInterface{
 		private $templateSystem;
 
 		public function __construct($requestData, $templateSystem){
@@ -29,25 +29,16 @@
 			}
 		}
 
-		/*public function setTitle($title){
-			if(is_string($title) && !empty($title)){
-				$this->setData(["title" => $title]);
-			}
-		}
-
-		public function authorizedToAccess($method, $methods, $user){
-			if(!empty($user)){
-				return true;
-			}
-			else{
-				if(is_array($methods) && !empty($methods)){
+		public function notAlowed($method, $methods){
+			if(is_array($methods) && !empty($methods)){
+				if(is_string($method) && !empty($method)){
 					if(in_array($method, $methods)){
 						return true;
 					}	
 				}
 			}
 			return false;
-		}*/
+		}
 
 		public function redirectTo($url){
 			if(!empty($url) && is_array($url)){
