@@ -4,6 +4,7 @@
         <img src="/images/notebook.png" class="banner-image">
     </div>
     <div class="features">
+        <?= $this->flashShowMessage() ?>
         <h1 class="features-title">Funcionalidades</h1>
         <div class="row">
             <div class="col-sm-6 col-md-4">

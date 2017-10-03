@@ -1,6 +1,7 @@
 <?php 
   class TemplateSystem{
     use Html;
+    use Flash;
 
     private static $instance;
     private $controllerInstance;
@@ -60,7 +61,6 @@
         $_SESSION["data"] = call_user_func("serialize", $variables);
       }
     }*/
-    
 
     public function setPageTitle($title){
       if(is_string($title)){

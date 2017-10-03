@@ -48,15 +48,14 @@
 		 * 	classes, será o src.
 		 */
 		public static function loadClasses($rootDir = null){
-			self::setClassesPath(getClassesPath());
+			if(!isset(self::$classPaths)){
+				self::setClassesPath(getClassesPath());
+			}
 			self::setRootDir($rootDir);
 
 			spl_autoload_register(function($class_name){
 				foreach(self::$classPaths as $path){
-					if(
-						is_file(self::getRootDir() . "{$path}/{$class_name}.php") && 
-						file_exists(self::getRootDir() . "{$path}/{$class_name}.php")
-					){
+					if(file_exists(self::getRootDir() . "{$path}/{$class_name}.php")){
 						require_once self::getRootDir() . "{$path}/{$class_name}.php";
 						break;
 					}

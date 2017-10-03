@@ -17,6 +17,7 @@
 					"name" => "Yadson"
 				]
 			]);
+			$this->flash("success", "A classe Flash está funcionando.");
 		}
 	}
 ?>

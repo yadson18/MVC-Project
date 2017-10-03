@@ -20,16 +20,14 @@
 			return $this->templateSystem->requestMethodIs($requestMethod);
 	    }
 
-		/*public function flash($method, $message){
-			$methods = ["Error", "Success", "SuccessModal", "Warning"];
+	    public function flash($messageType, $messageText){
+			$messageTypes = ["error", "success", "warning"];
 
-			if(in_array($method, $methods) && !empty($message)){
-				$method = "flash{$method}";
-				$this->templateSystem->$method($message);
-				return true;
+			if(!empty($messageType) && in_array($messageType, $messageTypes)){
+				$method = "flash" . ucfirst($messageType);
+				$this->templateSystem->$method($messageText);
 			}
-			return false;
-		}*/
+		}
 
 		/*public function setTitle($title){
 			if(is_string($title) && !empty($title)){
