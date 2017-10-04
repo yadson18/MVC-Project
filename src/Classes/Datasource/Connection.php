@@ -20,6 +20,7 @@
 			try{
 				self::$instance = new PDO($dsn, $user, $password);
 				self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				self::$instance->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
 
 				return self::$instance;
 			}

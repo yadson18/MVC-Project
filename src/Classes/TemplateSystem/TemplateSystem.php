@@ -1,5 +1,6 @@
 <?php 
   class TemplateSystem{
+    use SessionControll;
     use Html;
     use Flash;
 
