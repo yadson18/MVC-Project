@@ -5,16 +5,6 @@
     </div>
     <div class="features">
         <?= $this->flashShowMessage() ?>
-        <?php  
-            session_start();
-            //session_id(sha1("dafb6ed722406e7037b1". time()));
-            debug(getSalt());
-
-            //$bytes = random_bytes(10);
-            //$hex = bin2hex($bytes);
-            //debug($hex);
-            
-        ?>
         <h1 class="features-title">Funcionalidades</h1>
         <div class="row">
             <div class="col-sm-6 col-md-4">
