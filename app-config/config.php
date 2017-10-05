@@ -7,6 +7,8 @@
 			"view" => "home"
 		],
 
+		"Salt" => "759403333bb1ee9a773e97f4d1d1b29baab207b5",
+
 		"DefaultErrorPage" => "daniedAccess.php",
 
 		"Databases" => [

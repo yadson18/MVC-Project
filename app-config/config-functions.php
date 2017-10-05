@@ -29,6 +29,15 @@
     return false;
   }
 
+  function getSalt(){
+    global $appConfiguration;
+
+    if(isset($appConfiguration["Salt"])){
+      return $appConfiguration["Salt"];
+    }
+    return false;
+  }
+
   function getDefaultRoute(){
     global $appConfiguration;
 

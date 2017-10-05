@@ -1,6 +1,4 @@
 <?php 
-	session_start();
-	
 	abstract class Controller implements ControllerInterface{
 		private $templateSystem;
 
