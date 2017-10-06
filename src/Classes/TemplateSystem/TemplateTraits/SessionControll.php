@@ -12,10 +12,12 @@
 			}
 		}
 
-		public function setDataSession($data){
-			if(!empty($data) && is_array($data)){
-				if(isset($_SESSION["newSession"])){
-					# code...
+		public function setDataSession($index, $data){
+			if($this->getSession()){
+				if(!empty($index) && is_string($index)){
+					if(!empty($data)){
+						$_SESSION["newSession"][$index] = serialize($data);
+					}
 				}
 			}
 		}

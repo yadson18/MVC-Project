@@ -24,16 +24,6 @@
 			return false;
 		}
 
-		/*public static function countEntityAttributes($entity){
-			$top = 0;
-
-			foreach($entity as $attr => $value){
-				$top++;
-			}
-
-			return $top;
-		}*/
-
 		public static function patchEntity($entity, $arrayAttributes){
 			if(is_object($entity)){
 				if(is_array($arrayAttributes) && !empty($arrayAttributes)){
