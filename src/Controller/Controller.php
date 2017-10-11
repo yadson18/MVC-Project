@@ -6,8 +6,8 @@
 			$this->templateSystem = $templateSystem;
 		}
 
-		public function setViewData($variables){
-			$this->templateSystem->setViewData($variables);
+		public function setViewData($variables, $variablesToSerialize = null){
+			$this->templateSystem->setViewData($variables, $variablesToSerialize);
 		}
 
 		public function setPageTitle($title){
@@ -23,7 +23,7 @@
 
 			if(!empty($messageType) && in_array($messageType, $messageTypes)){
 				$method = "flash" . ucfirst($messageType);
-				$this->templateSystem->$method($messageText);
+				$this->templateSystem->Flash->$method($messageText);
 			}
 		}
 

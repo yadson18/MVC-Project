@@ -1,6 +1,6 @@
 <?php  
-    // A trait Html é usada para retornar textos e tags HTML específicos.
-	trait Html{
+    // A classe Html é usada para retornar textos e tags HTML específicos.
+	class Html{
         /* 
          * Este método retorna a tag script que carregará o Javascript na View.
          *

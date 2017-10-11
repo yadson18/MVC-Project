@@ -1,9 +1,5 @@
 <?php 
   class TemplateSystem{
-    use SessionControll;
-    use Html;
-    use Flash;
-
     private static $instance;
     private $controllerInstance;
     private $controllerName;
@@ -13,7 +9,11 @@
     private $pageTitle;
     private $viewData;
 
-    private function __construct(){}
+    private function __construct(){
+      $this->loadModule("Session");
+      $this->loadModule("Html");
+      $this->loadModule("Flash");
+    }
 
     public static function getInstance(){
       if(!isset(self::$instance)){
@@ -26,7 +26,9 @@
       if(is_file($this->getTemplate())){
         ob_start();
 
-        foreach($this->getviewData() as $variableName => $value){
+        $variables = array_merge($this->getviewData(), $this->Session->getData());
+        
+        foreach($variables as $variableName => $value){
           $$variableName = $value;
         }
         
@@ -35,17 +37,32 @@
       }
     } 
 
-    public function setViewData($variables){
-      if(!empty($variables) && is_array($variables)){
-        $isStringIndex = true;
+    protected function loadModule($module){
+      if(class_exists($module)){
+        $this->$module = new $module();
+      }
+    }
 
-        foreach($variables as $index => $variable){
-          if(!is_string($index) && $isStringIndex === true){
-            $isStringIndex = false;
+    public function setViewData($variables, $variablesToSerialize = null){
+      if(!empty($variables) && is_array($variables)){
+        foreach($variables as $variableName => $value){
+          if(!empty($variableName) && is_string($variableName)){
+            if(!empty($variablesToSerialize) && is_array($variablesToSerialize)){
+              if(isset($variablesToSerialize["_serialize"])){
+                if(in_array($variableName, $variablesToSerialize["_serialize"])){
+                  if(!empty($value)){
+                    $this->Session->setData($variableName, $value);
+                  }
+                }
+                else{
+                  $this->viewData[$variableName] = $value;
+                }
+              }
+            }
+            else{
+              $this->viewData[$variableName] = $value;
+            }
           }
-        }
-        if($isStringIndex){
-          $this->viewData = $variables;
         }
       }
     }

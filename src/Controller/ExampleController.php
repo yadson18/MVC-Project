@@ -12,11 +12,10 @@
 
 		public function home(){
 			$this->setPageTitle("Home");
-			$this->setViewData([
-				"user" => [
-					"name" => "Yadson"
-				]
-			]);
+			
+			$user = ["name" => "Yadson"];
+			
+			$this->setViewData(["user" => $user, "data" => $user]);
 			$this->flash("success", "A classe Flash está funcionando.");
 		}
 	}

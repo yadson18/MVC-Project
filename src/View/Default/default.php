@@ -4,18 +4,18 @@
 		<title><?= getAppName() . $this->getPageTitle()?></title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<?= $this->css("bootstrap.min.css") ?>
-		<?= $this->css("font-awesome.min.css") ?>
-		<?= $this->less("mixin.less") ?>
+		<?= $this->Html->css("bootstrap.min.css") ?>
+		<?= $this->Html->css("font-awesome.min.css") ?>
+		<?= $this->Html->less("mixin.less") ?>
 		
-		<?= $this->script("jquery.min.js") ?>
-		<?= $this->script("bootstrap.min.js") ?>
-		<?= $this->script("input-mask.js") ?>
-		<?= $this->script("functions.js") ?>
-		<?= $this->script("HtmlMaker.js") ?>
+		<?= $this->Html->script("jquery.min.js") ?>
+		<?= $this->Html->script("bootstrap.min.js") ?>
+		<?= $this->Html->script("input-mask.js") ?>
+		<?= $this->Html->script("functions.js") ?>
+		<?= $this->Html->script("HtmlMaker.js") ?>
 
-		<?= $this->less("presentation-style.less") ?>
-		<?= $this->script("less.min.js") ?>
+		<?= $this->Html->less("presentation-style.less") ?>
+		<?= $this->Html->script("less.min.js") ?>
 	</head>
 	<body>	
 		<nav class="navbar navbar-default navbar-fixed-top" id="home-nav">

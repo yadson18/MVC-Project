@@ -25,7 +25,7 @@
 		"ClassesPath" => [
 			"Classes/Datasource", 
 			"Classes/TemplateSystem",
-			"Classes/TemplateSystem/TemplateTraits",
+			"Classes/TemplateSystem/Modules",
 			"Classes/Webservice",
 			"Controller", 
 			"Controller/Interfaces",

@@ -1,9 +1,9 @@
 <?php  
 	/*
-	 * O trait Flash é usado para criar mensagens de erro, sucesso, atenção, acesso negado, 
+	 * A classe Flash é usado para criar mensagens de erro, sucesso, atenção, acesso negado, 
 	 * baseado em templates.
 	 */
-	trait Flash{
+	class Flash{
 		private $messageType;
 		private $messageText;
 
@@ -27,7 +27,7 @@
 		 * se existir, o buffer de saída do PHP é usado para capturar o conteúdo do template e 
 		 * exibir a mensagem ao usuário, caso não exista, o retorno será false.
 		 */
-		public function flashShowMessage(){
+		public function showMessage(){
 			ob_start();
 
 			if(isset($this->messageType) && isset($this->messageText)){
