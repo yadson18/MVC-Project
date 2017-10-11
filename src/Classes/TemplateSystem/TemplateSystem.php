@@ -26,9 +26,7 @@
       if(is_file($this->getTemplate())){
         ob_start();
 
-        $variables = array_merge($this->getviewData(), $this->Session->getData());
-        
-        foreach($variables as $variableName => $value){
+        foreach($this->getviewData() as $variableName => $value){
           $$variableName = $value;
         }
         
@@ -68,8 +66,14 @@
     }
 
     public function getviewData(){
-      if(!empty($this->viewData)){
+      if(!empty($this->viewData) && !empty($this->Session->getData())){
+        return array_merge($this->viewData, $this->Session->getData());
+      }
+      else if(!empty($this->viewData) && empty($this->Session->getData())){
         return $this->viewData;
+      }
+      else if(empty($this->viewData) && !empty($this->Session->getData())){
+        return $this->Session->getData();
       }
       return false;
     }
