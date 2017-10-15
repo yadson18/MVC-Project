@@ -41,6 +41,16 @@
       }
     }
 
+    public function newEntity($className){
+      if(!empty($className) && is_string($className)){
+        $className .= "Model";
+        if(class_exists($className)){
+          return new $className();
+        }
+      }
+      return false;
+    }
+
     public function setViewData($variables, $variablesToSerialize = null){
       if(!empty($variables) && is_array($variables)){
         foreach($variables as $variableName => $value){

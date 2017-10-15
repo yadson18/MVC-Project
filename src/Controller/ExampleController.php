@@ -13,10 +13,17 @@
 		public function home(){
 			$this->setPageTitle("Home");
 			
-			$user = ["name" => "Yadson"];
-			
-			$this->setViewData(["user" => $user, "data" => $user]);
+			$example = $this->newEntity("Example");
+			$user = [
+				"name" => "Yadson"
+			];
+
 			$this->flash("success", "A classe Flash está funcionando.");
+			$this->setViewData([
+				"user" => $user, 
+				"data" => $user, 
+				"example" => $example
+			]);
 		}
 	}
 ?>

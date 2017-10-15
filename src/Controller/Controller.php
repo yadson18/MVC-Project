@@ -14,6 +14,10 @@
 			$this->templateSystem->setPageTitle($title);
 		}
 
+		public function newEntity($className){
+			return $this->templateSystem->newEntity($className);
+		}
+
 		public function requestMethodIs($requestMethod){
 			return $this->templateSystem->requestMethodIs($requestMethod);
 	    }
