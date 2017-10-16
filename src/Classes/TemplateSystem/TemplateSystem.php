@@ -36,19 +36,11 @@
     } 
 
     protected function loadModule($module){
-      if(class_exists($module)){
-        $this->$module = new $module();
-      }
-    }
-
-    public function newEntity($className){
-      if(!empty($className) && is_string($className)){
-        $className .= "Model";
-        if(class_exists($className)){
-          return new $className();
+      if(file_exists(WWW_ROOT."src/Classes/TemplateSystem/Modules/{$module}.php")){
+        if(class_exists($module)){
+          $this->$module = new $module();
         }
       }
-      return false;
     }
 
     public function setViewData($variables, $variablesToSerialize = null){

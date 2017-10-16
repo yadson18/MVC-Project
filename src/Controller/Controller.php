@@ -15,8 +15,14 @@
 		}
 
 		public function newEntity($className){
-			return $this->templateSystem->newEntity($className);
-		}
+	      if(!empty($className) && is_string($className)){
+	        $className .= "Model";
+	        if(class_exists($className)){
+	          return new $className();
+	        }
+	      }
+	      return false;
+	    }
 
 		public function requestMethodIs($requestMethod){
 			return $this->templateSystem->requestMethodIs($requestMethod);

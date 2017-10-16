@@ -1,17 +1,19 @@
 <?php  
 	interface ControllerInterface{
-		public function isAuthorized($method);
-
-		public function setViewData($variables);
+		public function setViewData($variables, $variablesToSerialize = null);
 
 		public function setPageTitle($title);
+
+		public function newEntity($className);
 
 		public function requestMethodIs($requestMethod);
 
 		public function flash($messageType, $messageText);
 
+		public function notAlowed($method, $methods);
+
 		public function redirectTo($url);
 
-		public function notAlowed($method, $methods);
+		public function isAuthorized($method);
 	}
 ?>
