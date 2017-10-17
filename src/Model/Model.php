@@ -40,7 +40,7 @@
 
 		public function get($key){
 			if(strtolower($key) === "all"){
-				return $this->DBManipulator->find($this->getTableName(), "*")->toObject()->limit("max");
+				return $this->DBManipulator->find($this->getTableName(), "*")->limit("max");
 			}
 			else if($this->getTablePrimaryKey()){
 				return $this->DBManipulator->find($this->getTableName(), "*")

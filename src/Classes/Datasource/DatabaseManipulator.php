@@ -85,7 +85,7 @@
 		}
 
 		protected function setReturnType($returnType){
-			$avaliableTypes = ["object", "array"];
+			$avaliableTypes = ["object"];
 
 			if(!empty($returnType) && is_string($returnType) && in_array($returnType, $avaliableTypes)){
 				$this->returnType = $returnType;
@@ -96,13 +96,6 @@
 		protected function getReturnType(){
 			if(!empty($this->returnType)){
 				return $this->returnType;
-			}
-			return false;
-		}
-
-		public function toArray(){
-			if($this->setReturnType("array")){
-				return $this;
 			}
 			return false;
 		}
@@ -164,27 +157,16 @@
 		 * O método select é usado para fazer buscas no banco de dados, 
 		 * o método só funcionará, caso a conexão com o banco de dados seja estabelecida.
 		 *
-		 *  (string) columns, coluna(s) da(s) tabela(s) ou * para retornar os 
-		 *  dados de todas as colunas da tabela.
-		 *  (string) table, nome(s) da(s) tabela(s) onde os dados serão buscados.
-		 *
-		 * Os dois valores abaixo, são opcionais quando para a coluna for passado o valor *.
-		 *  (string) condition, condição para a busca dos dados (opcional).
-		 *  (array) conditionValues, valores a serem passados para a condição.
-		 *
-		 *   Exemplo: 
-		 *	   condition: "where user=? and password=?";
-		 *	   conditionValues: ["example", "123"];
+		 *  (int) limit, quantidade de dados que o metodo retornará.
 		 */
-
 		protected function select($limit){
 			if(!empty($this->connection)){
 				if($this->getTable() && $this->getFilterColumns()){
 					if($this->getCondition() && $this->getColumnsAndvalues()){
 						$query = $this->connection->prepare(
-								"SELECT {$limit}{$this->getFilterColumns()} 
-								 FROM {$this->getTable()} 
-								 WHERE{$this->getCondition()}"
+							"SELECT {$limit}{$this->getFilterColumns()} 
+							 FROM {$this->getTable()} 
+							 WHERE{$this->getCondition()}"
 						);
 
 						foreach($this->getColumnsAndvalues() as $column => $value){
@@ -193,14 +175,14 @@
 					}
 					else if($this->getCondition() && !$this->getColumnsAndvalues()){
 						$query = $this->connection->prepare(
-								"SELECT {$limit}{$this->getFilterColumns()} 
-								 FROM {$this->getTable()} 
-								 WHERE{$this->getCondition()}"
+							"SELECT {$limit}{$this->getFilterColumns()} 
+							 FROM {$this->getTable()} 
+							 WHERE{$this->getCondition()}"
 						);
 					}
 					else if(!$this->getCondition() && !$this->getColumnsAndvalues()){
 						$query = $this->connection->prepare(
-								"SELECT {$limit}{$this->getFilterColumns()} FROM {$this->getTable()}"
+							"SELECT {$limit}{$this->getFilterColumns()} FROM {$this->getTable()}"
 						);
 					}
 
@@ -210,16 +192,11 @@
 						if($this->getReturnType()){
 							if($this->getReturnType() === "object"){
 								$query->setFetchMode(PDO::FETCH_CLASS, $this->getModelName());
-							}
-							else if($this->getReturnType() === "array"){
-								$query->setFetchMode(PDO::FETCH_ASSOC);
+								return $query->fetch();
 							}
 						}
-						else{
-							$query->setFetchMode(PDO::FETCH_ASSOC);
-						}
-						
-						return $query->fetch();
+						$query->setFetchMode(PDO::FETCH_ASSOC);
+						return $query->fetchAll();
 					}
 				}
 			}

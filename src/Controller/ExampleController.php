@@ -14,13 +14,9 @@
 			$this->setPageTitle("Home");
 			
 			$example = $this->newEntity("Example");
-			echo "<br><br><br><br><br>";
-			debug(
-				$example->find("*")
-					->where(["cod_cadastro >" => 10])
-					->limit("max")
-			);
-
+			$example = $example->find("*")->where(["cod_cadastro >" => 10])->toObject()->limit(1);
+			/*echo "<br><br><br><br><br>";
+			debug($example);*/
 
 			$user = [
 				"name" => "Yadson"
