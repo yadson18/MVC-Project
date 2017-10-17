@@ -14,6 +14,10 @@
 			$this->setPageTitle("Home");
 			
 			$example = $this->newEntity("Example");
+			echo "<br><br><br><br><br>Fix model and controller";
+			debug($example->get("all"));
+
+
 			$user = [
 				"name" => "Yadson"
 			];

@@ -1,19 +1,15 @@
 <?php  
 	abstract class Model implements ModelInterface{
-		private $databaseName;
 		private $tableName;
+		private $DbManipulator;
 
-		public function modelConfig($modelConfig){
-			if(!empty($modelConfig) && is_array($modelConfig)){
-				if(
-					(array_key_exists("databaseName", $modelConfig)) && 
-					(array_key_exists("tableName", $modelConfig))
-				){
-					if(!empty($modelConfig["databaseName"]) && !empty($modelConfig["tableName"])){
-						$this->databaseName = $modelConfig["databaseName"];
-						$this->tableName = $modelConfig["tableName"];
-					}
-				}
+		protected function __construct($databaseType, $database){
+			$this->DBManipulator = new DatabaseManipulator($databaseType, $database);
+		}
+
+		public function setTableName($tableName){
+			if(!empty($tableName) && is_string($tableName)){
+				$this->tableName = $tableName;
 			}
 		}
 
@@ -24,16 +20,18 @@
 			return $this->tableName;
 		}
 
-		public function getDatabaseName(){
-			return $this->databaseName;
-		}
+		public function get($key){
+			return $this->DBManipulator->queryCreator([
+				"=" => [
+					"cod_cadastro" => 512, "and",
+					"idade" => 18
+				]
+			]);
 
-		public function get(){
-			return [
-				"Db" => $this->getDatabaseName(),
-				"Table" => $this->getTableName(),
-				"query" => "SELECT * FROM {$this->getTableName()}"
-			];
+			/*if(strtolower($key) === "all"){
+				$column = "*";
+			}
+			
+			return $this->DBManipulator->select($column, $this->getTableName());*/
 		}
 	}
-?>

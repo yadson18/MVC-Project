@@ -12,9 +12,9 @@
 		"DefaultErrorPage" => "daniedAccess.php",
 
 		"Databases" => [
-			"dbTypeExample" => [
-				"dbNameExample" => [
-					"dbPath" => "/BD/EXAMPLE.FDB",
+			"firebird" => [
+				"sricash" => [
+					"dbPath" => "/BD/SRICASH.FDB",
 					"dbUser" => "SYSDBA",
 					"dbPassword" => "masterkey",
 					"charset" => "UTF8"

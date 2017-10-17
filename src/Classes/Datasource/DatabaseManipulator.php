@@ -1,24 +1,17 @@
 <?php  
-	class DatabaseConnect extends Connection{
+	class DatabaseManipulator extends Connection{
 		private static $connection;
 
-		public function __construct($connectionData){
-			self::$connection = parent::__construct(
-				$connectionData["dsn"], 
-				$connectionData["user"], 
-				$connectionData["password"]
-			);
-		}
+		public function __construct($databaseType, $database){
+			$connectionConfig = getDatabaseConfig($databaseType, $database);
 
-		public function queryOperators($operator){
-			$operators = ["=", "+", "-", "*", "like", "not like", ">", "<", "<>"];
-
-			foreach($operators as $avaliableOperator){
-				if(strtolower($operator) === $avaliableOperator){
-					return true;
-				}
+			if(!empty($connectionConfig)){
+				self::$connection = Connection::getInstance(
+					$connectionConfig["dsn"], 
+					$connectionConfig["user"], 
+					$connectionConfig["password"]
+				);
 			}
-			return false;
 		}
 
 		/*
@@ -37,6 +30,66 @@
 		 *	   condition: "where user=? and password=?";
 		 *	   conditionValues: ["example", "123"];
 		 */
+
+
+		public function isOperator($operator){
+			$operators = ["=", "+", "-", "*", "like", "not like", ">", "<", "<>", "!="];
+
+			if(!empty($operator) && is_string($operator)){
+				if(in_array(strtolower($operator), $operators)){
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public function queryCreator($arrayQuery){
+			if(!empty($arrayQuery) && is_array($arrayQuery)){
+
+
+				foreach($arrayQuery as $operator => $query){
+					if($this->isOperator($operator) && !empty($query) && is_array($query)){
+						foreach($query as $column => $value){
+							if(!$this->isOperator($column)){
+								if(is_string($column)){
+
+								}
+							}
+							debug($column);
+						}
+					}
+				}
+
+
+
+				/*return array_map(function($operator, $values){
+					return $values;
+					$column = key($values);
+
+					if($this->isOperator($operator)){
+						if(!$this->isOperator($column)){
+							if(is_string($column)){
+								return ["{$column} {$operator} :{$column}" => $values[$column]];
+							}
+							return $values[$column];
+						}
+					}
+				}, 
+				array_keys($arrayQuery), $arrayQuery);*/
+			}
+		}
+
+		//public function query($arrayQuery){
+			//$this->queryCreator($arrayQuery);
+
+			/*$query = self::$connection->prepare(
+				"SELECT * from cadastro where cod_cadastro = :cod_cadastro"
+			);
+			$query->bindValue(":cod_cadastro", 5012);
+			$query->execute();
+						
+			return $query->fetchAll(PDO::FETCH_ASSOC);*/
+		//}
 		public function select($columns, $table, $condition = null, $conditionValues = null){
 			if(!empty(self::$connection)){
 				if(is_string($columns) && is_string($table)){

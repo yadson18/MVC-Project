@@ -1,10 +1,8 @@
 <?php  
 	class ExampleModel extends Model{
 		public function __construct(){
-			$this->modelConfig([
-				"databaseName" => "exampleBase",
-				"tableName" => "example_model"
-			]);
+			parent::__construct("firebird", "sricash");
+			$this->setTableName("cadastro");
 		}
 
 		public function sayHello(){
