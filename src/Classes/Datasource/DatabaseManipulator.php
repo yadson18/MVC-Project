@@ -1,17 +1,163 @@
 <?php  
-	class DatabaseManipulator extends Connection{
-		private static $connection;
+	class DatabaseManipulator{
+		private $connection;
+		private $modelName;
+		private $table;
+		private $filterColumns;
+		private $condition;
+		private $columnsAndvalues;
+		private $returnType;
 
-		public function __construct($databaseType, $database){
+		public function __construct($databaseType, $database, $model){
 			$connectionConfig = getDatabaseConfig($databaseType, $database);
 
 			if(!empty($connectionConfig)){
-				self::$connection = Connection::getInstance(
+				$this->modelName = $model;
+				$this->connection = Connection::getInstance(
 					$connectionConfig["dsn"], 
 					$connectionConfig["user"], 
 					$connectionConfig["password"]
 				);
 			}
+		}
+
+		protected function getModelName(){
+			if(!empty($this->modelName)){
+				return $this->modelName;
+			}
+			return false;
+		}
+
+		protected function setFilterColumns($filterColumns){
+			if(!empty($filterColumns) && is_string($filterColumns)){
+				$this->filterColumns = $filterColumns;
+				return true;
+			}
+			return false;
+		}
+		protected function getFilterColumns(){
+			if(!empty($this->filterColumns)){
+				return $this->filterColumns;
+			}
+			return false;
+		}
+
+		protected function setCondition($condition){
+			if(!empty($condition) && is_string($condition)){
+				$this->condition = $condition;
+				return true;
+			}
+			return false;
+		}
+		protected function getCondition(){
+			if(!empty($this->condition)){
+				return $this->condition;
+			}
+			return false;
+		}
+
+		protected function setColumnsAndvalues($columnsAndvalues){
+			if(!empty($columnsAndvalues) && is_array($columnsAndvalues)){
+				$this->columnsAndvalues = $columnsAndvalues;
+				return true;
+			}
+			return false;
+		}
+		protected function getColumnsAndvalues(){
+			if(!empty($this->columnsAndvalues)){
+				return $this->columnsAndvalues;
+			}
+			return false;
+		}
+
+		protected function setTable($table){
+			if(!empty($table) && is_string($table)){
+				$this->table = $table;
+				return true;
+			}
+			return false;
+		}
+		protected function getTable(){
+			if(!empty($this->table)){
+				return $this->table;
+			}
+			return false;
+		}
+
+		protected function setReturnType($returnType){
+			$avaliableTypes = ["object", "array"];
+
+			if(!empty($returnType) && is_string($returnType) && in_array($returnType, $avaliableTypes)){
+				$this->returnType = $returnType;
+				return true;
+			}
+			return false;
+		}
+		protected function getReturnType(){
+			if(!empty($this->returnType)){
+				return $this->returnType;
+			}
+			return false;
+		}
+
+		public function toArray(){
+			if($this->setReturnType("array")){
+				return $this;
+			}
+			return false;
+		}
+
+		public function toObject(){
+			if($this->setReturnType("object")){
+				return $this;
+			}
+			return false;
+		}
+
+		public function find($table, $columns){
+			if($this->setTable($table) && $this->setFilterColumns($columns)){
+				return $this;
+			}
+			return false;
+		}
+
+		public function where($arrayQuery){
+			if(!empty($arrayQuery) && is_array($arrayQuery)){
+				$stringfyColumns = "";
+				$columnsAndValues = [];
+
+				foreach($arrayQuery as $column => $value){
+					if(is_string($column)){
+						$columnName = substr($column, 0, strpos($column, " ")); 
+						
+						$stringfyColumns .= " {$column} :{$columnName}";
+						$columnsAndValues[":{$columnName}"] = $value;
+					}
+					else{
+						$stringfyColumns .= " {$value}";
+					}
+				}
+
+				if(
+					($this->setCondition($stringfyColumns) && $this->setColumnsAndvalues($columnsAndValues)) ||
+					($this->setCondition($stringfyColumns) && !$this->setColumnsAndvalues($columnsAndValues))
+				){
+					return $this;
+				}
+			}
+			return false;
+		}
+
+		public function limit($limitNumber){
+			if(!empty($limitNumber)){
+				if(is_string($limitNumber) && (strtolower($limitNumber) === "max")){
+					return $this->select("");
+				}
+				if(!is_string($limitNumber) && is_numeric($limitNumber)){
+					return $this->select("FIRST {$limitNumber} ");
+				}
+			}
+			return false;
 		}
 
 		/*
@@ -31,91 +177,49 @@
 		 *	   conditionValues: ["example", "123"];
 		 */
 
+		protected function select($limit){
+			if(!empty($this->connection)){
+				if($this->getTable() && $this->getFilterColumns()){
+					if($this->getCondition() && $this->getColumnsAndvalues()){
+						$query = $this->connection->prepare(
+								"SELECT {$limit}{$this->getFilterColumns()} 
+								 FROM {$this->getTable()} 
+								 WHERE{$this->getCondition()}"
+						);
 
-		public function isOperator($operator){
-			$operators = ["=", "+", "-", "*", "like", "not like", ">", "<", "<>", "!="];
+						foreach($this->getColumnsAndvalues() as $column => $value){
+							$query->bindValue($column, $value);
+						}
+					}
+					else if($this->getCondition() && !$this->getColumnsAndvalues()){
+						$query = $this->connection->prepare(
+								"SELECT {$limit}{$this->getFilterColumns()} 
+								 FROM {$this->getTable()} 
+								 WHERE{$this->getCondition()}"
+						);
+					}
+					else if(!$this->getCondition() && !$this->getColumnsAndvalues()){
+						$query = $this->connection->prepare(
+								"SELECT {$limit}{$this->getFilterColumns()} FROM {$this->getTable()}"
+						);
+					}
 
-			if(!empty($operator) && is_string($operator)){
-				if(in_array(strtolower($operator), $operators)){
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		public function queryCreator($arrayQuery){
-			if(!empty($arrayQuery) && is_array($arrayQuery)){
+					if(!empty($query) && (get_class($query) === "PDOStatement")){
+						$query->execute();	
 
-
-				foreach($arrayQuery as $operator => $query){
-					if($this->isOperator($operator) && !empty($query) && is_array($query)){
-						foreach($query as $column => $value){
-							if(!$this->isOperator($column)){
-								if(is_string($column)){
-
-								}
+						if($this->getReturnType()){
+							if($this->getReturnType() === "object"){
+								$query->setFetchMode(PDO::FETCH_CLASS, $this->getModelName());
 							}
-							debug($column);
-						}
-					}
-				}
-
-
-
-				/*return array_map(function($operator, $values){
-					return $values;
-					$column = key($values);
-
-					if($this->isOperator($operator)){
-						if(!$this->isOperator($column)){
-							if(is_string($column)){
-								return ["{$column} {$operator} :{$column}" => $values[$column]];
+							else if($this->getReturnType() === "array"){
+								$query->setFetchMode(PDO::FETCH_ASSOC);
 							}
-							return $values[$column];
 						}
-					}
-				}, 
-				array_keys($arrayQuery), $arrayQuery);*/
-			}
-		}
-
-		//public function query($arrayQuery){
-			//$this->queryCreator($arrayQuery);
-
-			/*$query = self::$connection->prepare(
-				"SELECT * from cadastro where cod_cadastro = :cod_cadastro"
-			);
-			$query->bindValue(":cod_cadastro", 5012);
-			$query->execute();
-						
-			return $query->fetchAll(PDO::FETCH_ASSOC);*/
-		//}
-		public function select($columns, $table, $condition = null, $conditionValues = null){
-			if(!empty(self::$connection)){
-				if(is_string($columns) && is_string($table)){
-					if(empty($condition) && empty($conditionValues)){
-						$query = self::$connection->prepare("SELECT {$columns} FROM {$table}");
-						$query->execute();
-						
-						return $query->fetchAll(PDO::FETCH_ASSOC);
-					}
-					else{
-						if(is_string($condition) && is_array($conditionValues)){
-							$query = self::$connection->prepare(
-								"SELECT {$columns} FROM {$table} {$condition}"
-							);
-							$query->execute($conditionValues);
-						
-							return $query->fetchAll(PDO::FETCH_ASSOC);
+						else{
+							$query->setFetchMode(PDO::FETCH_ASSOC);
 						}
-						if(is_string($condition) && empty($conditionValues)){
-							$query = self::$connection->prepare(
-								"SELECT {$columns} FROM {$table} {$condition}"
-							);
-							$query->execute();
-							
-							return $query->fetchAll(PDO::FETCH_ASSOC);
-						}
+						
+						return $query->fetch();
 					}
 				}
 			}
@@ -130,7 +234,7 @@
 		 * 	(array) columns, colunas da tabela onde os dados serão inseridos.
 		 * 	(array) values, valores a serem inseridos referentes às colunas da tabela.
 		 */
-		public function insert($table, $columns, $values){
+		/*public function insert($table, $columns, $values){
 			if(!empty(self::$connection)){
 				if(is_string($table) && is_array($columns) && is_array($values)){
 					for($i = 0; $i < sizeof($columns); $i++){
@@ -153,7 +257,7 @@
 				}
 			}
 			return false;
-		}
+		}*/
 
 		/*public function delete($table, $condition, $values){
 			if(!empty(self::$connection)){

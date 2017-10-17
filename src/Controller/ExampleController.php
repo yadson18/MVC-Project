@@ -14,8 +14,12 @@
 			$this->setPageTitle("Home");
 			
 			$example = $this->newEntity("Example");
-			echo "<br><br><br><br><br>Fix model and controller";
-			debug($example->get("all"));
+			echo "<br><br><br><br><br>";
+			debug(
+				$example->find("*")
+					->where(["cod_cadastro >" => 10])
+					->limit("max")
+			);
 
 
 			$user = [

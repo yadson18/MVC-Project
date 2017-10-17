@@ -1,37 +1,52 @@
 <?php  
 	abstract class Model implements ModelInterface{
 		private $tableName;
+		private $tablePrimaryKey;
 		private $DbManipulator;
 
 		protected function __construct($databaseType, $database){
-			$this->DBManipulator = new DatabaseManipulator($databaseType, $database);
+			$this->DBManipulator = new DatabaseManipulator($databaseType, $database, get_class($this));
 		}
 
-		public function setTableName($tableName){
+		protected function setTablePrimaryKey($columnName){
+			if(!empty($columnName) && is_string($columnName)){
+				$this->tablePrimaryKey = $columnName;
+			}
+		}
+
+		protected function getTablePrimaryKey(){
+			if(!empty($this->tablePrimaryKey)){
+				return $this->tablePrimaryKey;
+			}
+			return false;
+		}
+
+		protected function setTableName($tableName){
 			if(!empty($tableName) && is_string($tableName)){
 				$this->tableName = $tableName;
 			}
 		}
 
-		public function getTableName(){
+		protected function getTableName(){
 			if(empty($this->tableName)){
 				return str_replace("Model", "", get_class($this));
 			}
 			return $this->tableName;
 		}
 
-		public function get($key){
-			return $this->DBManipulator->queryCreator([
-				"=" => [
-					"cod_cadastro" => 512, "and",
-					"idade" => 18
-				]
-			]);
+		public function find($columns){
+			return $this->DBManipulator->find($this->getTableName(), $columns);
+		}
 
-			/*if(strtolower($key) === "all"){
-				$column = "*";
+		public function get($key){
+			if(strtolower($key) === "all"){
+				return $this->DBManipulator->find($this->getTableName(), "*")->toObject()->limit("max");
 			}
-			
-			return $this->DBManipulator->select($column, $this->getTableName());*/
+			else if($this->getTablePrimaryKey()){
+				return $this->DBManipulator->find($this->getTableName(), "*")
+					->where(["{$this->getTablePrimaryKey()} =" => $key])
+					->limit("max");
+			}
+			return false;
 		}
 	}
