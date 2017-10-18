@@ -1,18 +1,17 @@
 <?php  
 	class DatabaseManipulator{
 		private $connection;
-		private $modelName;
+		private $entityName;
 		private $table;
 		private $filterColumns;
 		private $condition;
 		private $columnsAndvalues;
 		private $returnType;
 
-		public function __construct($databaseType, $database, $model){
+		public function __construct(string $databaseType, string $database, string $entity){
 			$connectionConfig = getDatabaseConfig($databaseType, $database);
-
 			if(!empty($connectionConfig)){
-				$this->modelName = $model;
+				$this->entityName = $entity;
 				$this->connection = Connection::getInstance(
 					$connectionConfig["dsn"], 
 					$connectionConfig["user"], 
@@ -22,8 +21,8 @@
 		}
 
 		protected function getModelName(){
-			if(!empty($this->modelName)){
-				return $this->modelName;
+			if(!empty($this->entityName)){
+				return $this->entityName;
 			}
 			return false;
 		}
@@ -123,8 +122,8 @@
 					if(is_string($column)){
 						$columnName = substr($column, 0, strpos($column, " ")); 
 						
-						$stringfyColumns .= " {$column} :{$columnName}";
-						$columnsAndValues[":{$columnName}"] = $value;
+						$stringfyColumns .= " {$column} ?";
+						$columnsAndValues[] = $value;
 					}
 					else{
 						$stringfyColumns .= " {$value}";
@@ -170,7 +169,7 @@
 						);
 
 						foreach($this->getColumnsAndvalues() as $column => $value){
-							$query->bindValue($column, $value);
+							$query->bindValue(++$column, $value);
 						}
 					}
 					else if($this->getCondition() && !$this->getColumnsAndvalues()){

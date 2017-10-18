@@ -16,7 +16,7 @@
 
 		public function newEntity($className){
 	      if(!empty($className) && is_string($className)){
-	        $className .= "Model";
+	        $className = ucfirst($className);
 	        if(class_exists($className)){
 	          return new $className();
 	        }

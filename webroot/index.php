@@ -1,5 +1,5 @@
 <?php  
-	define("WWW_ROOT", str_replace("webroot", "", $_SERVER["DOCUMENT_ROOT"]));
+	include "../app-config/routes.php";
 	
 	include "../index.php";
 ?>

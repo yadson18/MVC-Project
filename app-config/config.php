@@ -30,8 +30,9 @@
 			"Controller", 
 			"Controller/Interfaces",
 			"Controller/ControllerTraits",
-			"Model",
-			"Model/Interfaces"
+			"Model/Entity",
+			"Model/Tables",
+			"Model/Tables/Interfaces"
 		],
 
 		"Webservice" => [

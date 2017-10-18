@@ -11,23 +11,11 @@
 		}
 
 		public function home(){
+			$cliente = $this->newEntity("Cliente")->get(1);
+
 			$this->setPageTitle("Home");
-			
-			$example = $this->newEntity("Example");
-			$example = $example->find("*")->where(["cod_cadastro >" => 10])->toObject()->limit(1);
-			/*echo "<br><br><br><br><br>";
-			debug($example);*/
-
-			$user = [
-				"name" => "Yadson"
-			];
-
 			$this->flash("success", "A classe Flash está funcionando.");
-			$this->setViewData([
-				"user" => $user, 
-				"data" => $user, 
-				"example" => $example
-			]);
+			$this->setViewData(["cliente" => $cliente]);
 		}
 	}
 ?>
