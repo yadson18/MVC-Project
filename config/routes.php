@@ -16,4 +16,3 @@
 	define("WWW_ROOT", ROOT . DS . "webroot" . DS);
 
 	define("CONFIG", ROOT . DS . "config" . DS);
-?>

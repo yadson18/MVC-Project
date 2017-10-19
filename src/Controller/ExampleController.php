@@ -18,4 +18,3 @@
 			$this->setViewData(["cliente" => $cliente]);
 		}
 	}
-?>

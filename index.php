@@ -4,4 +4,3 @@
 
 	AutoLoad::loadClasses();
 	TemplateSystem::getInstance()->loadTemplate();
-?>

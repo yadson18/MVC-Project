@@ -73,4 +73,3 @@
 			$this->setMessage("warning", $messageText);
 		}
 	}
-?>

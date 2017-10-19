@@ -16,4 +16,3 @@
 
 		public function isAuthorized($method);
 	}
-?>

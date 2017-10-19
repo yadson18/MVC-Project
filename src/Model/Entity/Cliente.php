@@ -2,4 +2,3 @@
 	class Cliente extends Entity{
 		
 	}
-?>
