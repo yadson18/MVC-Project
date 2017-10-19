@@ -1,4 +1,4 @@
-# O arquivo .htaccess serve para o apache interpretar as URL's de acordo com as condições abaixo.
+# O arquivo .htaccess serve para o apache interpretar e reescrever as URL's, de acordo com as condições abaixo.
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On

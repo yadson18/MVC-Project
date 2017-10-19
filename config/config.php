@@ -1,4 +1,16 @@
 <?php  
+	/*
+	 * Arquivo de configuração da aplicação.
+	 *	(array) appConfiguration, é um array, onde encontram-se as configurações que o sistema usará.
+	 *		[AppName] -> Título da aplicação.
+	 *		[DefaultRoute] -> O primeiro Controller e View a serem carregados ao iniciar a aplicação.
+	 *		[Salt] -> String aleatória para criar hash de senha.
+	 *		[DefaultErrorPage] -> Página que sempre será exibida em caso de acesso não permitido ou url's inexistentes.
+	 *		[Databases] -> Bases de dados que serão usadas pela aplicação.
+	 *		[ClassesPath] -> Diretórios onde encontram-se as classes do sistema, para que possam ser carregadas.
+	 *		[Webservice] -> Configuração para comunicação com webservices.
+	 */
+
 	$appConfiguration = [
 		"AppName" => "Framework ILP - ",
 		
