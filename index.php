@@ -1,6 +1,6 @@
 <?php
-	require_once "functions.php";
-	require_once "src/Classes/AutoLoad/AutoLoad.php";
+	require_once ROOT . DS . "functions.php";
+	require_once APP . "Classes/AutoLoad/AutoLoad.php";
 
 	AutoLoad::loadClasses();
 	TemplateSystem::getInstance()->loadTemplate();

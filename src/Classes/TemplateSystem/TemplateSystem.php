@@ -36,7 +36,7 @@
     } 
 
     protected function loadModule($module){
-      if(file_exists(WWW_ROOT."src/Classes/TemplateSystem/Modules/{$module}.php")){
+      if(file_exists(CLASSES . "TemplateSystem/Modules/{$module}.php")){
         if(class_exists($module)){
           $this->$module = new $module();
         }
@@ -119,8 +119,8 @@
     }
 
     protected function setTemplate($template){
-      if(file_exists(WWW_ROOT . "src/View/{$template}.php")){
-        $this->templateToLoad = WWW_ROOT . "src/View/{$template}.php";
+      if(file_exists(VIEW . "{$template}.php")){
+        $this->templateToLoad = VIEW . "{$template}.php";
         return true;
       }
       return false;
@@ -185,7 +185,7 @@
     protected function showDefaultPageError($messageToDisplay){
       ob_start();
       $message = $messageToDisplay;
-      include WWW_ROOT . "src/View/ErrorPages/" . getDefaultErrorPage();
+      include VIEW . "ErrorPages/" . getDefaultErrorPage();
       return ob_get_clean();
     }
 
@@ -220,7 +220,7 @@
               return false;
             }
             else{
-              include WWW_ROOT . "src/View/Default/default.php";         
+              include VIEW . "Default/default.php";         
               exit();
             }
           } 

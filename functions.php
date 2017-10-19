@@ -1,5 +1,5 @@
 <?php
-  include "app-config/config-functions.php";
+  include CONFIG . "config-functions.php";
 
   function cnpjFormat($cnpj){
     if(strlen($cnpj) === 14){

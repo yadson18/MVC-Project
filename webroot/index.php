@@ -1,5 +1,5 @@
 <?php  
-	include "../app-config/routes.php";
+	include "../config/routes.php";
 	
-	include "../index.php";
+	include ROOT . DS . "index.php";
 ?>

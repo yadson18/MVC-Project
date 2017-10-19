@@ -8,19 +8,17 @@
 		 * Este método salva em uma variável estática, o diretório raiz onde devem ser 
 		 * carregadas as classes.
 		 *
-		 * WWW_ROOT é uma constante onde está salvo o caminho até o diretório raiz do 
+		 * ROOT é uma constante onde está salvo o caminho até o diretório raiz do 
 		 * projeto, visível globalmente no código.
 		 *
 		 * 	(string) rootDir, diretório raiz onde devem ser carregadas as classes.
 		 */
 		public static function setRootDir($rootDir){
-			if(!empty($rootDir) && is_string($rootDir)){
-				if(is_dir($rootDir)){
-					self::$rootDir = WWW_ROOT . $rootDir;
-				}
+			if(!empty($rootDir) && is_dir($rootDir)){
+				self::$rootDir = ROOT . DS . $rootDir;
 			}
 			else{
-				self::$rootDir = WWW_ROOT . "src/";
+				self::$rootDir = APP;
 			}
 		}
 
@@ -30,8 +28,8 @@
 		 *
 		 *	(array) paths, pastas onde encontram-se as classes.
 		 */
-		public static function setClassesPath($paths){
-			if(is_array($paths)){
+		public static function setClassesPath(array $paths){
+			if(!empty($paths)){
 				self::$classPaths = $paths;
 			}
 		}

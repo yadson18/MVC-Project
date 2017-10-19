@@ -31,9 +31,9 @@
 			ob_start();
 
 			if(isset($this->messageType) && isset($this->messageText)){
-				if(file_exists(WWW_ROOT . "src/View/Flash/{$this->messageType}.php")){
+				if(file_exists(APP . "View/Flash/{$this->messageType}.php")){
 					$message = $this->messageText;
-					include WWW_ROOT . "src/View/Flash/{$this->messageType}.php";
+					include APP . "View/Flash/{$this->messageType}.php";
 					$this->clearMessage();
 					return ob_get_clean();
 				}
