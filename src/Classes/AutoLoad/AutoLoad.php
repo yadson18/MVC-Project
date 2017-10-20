@@ -11,7 +11,8 @@
 		 * ROOT é uma constante onde está salvo o caminho até o diretório raiz do 
 		 * projeto, visível globalmente no código.
 		 *
-		 * 	(string) rootDir, diretório raiz onde devem ser carregadas as classes.
+		 * 	(string) rootDir, diretório onde as classes deverão ser buscadas e carregadas.
+		 *		Obs: Cado não seja passado senhum valor, por padrão, o diretório será o "src".
 		 */
 		public static function setRootDir($rootDir){
 			if(!empty($rootDir) && is_dir($rootDir)){
@@ -23,10 +24,10 @@
 		}
 
 		/*
-		 * Este método salva em uma variável estática, um array com as pastas 
+		 * Este método salva em uma variável estática, um array com os diretórios 
 		 * onde encontram-se as classes do sistema.
 		 *
-		 *	(array) paths, pastas onde encontram-se as classes.
+		 *	(array) paths, diretórios onde encontram-se as classes.
 		 */
 		public static function setClassesPath(array $paths){
 			if(!empty($paths)){

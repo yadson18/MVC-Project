@@ -18,15 +18,26 @@
 		.text-align(center);
 	}
 	button.close{
-		.font-size(1em);
+		.font-size(1.2em);
 	}
+    #debug-screen{
+        .bg-color(#ffef00);
+        .border(solid 1px #ccc);
+        .margin(15px 0);
+        .font-size(1em);
+    }
 }
 
 .rotate-icons-effect(@transition, @transform){
     transition: @transition;
     transform: @transform;
 }
-
+.font-size(@size){
+    -webkit-font-size: @size;
+    -moz-font-size: @size;
+    -o-font-size: @size;
+    font-size: @size;
+}
 .border-radius(@radius){
     -webkit-border-radius: @radius;
     -moz-border-radius: @radius;

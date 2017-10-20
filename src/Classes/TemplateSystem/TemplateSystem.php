@@ -35,6 +35,10 @@
       }
     } 
 
+    public function getAppName(){
+      return getAppName();
+    }
+
     protected function loadModule($module){
       if(file_exists(CLASSES . "TemplateSystem/Modules/{$module}.php")){
         if(class_exists($module)){
@@ -183,10 +187,12 @@
     }
 
     protected function showDefaultPageError($messageToDisplay){
-      ob_start();
-      $message = $messageToDisplay;
-      include VIEW . "ErrorPages/" . getDefaultErrorPage();
-      return ob_get_clean();
+      if(is_file(VIEW . "ErrorPages/" . getDefaultErrorPage())){
+        ob_start();
+        $message = $messageToDisplay;
+        include VIEW . "ErrorPages/" . getDefaultErrorPage();
+        return ob_get_clean();
+      }
     }
 
     public function loadTemplate(){

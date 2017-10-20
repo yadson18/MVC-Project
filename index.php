@@ -1,6 +1,7 @@
 <?php
-	require_once ROOT . DS . "functions.php";
-	require_once APP . "Classes/AutoLoad/AutoLoad.php";
+	require_once CONFIG . "Functions/global-functions.php";
+	require_once CONFIG . "Functions/config-functions.php";
+	require_once CLASSES . "AutoLoad/AutoLoad.php";
 
 	AutoLoad::loadClasses();
 	TemplateSystem::getInstance()->loadTemplate();

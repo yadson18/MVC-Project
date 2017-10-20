@@ -1,5 +1,5 @@
 <?php  
-  include "config.php";
+  include CONFIG . "config.php";
 
   function getDatabaseConfig($dbType, $dbName){
     global $appConfiguration;

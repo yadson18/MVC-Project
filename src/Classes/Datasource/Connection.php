@@ -16,9 +16,10 @@
 		 *  Se a conexão com a base de dados for estabelecida, será retornada 
 		 *  a instância do PDO, caso contrário retornará falso. 
 		 */
+		
 		private function __construct(){}
 
-		public static function getInstance($dsn, $user, $password){
+		public static function getInstance(string $dsn, string $user, string $password){
 			try{
 				self::$instance = new PDO($dsn, $user, $password);
 				self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
