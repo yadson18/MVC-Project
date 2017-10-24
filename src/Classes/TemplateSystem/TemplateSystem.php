@@ -148,7 +148,11 @@
                 if(is_callable([$this->controllerInstance, $controllerMethod])){
                     if(is_callable([$this->controllerInstance, "isAuthorized"])){
                         if($this->controllerInstance->isAuthorized($controllerMethod)){
-                            $this->controllerInstance->$controllerMethod();
+                            $redirect = $this->controllerInstance->$controllerMethod();
+                            
+                            if(!empty($redirect) && isset($redirect["redirectTo"])){
+                                header("Location: {$redirect['redirectTo']}");
+                            }
 
                             $this->setTemplate("{$this->controllerName}/{$controllerMethod}");
                             return true;

@@ -16,6 +16,8 @@
 			if($this->requestIs("POST")){
 				$cliente->get(1);
 				$this->flash("success", "A classe Flash está funcionando.");
+				
+				//return $this->redirect(["controller" => "User", "view" => "home"]);
 			}
 			
 			$this->setViewData(["cliente" => $cliente]);

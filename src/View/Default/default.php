@@ -30,9 +30,9 @@
 		        </div>
 		        <div class="collapse navbar-collapse" id="responsive-menu">
 		            <ul class="nav navbar-nav navbar-right">
-		                <li><a href="#" data-toggle="modal" data-target="#user-modal" class="link-login">Ver Mais</a></li>
+		                <li><a href="/Example/home">Ver Mais</a></li>
 		                <p class="navbar-text">ou</p>
-		                <li><a href="#" data-toggle="modal" data-target="#user-modal" class="link-register">Nada Aqui</a></li>
+		                <li><a href="#">Nada Aqui</a></li>
 		            </ul>
 		        </div>
 		    </div>
