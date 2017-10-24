@@ -1,0 +1,51 @@
+#!/bin/bash
+# yadson20@gmail.com
+#
+
+if [ $# -eq 1 ] && [ $1 == start ]; then
+  	dir=$(pwd; cd ..); 
+  	cd $dir/webroot;
+
+  	php -S localhost:9000
+
+elif [ $# -eq 3 ] && [ $1 == createmvc ] && [ $2 != "" ] && [ $3 != "" ]; then
+	fileName=$(mktemp);
+	database=$2;
+	tableName=$3;
+	className=$(echo "$tableName" | sed -r 's/\b(\w)(\w*)\b/\U\1\L\2/g');
+	classContent="<?php class $className";
+
+	sed -i "s/=.*ORDER/= '$3' ORDER/g" bin/.classmaker.sql;
+
+	if [ $? -ne 1 ]; then
+		/opt/firebird/bin/isql 'localhost:/BD/SRICASH.FDB' -ch 'UTF-8' -i 'bin/.classmaker.sql' -o $fileName -u SYSDBA -p masterkey -page 1000000
+
+		if [ $? -ne 1 ]; then
+			sed -i 's/=//g' $fileName;
+			sed -i 's/[[:space:]]\+/|/g' $fileName;
+			sed -i 's/|$//' $fileName;
+			sed -i '/^$/d' $fileName;
+			sed -i -e '1d' $fileName;
+
+			attributes=();
+			methods=();
+
+			for line in `cat $fileName`; do
+				IFS='|';
+				array=($line);
+				for key in "${!array[@]}"; do 
+					if [ $key -eq 0 ]; then
+						column=$(echo "${array[$key]}" | sed -r 's/\b(\w)(\w*)\b/\U\1\L\2/g');
+
+						echo -e "public function get$column(){\n\treturn \$this->${array[$key]};\n}"; 
+						echo -e "public function set$column(${array[3]} \$${array[$key]}){\n\treturn \$this->${array[$key]};\n}"; 
+					fi
+				done
+			done
+		fi
+	fi
+else
+	echo "Não foi possível executar esta ação.";
+fi
+
+

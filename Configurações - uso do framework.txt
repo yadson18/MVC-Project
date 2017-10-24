@@ -37,4 +37,4 @@ Configurações para uso.
 	-> apt-get install php-soap
 
 9 - Por fim, reinicie o Apache, para carregar as novas configurações.
-	-> service apache2 restart
+-> service apache2 restart
