@@ -11,10 +11,15 @@
 		}
 
 		public function home(){
-			$cliente = $this->newEntity("Cliente")->get(1);
+			$cliente = $this->newEntity("Cliente");
 
-			$this->setPageTitle("Home");
-			$this->flash("success", "A classe Flash está funcionando.");
+			if($this->requestIs("POST")){
+				debug("ok");
+				$cliente->get(1);
+				$this->flash("success", "A classe Flash está funcionando.");
+			}
+			
 			$this->setViewData(["cliente" => $cliente]);
+			$this->setPageTitle("Home");
 		}
 	}

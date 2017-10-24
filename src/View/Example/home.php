@@ -1,11 +1,14 @@
 <div id="home-container" class="col-md-12 col-sm-12 col-xs-12">
     <div class="banner">
-        <h1 class="banner-title"><?= "Razão: ".ucfirst(mb_strtolower($cliente->razao, "UTF8")) ?></h1>
+        <h1 class="banner-title"><?= "Razão: ".$cliente->id ?></h1>
         <img src="/images/notebook.png" class="banner-image">
     </div>
     <div class="features">
         <?= $this->Flash->showMessage() ?>
         <h1 class="features-title">Funcionalidades</h1>
+        <form method="POST" action="/Example/home">
+            <input type="text" name="a"><input type="submit" value="Ok">
+        </form>
         <div class="row">
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">

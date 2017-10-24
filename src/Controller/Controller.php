@@ -24,8 +24,8 @@
 	      return false;
 	    }
 
-		public function requestMethodIs($requestMethod){
-			return $this->templateSystem->requestMethodIs($requestMethod);
+		public function requestIs($requestMethod){
+			return $this->templateSystem->requestIs($requestMethod);
 	    }
 
 	    public function flash($messageType, $messageText){
@@ -48,7 +48,7 @@
 			return false;
 		}
 
-		public function redirectTo($url){
+		public function redirect($url){
 			if(!empty($url) && is_array($url)){
 				if(isset($url["controller"]) && !empty($url["controller"])){
 					if(!isset($url["view"])){
