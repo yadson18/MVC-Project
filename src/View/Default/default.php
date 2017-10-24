@@ -30,7 +30,7 @@
 		        </div>
 		        <div class="collapse navbar-collapse" id="responsive-menu">
 		            <ul class="nav navbar-nav navbar-right">
-		                <li><a href="/Example/home">Ver Mais</a></li>
+		                <li><a href="#">Ver Mais</a></li>
 		                <p class="navbar-text">ou</p>
 		                <li><a href="#">Nada Aqui</a></li>
 		            </ul>

@@ -6,9 +6,6 @@
     <div class="features">
         <?= $this->Flash->showMessage() ?>
         <h1 class="features-title">Funcionalidades</h1>
-        <form method="POST" action="/Example/home">
-            <input type="text" name="a"><input type="submit" value="Ok">
-        </form>
         <div class="row">
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
