@@ -36,7 +36,7 @@
 		}
 
 		// Este método retorna o diretório onde devem ser carregadas as classes.
-		public static function getRootDir(){
+		protected static function getRootDir(){
 			return self::$rootDir;
 		}
 

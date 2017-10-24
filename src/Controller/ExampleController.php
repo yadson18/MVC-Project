@@ -4,7 +4,7 @@
 			parent::__construct($requestData, $templateSystem);
 		}
 
-		public function isAuthorized($method){
+		public function isAuthorized(string $method){
 			return $this->notAlowed($method, [
 				"home"
 			]);
@@ -14,7 +14,6 @@
 			$cliente = $this->newEntity("Cliente");
 
 			if($this->requestIs("POST")){
-				debug("ok");
 				$cliente->get(1);
 				$this->flash("success", "A classe Flash está funcionando.");
 			}

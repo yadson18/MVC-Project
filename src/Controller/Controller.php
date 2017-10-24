@@ -6,16 +6,16 @@
 			$this->templateSystem = $templateSystem;
 		}
 
-		public function setViewData($variables, $variablesToSerialize = null){
+		public function setViewData(array $variables, array $variablesToSerialize = null){
 			$this->templateSystem->setViewData($variables, $variablesToSerialize);
 		}
 
-		public function setPageTitle($title){
+		public function setPageTitle(string $title){
 			$this->templateSystem->setPageTitle($title);
 		}
 
-		public function newEntity($className){
-	      if(!empty($className) && is_string($className)){
+		public function newEntity(string $className){
+	      if(!empty($className)){
 	        $className = ucfirst($className);
 	        if(class_exists($className)){
 	          return new $className();
@@ -24,11 +24,11 @@
 	      return false;
 	    }
 
-		public function requestIs($requestMethod){
+		public function requestIs(string $requestMethod){
 			return $this->templateSystem->requestIs($requestMethod);
 	    }
 
-	    public function flash($messageType, $messageText){
+	    public function flash(string $messageType, string $messageText){
 			$messageTypes = ["error", "success", "warning"];
 
 			if(!empty($messageType) && in_array($messageType, $messageTypes)){
@@ -37,24 +37,22 @@
 			}
 		}
 
-		public function notAlowed($method, $methods){
-			if(is_array($methods) && !empty($methods)){
-				if(is_string($method) && !empty($method)){
-					if(in_array($method, $methods)){
-						return true;
-					}	
+		public function notAlowed(string $method, array $methods){
+			if(!empty($methods) && !empty($method)){
+				if(in_array($method, $methods)){
+					return true;
 				}
 			}
 			return false;
 		}
 
-		public function redirect($url){
-			if(!empty($url) && is_array($url)){
-				if(isset($url["controller"]) && !empty($url["controller"])){
-					if(!isset($url["view"])){
-						return ["redirectTo" => "/{$url['controller']}/index"];
-					}
-					else if(isset($url["view"]) && !empty($url["view"])){
+		public function redirect(array $url){
+			if(!empty($url)){
+				if(!isset($url["controller"]) && isset($url["view"]) && !empty($url["view"])){
+					return ["redirectTo" => "/{$this->templateSystem->getControllerName()}/{$url['view']}"];
+				}
+				else if(isset($url["controller"]) && isset($url["view"])){
+					if(!empty($url["controller"]) && !empty($url["view"])){
 						return ["redirectTo" => "/{$url['controller']}/{$url['view']}"];
 					}
 				}

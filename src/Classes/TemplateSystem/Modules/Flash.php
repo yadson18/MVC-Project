@@ -13,12 +13,10 @@
 		 *	(string) messageType, o tipo do flash que deseja guardar a mensagem Ex: success.
 		 *	(string) messageText, mensagem que será exibida ao usuário.
 		 */
-		public function setMessage($messageType, $messageText){
-			if(!empty($messageType) && is_string($messageType)){
-				if(!empty($messageText) && is_string($messageText)){
-					$this->messageType = $messageType;
-					$this->messageText = $messageText;
-				}
+		public function setMessage(string $messageType, string $messageText){
+			if(!empty($messageType) && !empty($messageText)){
+				$this->messageType = $messageType;
+				$this->messageText = $messageText;
 			}
 		}
 
@@ -51,7 +49,7 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function flashError($messageText){
+		public function flashError(string $messageText){
 			$this->setMessage("error", $messageText);
 		}
 
@@ -60,7 +58,7 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function flashSuccess($messageText){
+		public function flashSuccess(string $messageText){
 			$this->setMessage("success", $messageText);
 		}
 
@@ -69,7 +67,7 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function flashWarning($messageText){
+		public function flashWarning(string $messageText){
 			$this->setMessage("warning", $messageText);
 		}
 	}

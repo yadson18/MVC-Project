@@ -4,10 +4,10 @@
 
 
 if [ $* == start ]; then
-  dir=$(pwd; cd ..); 
-  cd $dir/webroot;
+  	dir=$(pwd; cd ..); 
+  	cd $dir/webroot;
 
-  php -S localhost:9000
+  	php -S localhost:9000
 
 elif [ $* == ok ]; then
 	echo "ok";

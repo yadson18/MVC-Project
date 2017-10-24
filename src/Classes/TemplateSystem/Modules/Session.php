@@ -14,7 +14,7 @@
 			}
 		}
 
-		public function createNewId($minutes){
+		public function createNewId(int $minutes){
 			if(isset($_SESSION["newSession"])){
 				$time = 60 * $minutes;
 				
@@ -31,14 +31,12 @@
 			}
 		}
 
-		public function setData($index, $data){
+		public function setData(string $index, $data){
 			$this->startSession();
 			$this->createNewId(5);
 
-			if(!empty($index) && is_string($index)){
-				if(!empty($data)){
-					$_SESSION["newSession"][$index] = serialize($data);
-				}
+			if(!empty($index) && !empty($data)){
+				$_SESSION["newSession"][$index] = serialize($data);
 			}
 		}
 

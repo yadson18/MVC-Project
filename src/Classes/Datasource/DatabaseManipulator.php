@@ -27,8 +27,8 @@
 			return false;
 		}
 
-		protected function setFilterColumns($filterColumns){
-			if(!empty($filterColumns) && is_string($filterColumns)){
+		protected function setFilterColumns(string $filterColumns){
+			if(!empty($filterColumns)){
 				$this->filterColumns = $filterColumns;
 				return true;
 			}
@@ -41,8 +41,8 @@
 			return false;
 		}
 
-		protected function setCondition($condition){
-			if(!empty($condition) && is_string($condition)){
+		protected function setCondition(string $condition){
+			if(!empty($condition)){
 				$this->condition = $condition;
 				return true;
 			}
@@ -55,8 +55,8 @@
 			return false;
 		}
 
-		protected function setColumnsAndvalues($columnsAndvalues){
-			if(!empty($columnsAndvalues) && is_array($columnsAndvalues)){
+		protected function setColumnsAndvalues(array $columnsAndvalues){
+			if(!empty($columnsAndvalues)){
 				$this->columnsAndvalues = $columnsAndvalues;
 				return true;
 			}
@@ -69,8 +69,8 @@
 			return false;
 		}
 
-		protected function setTable($table){
-			if(!empty($table) && is_string($table)){
+		protected function setTable(string $table){
+			if(!empty($table)){
 				$this->table = $table;
 				return true;
 			}
@@ -83,10 +83,10 @@
 			return false;
 		}
 
-		protected function setReturnType($returnType){
+		protected function setReturnType(string $returnType){
 			$avaliableTypes = ["object"];
 
-			if(!empty($returnType) && is_string($returnType) && in_array($returnType, $avaliableTypes)){
+			if(!empty($returnType) && in_array($returnType, $avaliableTypes)){
 				$this->returnType = $returnType;
 				return true;
 			}
@@ -106,15 +106,15 @@
 			return false;
 		}
 
-		public function find($table, $columns){
+		public function find(string $table, string $columns){
 			if($this->setTable($table) && $this->setFilterColumns($columns)){
 				return $this;
 			}
 			return false;
 		}
 
-		public function where($arrayQuery){
-			if(!empty($arrayQuery) && is_array($arrayQuery)){
+		public function where(array $arrayQuery){
+			if(!empty($arrayQuery)){
 				$stringfyColumns = "";
 				$columnsAndValues = [];
 
