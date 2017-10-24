@@ -216,15 +216,15 @@
 
                         $template = "{$this->controllerName}/{$this->controllerMethod}";
 
-                        if(!$this->classExists(
+                        if($this->classExists(
                             $this->controllerName."Controller", $this->controllerMethod, $requestData
                         )){
-                            echo $this->showDefaultPageError("Errou");
-                            return false;
-                        }
-                        else{
                             include VIEW . "Default/default.php";         
                             exit();
+                        }
+                        else{
+                            echo $this->showDefaultPageError("Acesso Negado");
+                            return false;
                         }
                     }
                     call_user_func_array([$this->controllerInstance, $this->controllerMethod], $this->controllerArgs);

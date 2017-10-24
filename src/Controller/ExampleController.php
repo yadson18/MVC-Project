@@ -6,7 +6,7 @@
 
 		public function isAuthorized(string $method){
 			return $this->notAlowed($method, [
-				"home"
+				"home", "ajax"
 			]);
 		}
 
