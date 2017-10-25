@@ -6,7 +6,7 @@
 
 		public function isAuthorized(string $method){
 			return $this->notAlowed($method, [
-				"home", "ajax"
+				"home", "logStatus"
 			]);
 		}
 
@@ -22,5 +22,14 @@
 			
 			$this->setViewData(["cliente" => $cliente]);
 			$this->setPageTitle("Home");
+		}
+
+		public function logStatus(){
+			if($this->requestIs("POST")){
+				$this->ajaxResponse([
+					"status" => "success",
+					"message" => "dados retornados"
+				]);
+			}
 		}
 	}

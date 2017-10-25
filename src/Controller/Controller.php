@@ -28,6 +28,10 @@
 			return $this->templateSystem->requestIs($requestMethod);
 	    }
 
+	    public function ajaxResponse($data){
+	    	$this->templateSystem->Ajax->response($data);
+	    }
+
 	    public function flash(string $messageType, string $messageText){
 			$messageTypes = ["error", "success", "warning"];
 
