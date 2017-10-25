@@ -220,12 +220,16 @@
                         if($this->classExists(
                             $this->controllerName."Controller", $this->controllerMethod, $requestData
                         )){
-                            include VIEW . "Default/default.php";         
-                            exit();
+                            if($this->Ajax->notEmptyResponse()){
+                                echo $this->Ajax->getResponse();
+                            }
+                            else{
+                                include VIEW . "Default/default.php";         
+                                exit();
+                            }
                         }
                         else{
                             echo $this->showDefaultPageError("Acesso Negado");
-                            return false;
                         }
                     }
                     call_user_func_array([$this->controllerInstance, $this->controllerMethod], $this->controllerArgs);
