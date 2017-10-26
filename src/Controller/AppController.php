@@ -1,35 +1,38 @@
 <?php 
-	abstract class Controller implements ControllerInterface{
-		private $templateSystem;
+	abstract class AppController implements ControllerInterface{
+		private $requestData;
+		private static $templateSystem;
 
 		public function __construct($requestData, $templateSystem){
-			$this->templateSystem = $templateSystem;
+			$this->requestData = $requestData;
+			self::$templateSystem = $templateSystem;
 		}
 
 		public function setViewData(array $variables, array $variablesToSerialize = null){
-			$this->templateSystem->setViewData($variables, $variablesToSerialize);
+			self::$templateSystem->setViewData($variables, $variablesToSerialize);
 		}
 
 		public function setPageTitle(string $title){
-			$this->templateSystem->setPageTitle($title);
+			self::$templateSystem->setPageTitle($title);
 		}
 
 		public function newEntity(string $className){
-	      if(!empty($className)){
-	        $className = ucfirst($className);
-	        if(class_exists($className)){
-	          return new $className();
-	        }
-	      }
-	      return false;
+	     	if(!empty($className)){
+	        	$className = ucfirst($className);
+	        	
+	        	if(class_exists($className)){
+	          		return new $className();
+	        	}
+	      	}
+	      	return false;
 	    }
 
 		public function requestIs(string $requestMethod){
-			return $this->templateSystem->requestIs($requestMethod);
+			return self::$templateSystem->requestIs($requestMethod);
 	    }
 
 	    public function ajaxResponse($data){
-	    	$this->templateSystem->Ajax->response($data);
+	    	self::$templateSystem->Ajax->response($data);
 	    }
 
 	    public function flash(string $messageType, string $messageText){
@@ -37,7 +40,7 @@
 
 			if(!empty($messageType) && in_array($messageType, $messageTypes)){
 				$method = "flash" . ucfirst($messageType);
-				$this->templateSystem->Flash->$method($messageText);
+				self::$templateSystem->Flash->$method($messageText);
 			}
 		}
 
@@ -53,7 +56,9 @@
 		public function redirect(array $url){
 			if(!empty($url)){
 				if(!isset($url["controller"]) && isset($url["view"]) && !empty($url["view"])){
-					return ["redirectTo" => "/{$this->templateSystem->getControllerName()}/{$url['view']}"];
+					return [
+						"redirectTo" => "/".self::$templateSystem->Controller->getName()."/{$url['view']}"
+					];
 				}
 				else if(isset($url["controller"]) && isset($url["view"])){
 					if(!empty($url["controller"]) && !empty($url["view"])){

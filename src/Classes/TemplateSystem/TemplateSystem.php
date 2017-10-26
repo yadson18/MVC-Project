@@ -1,16 +1,12 @@
 <?php 
     class TemplateSystem{
         private static $instance;
-        private $controllerInstance;
-        private $controllerName;
-        private $controllerMethod;
-        private $controllerArgs;
-        private $templateToLoad;
         private $pageTitle;
         private $viewData;
 
         private function __construct(){
             $this->loadModule("Session");
+            $this->loadModule("Controller");
             $this->loadModule("Html");
             $this->loadModule("Ajax");
             $this->loadModule("Flash");
@@ -24,14 +20,14 @@
         }
 
         protected function fetchAll(){ 
-            if(is_file($this->getTemplate())){
+            if(is_file($this->Controller->getTemplate())){
                 ob_start();
 
                 foreach($this->getviewData() as $variableName => $value){
                     $$variableName = $value;
                 }
 
-                include $this->getTemplate();
+                include $this->Controller->getTemplate();
                 return ob_get_clean();
             }
         } 
@@ -90,47 +86,10 @@
         }
 
         public function getPageTitle(){
-            return $this->pageTitle;
-        }
-
-        protected function setControllerName(string $controllerName){
-            if(!empty($controllerName)){
-                $this->controllerName = $controllerName;
+            if(!empty($this->pageTitle)){
+                return $this->pageTitle;
             }
-        }
-
-        public function getControllerName(){
-            return $this->controllerName;
-        }
-
-        protected function setTemplateName(string $controllerMethod){
-            if(!empty($controllerMethod)){
-                $this->controllerMethod = $controllerMethod;
-            }
-        }
-
-        public function getTemplateName(){
-            return $this->controllerMethod;
-        }
-
-        protected function setControllerArgs($controllerArgs){
-            $this->controllerArgs = $controllerArgs;
-        }
-
-        public function getControllerArgs(){
-            return $this->controllerArgs;
-        }
-
-        protected function setTemplate(string $template){
-            if(!empty($template) && file_exists(VIEW . "{$template}.php")){
-                $this->templateToLoad = VIEW . "{$template}.php";
-                return true;
-            }
-            return false;
-        }
-
-        public function getTemplate(){
-            return $this->templateToLoad;
+            return $this->Controller->getMethod();
         }
 
         public function requestIs(string $requestMethod){
@@ -140,40 +99,37 @@
             return false;
         }
 
-        protected function classExists(
-            string $controllerName, string $controllerMethod, $requestData, $template = null
-        ){
-            if(!empty($controllerName) && class_exists($controllerName)){
-                $this->controllerInstance = new $controllerName($requestData, $this);
+        protected function callControllerMethod(string $controllerName, string $controllerMethod, $requestData){
+            if($this->Controller->createInstance($controllerName, $requestData, $this)){
+                $controller = $this->Controller->getInstance();
 
-                if(is_callable([$this->controllerInstance, $controllerMethod])){
-                    if(is_callable([$this->controllerInstance, "isAuthorized"])){
-                        if($this->controllerInstance->isAuthorized($controllerMethod)){
-                            $redirect = $this->controllerInstance->$controllerMethod();
-                            
-                            if(!empty($redirect) && isset($redirect["redirectTo"])){
-                                header("Location: {$redirect['redirectTo']}");
+                if($this->Controller->callableMethod("isAuthorized") && $controller->isAuthorized($controllerMethod)){
+                    if($this->Controller->callableMethod($controllerMethod)){
+                        $controllerReturn = $controller->$controllerMethod();
+
+                        if(!empty($controllerReturn)){
+                            if(isset($controllerReturn["redirectTo"])){
+                                header("Location: {$controllerReturn['redirectTo']}");
                             }
-
-                            $this->setTemplate("{$this->controllerName}/{$controllerMethod}");
-                            return true;
                         }
+
+                        $this->Controller->setTemplate("{$controllerName}/{$controllerMethod}");
+                        return true;
                     }
                 }
             }
-            
             return false;
         }
 
         protected function setUriConfig(string $uri){
             if(!empty($uri)){
-                $args = explode("/", substr($uri, 1));
-                $controller = array_shift($args);
-                $method = array_shift($args);
+                $requestData = explode("/", substr($uri, 1));
+                $controllerName = array_shift($requestData);
+                $method = array_shift($requestData);
 
                 if(empty($method)){
-                    if(empty($controller) && !empty(getDefaultRoute())){
-                        $controller = getDefaultRoute()["controller"];
+                    if(empty($controllerName) && !empty(getDefaultRoute())){
+                        $controllerName = getDefaultRoute()["controller"];
                         $method = getDefaultRoute()["view"];
                     }
                     else{
@@ -181,9 +137,10 @@
                     }
                 }
 
-                $this->controllerName = ucfirst($controller);
-                $this->controllerMethod = $method;
-                $this->controllerArgs = $args;
+
+                $this->Controller->setName(ucfirst($controllerName));
+                $this->Controller->setMethod($method);
+                $this->Controller->setRequestData($requestData);
 
                 return true;
             }
@@ -206,25 +163,23 @@
             else{
                 if($this->setUriConfig($_SERVER["REQUEST_URI"])){
                     if($this->requestIs("POST") || $this->requestIs("GET")){
-                        $this->controllerInstance = NULL;
+                        $this->Controller->deleteInstance();
 
                         if($this->requestIs("POST")){
-                            $requestData = (object) $_POST;
+                            $this->Controller->setRequestData($_POST);
                         }
-                        else if($this->requestIs("GET")){
-                            $requestData = (object) $_GET;
+                        else if($this->requestIs("GET") && !empty($_GET)){
+                            $this->Controller->setRequestData($_GET);
                         }
 
-                        $template = "{$this->controllerName}/{$this->controllerMethod}";
-
-                        if($this->classExists(
-                            $this->controllerName."Controller", $this->controllerMethod, $requestData
+                        if($this->callControllerMethod(
+                            $this->Controller->getName(), $this->Controller->getMethod(), $this->Controller->getRequestData()
                         )){
                             if($this->Ajax->notEmptyResponse()){
                                 echo $this->Ajax->getResponse();
                             }
                             else{
-                                include VIEW . "Default/default.php";         
+                                include VIEW . "Default/default.php";  
                                 exit();
                             }
                         }

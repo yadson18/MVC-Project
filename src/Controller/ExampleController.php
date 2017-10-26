@@ -1,13 +1,11 @@
 <?php  
-	class ExampleController extends Controller{
+	class ExampleController extends AppController{
 		public function __construct($requestData, $templateSystem){
 			parent::__construct($requestData, $templateSystem);
 		}
 
 		public function isAuthorized(string $method){
-			return $this->notAlowed($method, [
-				"home"
-			]);
+			return $this->notAlowed($method, ["home"]);
 		}
 
 		public function home(){
