@@ -1,9 +1,6 @@
 <?php  
 	class Ajax{
-		private $responseData = [
-			"status" => "error",
-			"message" => "Danied access for this method"
-		];
+		private $responseData;
 
 		public function response($data){
 			if(!empty($data) && !is_resource($data)){

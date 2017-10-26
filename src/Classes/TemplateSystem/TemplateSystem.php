@@ -232,7 +232,6 @@
                             echo $this->showDefaultPageError("Acesso Negado");
                         }
                     }
-                    call_user_func_array([$this->controllerInstance, $this->controllerMethod], $this->controllerArgs);
                 }
             }
         }

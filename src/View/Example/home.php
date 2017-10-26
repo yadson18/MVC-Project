@@ -91,12 +91,3 @@
         </p> 
     </div>
 </footer>
-<script type="text/javascript">
-    $.ajax({
-        url: "/Example/logStatus",
-        method: "POST",
-        dataType: "json"
-    }).done(function(data){
-        console.log(data["status"]);
-    });
-</script>
