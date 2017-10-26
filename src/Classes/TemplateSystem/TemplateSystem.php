@@ -5,8 +5,8 @@
         private $viewData;
 
         private function __construct(){
-            $this->loadModule("Session");
             $this->loadModule("Controller");
+            $this->loadModule("Session");
             $this->loadModule("Html");
             $this->loadModule("Ajax");
             $this->loadModule("Flash");

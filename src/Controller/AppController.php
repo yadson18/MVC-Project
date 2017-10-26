@@ -56,9 +56,11 @@
 		public function redirect(array $url){
 			if(!empty($url)){
 				if(!isset($url["controller"]) && isset($url["view"]) && !empty($url["view"])){
-					return [
-						"redirectTo" => "/".self::$templateSystem->Controller->getName()."/{$url['view']}"
-					];
+					if(self::$templateSystem->Controller->getMethod() !== $url["view"]){
+						return [
+							"redirectTo" => "/".self::$templateSystem->Controller->getName()."/{$url['view']}"
+						];
+					}
 				}
 				else if(isset($url["controller"]) && isset($url["view"])){
 					if(!empty($url["controller"]) && !empty($url["view"])){

@@ -1,10 +1,10 @@
 <?php  
 	class Controller{
-        private $instance;
-        private $controller;
-        private $method;
-        private $requestData;
-        private $template;
+        protected $instance;
+        protected $controller;
+        protected $method;
+        protected $requestData;
+        protected $template;
 
         public function createInstance(string $controllerName, $requestData, $templateSystem){
         	$controllerName = "{$controllerName}Controller";

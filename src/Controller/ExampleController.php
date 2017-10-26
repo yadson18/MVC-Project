@@ -17,7 +17,6 @@
 				
 				//return $this->redirect(["controller" => "User", "view" => "home"]);
 			}
-			
 			$this->setViewData(["cliente" => $cliente]);
 			$this->setPageTitle("Home");
 		}
