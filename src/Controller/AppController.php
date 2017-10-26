@@ -1,19 +1,19 @@
 <?php 
 	abstract class AppController implements ControllerInterface{
 		protected $RequestData;
-		private static $templateSystem;
+		private static $TemplateSystem;
 
 		public function __construct($requestData, $templateSystem){
 			$this->RequestData = $requestData;
-			self::$templateSystem = $templateSystem;
+			self::$TemplateSystem = $templateSystem;
 		}
 
 		public function setViewData(array $variables, array $variablesToSerialize = null){
-			self::$templateSystem->setViewData($variables, $variablesToSerialize);
+			self::$TemplateSystem->setViewData($variables, $variablesToSerialize);
 		}
 
 		public function setPageTitle(string $title){
-			self::$templateSystem->setPageTitle($title);
+			self::$TemplateSystem->setPageTitle($title);
 		}
 
 		public function newEntity(string $className){
@@ -28,11 +28,11 @@
 	    }
 
 		public function requestIs(string $requestMethod){
-			return self::$templateSystem->requestIs($requestMethod);
+			return self::$TemplateSystem->requestIs($requestMethod);
 	    }
 
 	    public function ajaxResponse($data){
-	    	self::$templateSystem->Ajax->response($data);
+	    	self::$TemplateSystem->Ajax->response($data);
 	    }
 
 	    public function flash(string $messageType, string $messageText){
@@ -40,7 +40,7 @@
 
 			if(!empty($messageType) && in_array($messageType, $messageTypes)){
 				$method = "flash" . ucfirst($messageType);
-				self::$templateSystem->Flash->$method($messageText);
+				self::$TemplateSystem->Flash->$method($messageText);
 			}
 		}
 
@@ -56,9 +56,9 @@
 		public function redirect(array $url){
 			if(!empty($url)){
 				if(!isset($url["controller"]) && isset($url["view"]) && !empty($url["view"])){
-					if(self::$templateSystem->Controller->getMethod() !== $url["view"]){
+					if(self::$TemplateSystem->Controller->getMethod() !== $url["view"]){
 						return [
-							"redirectTo" => "/".self::$templateSystem->Controller->getName()."/{$url['view']}"
+							"redirectTo" => "/".self::$TemplateSystem->Controller->getName()."/{$url['view']}"
 						];
 					}
 				}

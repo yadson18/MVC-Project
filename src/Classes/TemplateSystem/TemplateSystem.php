@@ -1,6 +1,6 @@
 <?php 
     class TemplateSystem{
-        private static $instance;
+        private static $Instance;
         private $pageTitle;
         private $viewData;
 
@@ -13,10 +13,10 @@
         }
 
         public static function getInstance(){
-            if(!isset(self::$instance)){
-                self::$instance = new TemplateSystem();
+            if(!isset(self::$Instance)){
+                self::$Instance = new TemplateSystem();
             }
-            return self::$instance;
+            return self::$Instance;
         }
 
         protected function fetchAll(){ 
@@ -101,11 +101,11 @@
 
         protected function callControllerMethod(string $controllerName, string $controllerMethod, $requestData){
             if($this->Controller->createInstance($controllerName, $requestData, $this)){
-                $controller = $this->Controller->getInstance();
+                $Controller = $this->Controller->getInstance();
 
-                if($this->Controller->callableMethod("isAuthorized") && $controller->isAuthorized($controllerMethod)){
+                if($this->Controller->callableMethod("isAuthorized") && $Controller->isAuthorized($controllerMethod)){
                     if($this->Controller->callableMethod($controllerMethod)){
-                        $controllerReturn = $controller->$controllerMethod();
+                        $controllerReturn = $Controller->$controllerMethod();
 
                         if(!empty($controllerReturn)){
                             if(isset($controllerReturn["redirectTo"])){
