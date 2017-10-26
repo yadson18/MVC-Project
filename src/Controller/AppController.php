@@ -1,10 +1,10 @@
 <?php 
 	abstract class AppController implements ControllerInterface{
-		private $requestData;
+		protected $RequestData;
 		private static $templateSystem;
 
 		public function __construct($requestData, $templateSystem){
-			$this->requestData = $requestData;
+			$this->RequestData = $requestData;
 			self::$templateSystem = $templateSystem;
 		}
 
