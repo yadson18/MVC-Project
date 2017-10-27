@@ -1,7 +1,7 @@
 <?php  
 	class ExampleController extends AppController{
-		public function __construct($requestData, $templateSystem){
-			parent::__construct($requestData, $templateSystem);
+		public function __construct($requestData){
+			parent::initialize($requestData);
 		}
 
 		public function isAuthorized(string $method){
@@ -9,15 +9,14 @@
 		}
 
 		public function home(){
-			$cliente = $this->newEntity("Cliente");
+			$Cliente = $this->newEntity("Cliente");
 
 			if($this->requestIs("POST")){
-				$cliente->get(1);
-				$this->flash("success", "A classe Flash está funcionando.");
-				
+				$Cliente = $Cliente->get(88);
+				$this->Flash->success("A classe Flash está funcionando.");
 				//return $this->redirect(["controller" => "User", "view" => "home"]);
 			}
-			$this->setViewData(["cliente" => $cliente]);
-			$this->setPageTitle("Home");
+			$this->set(["cliente" => $Cliente]);
+			$this->pageTitle("Home");
 		}
 	}

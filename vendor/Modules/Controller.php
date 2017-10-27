@@ -3,20 +3,19 @@
         protected $instance;
         protected $controller;
         protected $method;
+        protected $methodArgs;
         protected $requestData;
         protected $template;
 
-        public function createInstance(string $controllerName, $requestData, $templateSystem){
+        public function createInstance(string $controllerName, $requestData){
         	$controllerName = "{$controllerName}Controller";
 
-        	if(!empty($controllerName) && !empty($templateSystem)){
-        		if(class_exists($controllerName) && is_object($templateSystem)){
-	        		$this->instance = new $controllerName($requestData, $templateSystem);
+        	if(!empty($controllerName) && class_exists($controllerName)){
+        		$this->instance = new $controllerName($requestData);
 
-	        		if(!empty($this->instance)){
-	        			return true;
-	        		}
-        		}
+	        	if(!empty($this->instance)){
+	        		return true;
+	        	}
         	}
         	return false;
         }
@@ -70,6 +69,15 @@
         }
         public function getRequestData(){
         	return (object) $this->requestData;
+        }
+
+        public function setMethodArgs($args){
+            if(!empty($args)){
+                $this->methodArgs = $args;
+            }
+        }
+        public function getMethodArgs(){
+            return $this->methodArgs;
         }
 
         public function setTemplate(string $template){

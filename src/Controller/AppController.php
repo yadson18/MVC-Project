@@ -1,22 +1,69 @@
 <?php 
-	abstract class AppController implements ControllerInterface{
-		protected $RequestData;
-		private static $TemplateSystem;
+	abstract class AppController{
+		private $pageTitle;
+		private $viewData;
+		private $RequestData;
 
-		public function __construct($requestData, $templateSystem){
+		protected function initialize(stdClass $requestData){
+			$this->loadModule("Session");
+            $this->loadModule("Ajax");
+            $this->loadModule("Flash");
+            
 			$this->RequestData = $requestData;
-			self::$TemplateSystem = $templateSystem;
 		}
 
-		public function setViewData(array $variables, array $variablesToSerialize = null){
-			self::$TemplateSystem->setViewData($variables, $variablesToSerialize);
-		}
+		protected function set(array $variables, array $variablesToSerialize = null){
+            if(!empty($variables)){
+                foreach($variables as $variableName => $value){
+                    if(!empty($variableName) && is_string($variableName)){
+                        if(!empty($variablesToSerialize)){
+                            if(isset($variablesToSerialize["_serialize"])){
+                                if(in_array($variableName, $variablesToSerialize["_serialize"])){
+                                    if(!empty($value)){
+                                        $this->Session->setData($variableName, $value);
+                                    }
+                                }
+                                else{
+                                    $this->viewData[$variableName] = $value;
+                                }
+                            }
+                        }
+                        else{
+                            $this->viewData[$variableName] = $value;
+                        }
+                    }
+                }
+            }
+        }
+        public function getviewData(){
+            if(!empty($this->viewData) && !empty($this->Session->getData())){
+                return array_merge($this->viewData, $this->Session->getData());
+            }
+            else if(!empty($this->viewData) && empty($this->Session->getData())){
+                return $this->viewData;
+            }
+            else if(empty($this->viewData) && !empty($this->Session->getData())){
+                return $this->Session->getData();
+            }
+            return false;
+        }
 
-		public function setPageTitle(string $title){
-			self::$TemplateSystem->setPageTitle($title);
-		}
+        protected function pageTitle(string $title){
+            if(!empty($title)){
+                $this->pageTitle = $title;
+            }
+        }
+        public function getPageTitle(){
+        	return $this->pageTitle;
+        }
 
-		public function newEntity(string $className){
+		protected function loadModule(string $module){
+            if(file_exists(VENDOR . "Modules/{$module}.php") && class_exists($module)){
+                $this->$module = new $module();
+            }
+        }
+
+		protected function newEntity(string $className){
 	     	if(!empty($className)){
 	        	$className = ucfirst($className);
 	        	
@@ -27,24 +74,11 @@
 	      	return false;
 	    }
 
-		public function requestIs(string $requestMethod){
-			return self::$TemplateSystem->requestIs($requestMethod);
+		protected function requestIs(string $requestMethod){
+			return requestIs($requestMethod);
 	    }
 
-	    public function ajaxResponse($data){
-	    	self::$TemplateSystem->Ajax->response($data);
-	    }
-
-	    public function flash(string $messageType, string $messageText){
-			$messageTypes = ["error", "success", "warning"];
-
-			if(!empty($messageType) && in_array($messageType, $messageTypes)){
-				$method = "flash" . ucfirst($messageType);
-				self::$TemplateSystem->Flash->$method($messageText);
-			}
-		}
-
-		public function notAlowed(string $method, array $methods){
+		protected function notAlowed(string $method, array $methods){
 			if(!empty($methods) && !empty($method)){
 				if(in_array($method, $methods)){
 					return true;
@@ -53,7 +87,7 @@
 			return false;
 		}
 
-		public function redirect(array $url){
+		protected function redirect(array $url){
 			if(!empty($url)){
 				if(!isset($url["controller"]) && isset($url["view"]) && !empty($url["view"])){
 					if(self::$TemplateSystem->Controller->getMethod() !== $url["view"]){

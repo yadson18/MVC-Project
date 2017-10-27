@@ -1,5 +1,5 @@
 <?php  
-	interface ControllerInterface{
+	/*interface ControllerInterface{
 		public function setViewData(array $variables, array $variablesToSerialize = null);
 
 		public function setPageTitle(string $title);
@@ -15,4 +15,4 @@
 		public function redirect(array $url);
 
 		public function isAuthorized(string $method);
-	}
+	}*/

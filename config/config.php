@@ -34,19 +34,6 @@
 			]
 		],
 
-		"ClassesPath" => [
-			"Classes/Datasource", 
-			"Classes/TemplateSystem",
-			"Classes/TemplateSystem/Modules",
-			"Classes/Webservice",
-			"Controller", 
-			"Controller/Interfaces",
-			"Controller/ControllerTraits",
-			"Model/Entity",
-			"Model/Tables",
-			"Model/Tables/Interfaces"
-		],
-
 		"Webservice" => [
 			"url" => "url do webservice",
 			"options" => [

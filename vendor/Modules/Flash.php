@@ -49,7 +49,7 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function flashError(string $messageText){
+		public function error(string $messageText){
 			$this->setMessage("error", $messageText);
 		}
 
@@ -58,7 +58,7 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function flashSuccess(string $messageText){
+		public function success(string $messageText){
 			$this->setMessage("success", $messageText);
 		}
 
@@ -67,7 +67,7 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function flashWarning(string $messageText){
+		public function warning(string $messageText){
 			$this->setMessage("warning", $messageText);
 		}
 	}

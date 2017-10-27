@@ -13,9 +13,6 @@
 	// Diretŕoio "src".
 	define("APP", ROOT . DS . APP_DIR . DS);
 
-	// Diretório "Classes".
-	define("CLASSES", APP . "Classes" . DS);
-
 	// Diretório "View".
 	define("VIEW", APP . "View" . DS);
 
@@ -27,3 +24,6 @@
 
 	// Diretório "config".
 	define("CONFIG", ROOT . DS . "config" . DS);
+
+	// Diretório "vendor".
+	define("VENDOR", ROOT . DS . "vendor" . DS);
