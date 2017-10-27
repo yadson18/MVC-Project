@@ -4,7 +4,7 @@
 		private $viewData;
 		private $RequestData;
 
-		protected function initialize(stdClass $requestData){
+		public function initialize(stdClass $requestData){
 			$this->loadModule("Session");
             $this->loadModule("Ajax");
             $this->loadModule("Flash");
