@@ -9,39 +9,75 @@ if [ $# -eq 1 ] && [ $1 == start ]; then
   	php -S localhost:9000
 
 elif [ $# -eq 3 ] && [ $1 == createmvc ] && [ $2 != "" ] && [ $3 != "" ]; then
-	fileName=$(mktemp);
+	primaryKeyFile=$(mktemp);
+	attributesFile=$(mktemp);
+
 	database=$2;
 	tableName=$3;
 	className=$(echo "$tableName" | sed -r 's/\b(\w)(\w*)\b/\U\1\L\2/g');
-	classContent="<?php class $className";
+	classContent="<?php \n\tclass $className extends Table{\n";
+	primaryKey="";
 
-	sed -i "s/=.*ORDER/= '$3' ORDER/g" bin/.classmaker.sql;
+	sed -i "s/=.*ORDER/= '$tableName' ORDER/g" bin/.classInitialize.sql;
+	sed -i "s/=.*ORDER/= '$tableName' ORDER/g" bin/.classAttributes.sql;
 
 	if [ $? -ne 1 ]; then
-		/opt/firebird/bin/isql 'localhost:/BD/SRICASH.FDB' -ch 'UTF-8' -i 'bin/.classmaker.sql' -o $fileName -u SYSDBA -p masterkey -page 1000000
-
+		/opt/firebird/bin/isql "localhost:/BD/$database.FDB" -ch 'UTF-8' -i 'bin/.classInitialize.sql' -o $primaryKeyFile -u SYSDBA -p masterkey -page 1000000;
+		
 		if [ $? -ne 1 ]; then
-			sed -i 's/=//g' $fileName;
-			sed -i 's/[[:space:]]\+/|/g' $fileName;
-			sed -i 's/|$//' $fileName;
-			sed -i '/^$/d' $fileName;
-			sed -i -e '1d' $fileName;
+			/opt/firebird/bin/isql "localhost:/BD/$database.FDB" -ch 'UTF-8' -i 'bin/.classAttributes.sql' -o $attributesFile -u SYSDBA -p masterkey -page 1000000;
+		
+			if [ $? -ne 1 ]; then
+				sed -i 's/=//g' $primaryKeyFile;
+				sed -i 's/[[:space:]]\+/|/g' $primaryKeyFile;
+				sed -i 's/|$//' $primaryKeyFile;
+				sed -i '/^$/d' $primaryKeyFile;
+				sed -i -e '1d' $primaryKeyFile;
 
-			attributes=();
-			methods=();
+				sed -i 's/=//g' $attributesFile;
+				sed -i 's/[[:space:]]\+/|/g' $attributesFile;
+				sed -i 's/|$//' $attributesFile;
+				sed -i '/^$/d' $attributesFile;
+				sed -i -e '1d' $attributesFile;
 
-			for line in `cat $fileName`; do
-				IFS='|';
-				array=($line);
-				for key in "${!array[@]}"; do 
-					if [ $key -eq 0 ]; then
-						column=$(echo "${array[$key]}" | sed -r 's/\b(\w)(\w*)\b/\U\1\L\2/g');
+				fileName=$(mktemp);
+				cat $primaryKeyFile >> $fileName;
+				cat $attributesFile >> $fileName;
 
-						echo -e "public function get$column(){\n\treturn \$this->${array[$key]};\n}"; 
-						echo -e "public function set$column(${array[3]} \$${array[$key]}){\n\treturn \$this->${array[$key]};\n}"; 
+				attributes=();
+				for line in `cat $fileName`; do
+					IFS='|';
+					array=($line);
+					attribute='';
+					for key in "${!array[@]}"; do
+						if [ ${#array[@]} != 4 ]; then
+							primaryKey=${array[$key]};
+						elif [ $key -eq 0 ]; then
+							attribute="$attribute \t\t\t'${array[$key]}' => [";
+						elif [ $key -eq 1 ]; then
+							attribute="$attribute 'null' => '${array[$key]}',";
+						elif [ $key -eq 2 ]; then
+							attribute="$attribute 'size' => ${array[$key]},";
+						elif [ $key -eq 3 ]; then
+							attribute="$attribute 'type' => '${array[$key]}']";
+						fi
+					done
+					attributes=( ${attributes[@]} "$attribute" );
+				done
+
+				for col in "${!attributes[@]}"; do
+					if [ $col -eq  0 ]; then
+						classContent="$classContent \t\tprivate \$attributes = [\n${attributes[$col]},\n";
+					elif [ $(($col+1)) -eq  ${#attributes[@]} ]; then
+						classContent="$classContent${attributes[$col]}\n\t\t];\n\t}\n";
+					else
+						classContent="$classContent${attributes[$col]},\n";
 					fi
 				done
-			done
+
+				classContent="$classContent\n\n\tpublic function initialize(){\n\t\tparent::database('firebird', '$database');\n\t\t\$this->table('$tableName');\n\t\t\$this->primaryKey('$primaryKey');\n\t\t\$this->belongsTo([]);\n\t}\n}";
+				echo -e $classContent > bin/$className"Table".php;
+			fi
 		fi
 	fi
 else
