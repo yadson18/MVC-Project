@@ -15,7 +15,7 @@ elif [ $# -eq 3 ] && [ $1 == createmvc ] && [ $2 != "" ] && [ $3 != "" ]; then
 	database=$2;
 	tableName=$3;
 	className=$(echo "$tableName" | sed -r 's/\b(\w)(\w*)\b/\U\1\L\2/g');
-	classContent="<?php \n\tclass $className extends Table{\n";
+	classContent="<?php \n\tclass "$className"Table extends Table{\n";
 	primaryKey="";
 
 	sed -i "s/=.*ORDER/= '$tableName' ORDER/g" bin/.classInitialize.sql;
@@ -75,7 +75,7 @@ elif [ $# -eq 3 ] && [ $1 == createmvc ] && [ $2 != "" ] && [ $3 != "" ]; then
 					fi
 				done
 
-				classContent="$classContent\n\n\tpublic function initialize(){\n\t\tparent::database('firebird', '$database');\n\t\t\$this->table('$tableName');\n\t\t\$this->primaryKey('$primaryKey');\n\t\t\$this->belongsTo([]);\n\t}\n}";
+				classContent="$classContent\n\n\tpublic function initialize(){\n\t\tparent::database('firebird', '$database');\n\n\t\t\$this->table('$tableName');\n\t\t\$this->primaryKey('$primaryKey');\n\t\t\$this->belongsTo([]);\n\t}\n}";
 				echo -e $classContent > bin/$className"Table".php;
 			fi
 		fi
