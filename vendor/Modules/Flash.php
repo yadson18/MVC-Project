@@ -54,6 +54,15 @@
 		}
 
 		/* 
+		 * Este método cria uma mesnsagem informativa.
+		 *
+		 * (string) message, mensagem a ser exibida ao usuário.
+		 */
+		public function info(string $messageText){
+			$this->setMessage("info", $messageText);
+		}
+
+		/* 
 		 * Este método cria uma mesnsagem de sucesso.
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.

@@ -13,7 +13,7 @@
 
 			if($this->requestIs("POST")){
 				$Cliente = $Cliente->get(88);
-				$this->Flash->success("A classe Flash está funcionando.");
+				$this->Flash->info("A classe Flash está funcionando.");
 				//return $this->redirect(["controller" => "User", "view" => "home"]);
 			}
 			$this->set(["cliente" => $Cliente]);
