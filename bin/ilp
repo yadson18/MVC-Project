@@ -2,86 +2,169 @@
 # yadson20@gmail.com
 #
 
-if [ $# -eq 1 ] && [ $1 == start ]; then
-  	dir=$(pwd; cd ..); 
-  	cd $dir/webroot;
+ROOT=$(pwd);
 
-  	php -S localhost:9000
+function getClassName(){ 
+	# $1 - Nome da tabela.
+
+	className=$(echo "$1" | sed -r 's/\b(\w)(\w*)\b/\U\1\L\2/g');
+	
+	if [ $? -ne 1 ]; then
+		echo $className;
+	else
+		echo 0;
+	fi
+}
+
+function findFile(){
+	# $1 - Nome do arquivo na pasta bin
+
+	if [ -f $ROOT/bin/$1 ]; then
+		echo 1;
+	else
+		echo 0;
+	fi
+}
+
+function setFileTableName(){
+	# $1 - Nome da tabela.
+	# $2 - Nome do arquivo.
+
+	fileExists=$(findFile $2);
+
+	if [ $fileExists -eq 1 ]; then
+		verifyChange=$(sed -i "s/=.*ORDER/= '$1' ORDER/g" bin/$2);
+
+		if [ $? -ne 1 ]; then
+			echo 1;
+		else
+			echo 0;
+		fi
+	else
+		echo 0;
+	fi	
+}
+
+function getTablePrimaryKey(){
+	# $1 - Nome da base de dados.
+	# $2 - Nome do arquivo temporário.
+
+	queryResult=$(/opt/firebird/bin/isql "localhost:/BD/$1.FDB" -ch 'UTF-8' -i 'bin/.classInitialize.sql' -o $2 -u SYSDBA -p masterkey -page 1000000);
+
+	if [ $? -ne 1 ]; then
+		sed -i 's/=//g' $2;
+		sed -i 's/[[:space:]]\+/|/g' $2;
+		sed -i 's/|$//' $2;
+		sed -i '/^$/d' $2;
+		sed -i -e '1d' $2;
+
+		if [ $? -ne 1 ]; then
+			echo 1;
+		else
+			echo 0;
+		fi
+	else
+		echo 0;
+	fi
+}
+
+function getTableAttributes(){
+	# $1 - Nome da base de dados.
+	# $2 - Nome do arquivo temporário.
+
+	queryResult=$(/opt/firebird/bin/isql "localhost:/BD/$1.FDB" -ch 'UTF-8' -i 'bin/.classAttributes.sql' -o $2 -u SYSDBA -p masterkey -page 1000000);
+
+	if [ $? -ne 1 ]; then
+		sed -i 's/=//g' $2;
+		sed -i 's/[[:space:]]\+/|/g' $2;
+		sed -i 's/|$//' $2;
+		sed -i '/^$/d' $2;
+		sed -i -e '1d' $2;
+
+		if [ $? -ne 1 ]; then
+			echo 1;
+		else
+			echo 0;
+		fi
+	else
+		echo 0;
+	fi
+}
+
+if [ $# -eq 1 ] && [ $1 == start ]; then
+   	dir=$(pwd; cd ..); 
+   	cd $dir/webroot;
+
+   	php -S localhost:9000
 
 elif [ $# -eq 3 ] && [ $1 == createmvc ] && [ $2 != "" ] && [ $3 != "" ]; then
 	primaryKeyFile=$(mktemp);
 	attributesFile=$(mktemp);
-
-	database=$2;
+	databaseName=$2;
 	tableName=$3;
-	className=$(echo "$tableName" | sed -r 's/\b(\w)(\w*)\b/\U\1\L\2/g');
-	classContent="<?php \n\tclass "$className"Table extends Table{\n";
-	primaryKey="";
-
-	sed -i "s/=.*ORDER/= '$tableName' ORDER/g" bin/.classInitialize.sql;
-	sed -i "s/=.*ORDER/= '$tableName' ORDER/g" bin/.classAttributes.sql;
-
-	if [ $? -ne 1 ]; then
-		/opt/firebird/bin/isql "localhost:/BD/$database.FDB" -ch 'UTF-8' -i 'bin/.classInitialize.sql' -o $primaryKeyFile -u SYSDBA -p masterkey -page 1000000;
+	className=$(getClassName $tableName);
+	
+	changeTableName=$(setFileTableName $tableName .classInitialize.sql);
+	
+	if [ $changeTableName -eq 1 ]; then
+		changeTableName=$(setFileTableName $tableName .classAttributes.sql);
 		
-		if [ $? -ne 1 ]; then
-			/opt/firebird/bin/isql "localhost:/BD/$database.FDB" -ch 'UTF-8' -i 'bin/.classAttributes.sql' -o $attributesFile -u SYSDBA -p masterkey -page 1000000;
-		
-			if [ $? -ne 1 ]; then
-				sed -i 's/=//g' $primaryKeyFile;
-				sed -i 's/[[:space:]]\+/|/g' $primaryKeyFile;
-				sed -i 's/|$//' $primaryKeyFile;
-				sed -i '/^$/d' $primaryKeyFile;
-				sed -i -e '1d' $primaryKeyFile;
+		if [ $changeTableName -eq 1 ]; then
+			primaryKeyExists=$(getTablePrimaryKey $databaseName $primaryKeyFile);
 
-				sed -i 's/=//g' $attributesFile;
-				sed -i 's/[[:space:]]\+/|/g' $attributesFile;
-				sed -i 's/|$//' $attributesFile;
-				sed -i '/^$/d' $attributesFile;
-				sed -i -e '1d' $attributesFile;
+			if [ $primaryKeyExists -eq 1 ]; then
+				attributesExists=$(getTableAttributes $databaseName $attributesFile);
 
-				fileName=$(mktemp);
-				cat $primaryKeyFile >> $fileName;
-				cat $attributesFile >> $fileName;
+				if [ $attributesExists -eq 1 ]; then
+					tableClass="<?php \n\tclass "$className"Table extends Table{\n";
+					allTableAttributes=$(mktemp);
+					attributes=();
+					primaryKey="";
+					
+					cat $primaryKeyFile >> $allTableAttributes;
+					cat $attributesFile >> $allTableAttributes;
 
-				attributes=();
-				for line in `cat $fileName`; do
-					IFS='|';
-					array=($line);
-					attribute='';
-					for key in "${!array[@]}"; do
-						if [ ${#array[@]} != 4 ]; then
-							primaryKey=${array[$key]};
-						elif [ $key -eq 0 ]; then
-							attribute="$attribute \t\t\t'${array[$key]}' => [";
-						elif [ $key -eq 1 ]; then
-							attribute="$attribute 'null' => '${array[$key]}',";
-						elif [ $key -eq 2 ]; then
-							attribute="$attribute 'size' => ${array[$key]},";
-						elif [ $key -eq 3 ]; then
-							attribute="$attribute 'type' => '${array[$key]}']";
+					for line in `cat $allTableAttributes`; do
+						IFS='|';
+						array=($line);
+						attribute='';
+
+						for key in "${!array[@]}"; do
+							if [ ${#array[@]} != 4 ]; then
+								primaryKey=${array[$key]};
+							elif [ $key -eq 0 ]; then
+								attribute="$attribute \t\t\t'${array[$key]}' => [";
+							elif [ $key -eq 1 ]; then
+								attribute="$attribute'null' => '${array[$key]}',";
+							elif [ $key -eq 2 ]; then
+								attribute="$attribute 'size' => ${array[$key]},";
+							elif [ $key -eq 3 ]; then
+								attribute="$attribute 'type' => '${array[$key]}']";
+							fi
+						done
+						attributes=( ${attributes[@]} "$attribute" );
+					done
+
+					for col in "${!attributes[@]}"; do
+						if [ $col -eq  0 ]; then
+							tableClass="$tableClass \t\tprivate \$attributes = [\n${attributes[$col]},\n";
+						elif [ $(($col+1)) -eq  ${#attributes[@]} ]; then
+							tableClass="$tableClass${attributes[$col]}\n\t\t];\n\t}\n";
+						else
+							tableClass="$tableClass${attributes[$col]},\n";
 						fi
 					done
-					attributes=( ${attributes[@]} "$attribute" );
-				done
 
-				for col in "${!attributes[@]}"; do
-					if [ $col -eq  0 ]; then
-						classContent="$classContent \t\tprivate \$attributes = [\n${attributes[$col]},\n";
-					elif [ $(($col+1)) -eq  ${#attributes[@]} ]; then
-						classContent="$classContent${attributes[$col]}\n\t\t];\n\t}\n";
-					else
-						classContent="$classContent${attributes[$col]},\n";
-					fi
-				done
+					tableClass="$tableClass\n\n\tpublic function initialize(){\n\t\tparent::database('firebird', '$databaseName');\n\n\t\t\$this->table('$tableName');\n\t\t\$this->primaryKey('$primaryKey');\n\t\t\$this->belongsTo([]);\n\t}\n}";
+					entityClass="<?php\n\tclass $className extends Entity{\n\t\n\t}";
 
-				classContent="$classContent\n\n\tpublic function initialize(){\n\t\tparent::database('firebird', '$database');\n\n\t\t\$this->table('$tableName');\n\t\t\$this->primaryKey('$primaryKey');\n\t\t\$this->belongsTo([]);\n\t}\n}";
-				echo -e $classContent > bin/$className"Table".php;
+					echo -e $tableClass > $ROOT/src/Model/Tables/$className"Table".php;
+					echo -e $entityClass > $ROOT/src/Model/Entity/$className.php;
+					cd $ROOT/src/View; mkdir $className;
+				fi
 			fi
 		fi
 	fi
 else
 	echo "Não foi possível executar esta ação.";
 fi
-
-
