@@ -206,9 +206,6 @@ function getTableClassPrimaryKey(){
 	done
 }
 
-#result=$(createTableClass Cadastro FIREBIRD CADASTRO, cod_cadastro);
-#echo -e $result > bin/test.php;
-
 if [ $# -eq 1 ] && [ $1 == start ]; then
    	dir=$(pwd; cd ..); 
    	cd $dir/webroot;
@@ -246,7 +243,7 @@ elif [ $# -eq 3 ] && [ $1 == createmvc ] && [ $2 != "" ] && [ $3 != "" ]; then
 					done
 					attributes=$(echo $attributes | sed 's/...$//');
 
-					TableClass=$(createTableClass $className $databaseName $tableName, $primaryKey "$attributes");
+					TableClass=$(createTableClass $className $databaseName $tableName $primaryKey "$attributes");
 					EntityClass=$(createEntityClass $className);
 					ControllerClass=$(createControllerClass $className);
 					ViewDirectoryClass=$(createClassDir $className);
