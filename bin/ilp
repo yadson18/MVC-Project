@@ -165,7 +165,7 @@ function createTableClass(){
 
 					\t\t\t\$this->table('$3');\n
 					\t\t\t\$this->primaryKey('$4');\n
-					\t\t\t\$this->belongsTo('' => []);\n
+					\t\t\t\$this->belongsTo('', []);\n
 				\t\t}\n
 			\t}
 	";
