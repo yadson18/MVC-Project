@@ -24,9 +24,7 @@
 		}
 
 		protected function belongsTo(string $fieldName, array $arrayConfig){
-			if(!empty($fieldName) && !empty($arrayConfig)){
-				$this->belongsTo[$fieldName] = $arrayConfig;
-			}
+			$this->belongsTo[$fieldName] = $arrayConfig;
 		}
 		public function getBelongsTo(string $fieldName = null){
 			if(!empty($this->belongsTo) && !empty($fieldName)){
