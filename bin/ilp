@@ -19,7 +19,7 @@ function getClassName(){
 function findFile(){
 	# $1 - Nome do arquivo na pasta bin
 
-	if [ -f $ROOT/bin/$1 ]; then
+	if [ -e $ROOT/bin/$1 ]; then
 		echo 1;
 	else
 		echo 0;
@@ -91,6 +91,124 @@ function getTableAttributes(){
 	fi
 }
 
+function getFileContents(){
+	# $1 - Nome do primeiro arquivo.
+	# $2 - Nome do segundo arquivo.
+
+	newFile=$(mktemp);
+
+	cat $1 >> $newFile;
+	cat $2 >> $newFile;
+
+	cat $newFile;
+}
+
+function createClassDir(){
+	# $1 - Nome do diretório.
+
+	cd $ROOT/src/View;
+	if [ -e $1 ]; then
+		echo 0;
+	else
+		mkdir $1;
+		echo 1;
+	fi
+}
+
+function createEntityClass(){
+	# $1 - Nome da classe.
+
+	entityClass="
+		<?php\n
+			\tclass $1 extends Entity{\n
+				\t\n
+			\t}
+	";
+	
+	echo $entityClass;
+}
+
+function createControllerClass(){
+	# $1 - Nome da classe.
+
+	controllerClass="
+		<?php\n  
+			\tclass $1Controller extends AppController{\n
+				\t\tpublic function __construct(\$requestData){\n
+						\t\t\tparent::initialize(\$requestData);\n
+				\t\t}\n\n
+
+				\t\tpublic function isAuthorized(string \$method){\n
+					\t\t\treturn \$this->notAlowed(\$method, []);\n
+				\t\t}\n
+			\t}
+	";
+
+	echo $controllerClass;
+}
+
+function createTableClass(){
+	# $1 - Nome da classe.
+	# $2 - Nome da base de dados.
+	# $3 - Nome da tabela.
+	# $4 - Chave primária da tabela.
+	# $5 - Atributos da classe.
+
+	tableClass="
+		<?php\n
+			\tclass $1Table extends Table{\n
+				\t\tprivate \$attributes = [\n
+					$5\n
+				\t\t];\n\n
+				\t\tpublic function initialize(){\n
+					\t\t\tparent::database('firebird', '$2');\n\n
+
+					\t\t\t\$this->table('$3');\n
+					\t\t\t\$this->primaryKey('$4');\n
+					\t\t\t\$this->belongsTo([]);\n
+				\t\t}\n
+			\t}
+	";
+
+	echo $tableClass;
+}
+
+function getTableClassAttributeLine(){
+	# $1 - Linha de atributo do arquivo.
+
+	IFS='|';
+	array=($1);
+	for key in "${!array[@]}"; do
+		if [ ${#array[@]} -eq 4 ]; then
+			if [ $key -eq 0 ]; then
+				echo "\t\t\t'${array[$key]}' => [";
+			elif [ $key -eq 1 ]; then
+				echo "'null' => '${array[$key]}',";
+			elif [ $key -eq 2 ]; then
+				echo "'size' => ${array[$key]},";
+			elif [ $key -eq 3 ]; then
+				echo "'type' => '${array[$key]}' ],\n";
+			fi
+		fi
+	done
+}
+
+function getTableClassPrimaryKey(){
+	# $1 - Linha de atributo do arquivo.
+
+	IFS='|';
+	array=($1);
+	for key in "${!array[@]}"; do
+		if [ ${#array[@]} -ne 4 ]; then
+			echo "${array[$key]}";
+			break;
+		fi
+	done
+}
+
+#result=$(createTableClass Cadastro FIREBIRD CADASTRO, cod_cadastro);
+#echo -e $result > bin/test.php;
+
 if [ $# -eq 1 ] && [ $1 == start ]; then
    	dir=$(pwd; cd ..); 
    	cd $dir/webroot;
@@ -116,51 +234,28 @@ elif [ $# -eq 3 ] && [ $1 == createmvc ] && [ $2 != "" ] && [ $3 != "" ]; then
 				attributesExists=$(getTableAttributes $databaseName $attributesFile);
 
 				if [ $attributesExists -eq 1 ]; then
-					tableClass="<?php \n\tclass "$className"Table extends Table{\n";
-					allTableAttributes=$(mktemp);
-					attributes=();
-					primaryKey="";
-					
-					cat $primaryKeyFile >> $allTableAttributes;
-					cat $attributesFile >> $allTableAttributes;
+					attributes="";
+					primaryKey=0;
 
-					for line in `cat $allTableAttributes`; do
-						IFS='|';
-						array=($line);
-						attribute='';
-
-						for key in "${!array[@]}"; do
-							if [ ${#array[@]} != 4 ]; then
-								primaryKey=${array[$key]};
-							elif [ $key -eq 0 ]; then
-								attribute="$attribute \t\t\t'${array[$key]}' => [";
-							elif [ $key -eq 1 ]; then
-								attribute="$attribute'null' => '${array[$key]}',";
-							elif [ $key -eq 2 ]; then
-								attribute="$attribute 'size' => ${array[$key]},";
-							elif [ $key -eq 3 ]; then
-								attribute="$attribute 'type' => '${array[$key]}']";
-							fi
-						done
-						attributes=( ${attributes[@]} "$attribute" );
-					done
-
-					for col in "${!attributes[@]}"; do
-						if [ $col -eq  0 ]; then
-							tableClass="$tableClass \t\tprivate \$attributes = [\n${attributes[$col]},\n";
-						elif [ $(($col+1)) -eq  ${#attributes[@]} ]; then
-							tableClass="$tableClass${attributes[$col]}\n\t\t];\n\t}\n";
-						else
-							tableClass="$tableClass${attributes[$col]},\n";
+					result=$(getFileContents $primaryKeyFile $attributesFile);
+					for line in `echo $result`; do
+						if [ $primaryKey == 0 ]; then
+							primaryKey=$(getTableClassPrimaryKey $line);
 						fi
+						attributes="$attributes$(getTableClassAttributeLine $line)";
 					done
+					attributes=$(echo $attributes | sed 's/...$//');
 
-					tableClass="$tableClass\n\n\tpublic function initialize(){\n\t\tparent::database('firebird', '$databaseName');\n\n\t\t\$this->table('$tableName');\n\t\t\$this->primaryKey('$primaryKey');\n\t\t\$this->belongsTo([]);\n\t}\n}";
-					entityClass="<?php\n\tclass $className extends Entity{\n\t\n\t}";
+					TableClass=$(createTableClass $className $databaseName $tableName, $primaryKey "$attributes");
+					EntityClass=$(createEntityClass $className);
+					ControllerClass=$(createControllerClass $className);
+					ViewDirectoryClass=$(createClassDir $className);
 
-					echo -e $tableClass > $ROOT/src/Model/Tables/$className"Table".php;
-					echo -e $entityClass > $ROOT/src/Model/Entity/$className.php;
-					cd $ROOT/src/View; mkdir $className;
+					if [ $ViewDirectoryClass -eq 1 ]; then
+						echo -e $TableClass > $ROOT/src/Model/Tables/$className"Table".php;
+						echo -e $EntityClass > $ROOT/src/Model/Entity/$className.php;
+						echo -e $ControllerClass > $ROOT/src/Controller/$className"Controller".php;
+					fi
 				fi
 			fi
 		fi
