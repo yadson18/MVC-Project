@@ -5,6 +5,7 @@
         private function __construct(){
             $this->loadModule("Controller");
             $this->loadModule("Html");
+            $this->loadModule("Form");
             $this->loadModule("Flash");
         }
 
