@@ -157,7 +157,7 @@ function createTableClass(){
 	tableClass="
 		<?php\n
 			\tclass $1Table extends Table{\n
-				\t\tprivate \$attributes = [\n
+				\t\tprotected \$attributes = [\n
 					$5\n
 				\t\t];\n\n
 				\t\tpublic function initialize(){\n
