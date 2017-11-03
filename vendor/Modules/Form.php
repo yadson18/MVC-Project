@@ -19,23 +19,23 @@
         	}
         }
 
-        protected function getTagAttributes(string $tagName, string $labelName, array $attributes){
-        	if(!empty($tagName) && !empty($attributes)){
+        protected function getTagAttributes(string $tagName, string $labelName, array $attributes = null){
+        	if(!empty($tagName)){
 	        	$avaliableAttrs = $this->getAvaliableAtts($tagName);
 	        	$tagAttributes = [];
 
-	            foreach($attributes as $attribute => $value){
-	            	if(in_array($attribute, $avaliableAttrs)){
-	            		if(isset($avaliableAttrs[$attribute])){
-	            			if(in_array($value, $avaliableAttrs[$attribute])){
-	            				$tagAttributes[$attribute] = $value;
-	            			}
-	            		}
-	            		else{
-	            			$tagAttributes[$attribute] = $value;
-	            		}
-	            	}
-	            }
+                if(!empty($attributes)){
+    	            foreach($attributes as $attribute => $value){
+    	            	if(in_array($attribute, $avaliableAttrs)){
+                            $tagAttributes[$attribute] = $value;
+    	            	}
+                        else if(isset($avaliableAttrs[$attribute])){
+                            if(in_array($value, $avaliableAttrs[$attribute])){
+                                $tagAttributes[$attribute] = $value;
+                            }
+                        }
+    	            }
+                }
 
 	            if(
 	            	$tagName === "input" ||
@@ -79,7 +79,7 @@
             return "</form>";
         }
 
-        public function input(string $name, array $attributes){
+        public function input(string $name, array $attributes = null){
             if(!empty($name)){
             	$inputAttributes = $this->getTagAttributes("input", $name, $attributes);
             	if(!empty($inputAttributes)){
