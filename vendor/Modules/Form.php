@@ -19,7 +19,7 @@
         	}
         }
 
-        protected function getTagAttributes(string $tagName, string $labelName, array $attributes = null){
+        protected function getTagAttributes(string $tagName, array $attributes = null, string $labelName = null){
         	if(!empty($tagName)){
 	        	$avaliableAttrs = $this->getAvaliableAtts($tagName);
 	        	$tagAttributes = [];
@@ -43,14 +43,14 @@
 	            	$tagName === "button"
 	            ){
 		            if(!array_key_exists("class", $tagAttributes)){
-		            	$tagAttributes["class"] = "form-control";
+		            	$tagAttributes["class"] = "form-control ".strtolower(removeSpecialChars($labelName));
+                        if($tagName === "button"){
+                            $tagAttributes["class"] .= " btn btn-default";
+                        }
 		            }
 		            if($tagName === "input" || $tagName === "select"){
 			            if(!array_key_exists("name", $tagAttributes)){
 			            	$tagAttributes["name"] = strtolower(removeSpecialChars($labelName));
-			            }
-			            if(!array_key_exists("id", $tagAttributes)){
-			            	$tagAttributes["id"] = strtolower(removeSpecialChars($labelName));
 			            }
 		            }
 	            }
@@ -81,7 +81,7 @@
 
         public function input(string $name, array $attributes = null){
             if(!empty($name)){
-            	$inputAttributes = $this->getTagAttributes("input", $name, $attributes);
+            	$inputAttributes = $this->getTagAttributes("input", $attributes, $name);
             	if(!empty($inputAttributes)){
                 	return "
 		        		<div class='form-group'>
@@ -93,11 +93,16 @@
             }
         }
 
-        public function buttonSubmit(string $text){
-        	return "
-        		<div class='form-group'>
-        			<button type='submit' class='btn'>{$text}</button>
-        		</div>
-        	";
+        public function buttonSubmit(string $text, array $attributes = null){
+            if(!empty($text)){
+                $buttonAttributes = $this->getTagAttributes("button", $attributes);
+                if(!empty($buttonAttributes)){
+                    return "
+                        <div class='form-group'>
+                            <button {$buttonAttributes}>{$text}</button>
+                        </div>
+                    ";
+                }
+            }
         }
 	}
