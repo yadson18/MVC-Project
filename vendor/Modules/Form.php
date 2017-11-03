@@ -47,10 +47,10 @@
 		            }
 		            if($tagName === "input" || $tagName === "select"){
 			            if(!array_key_exists("name", $tagAttributes)){
-			            	$tagAttributes["name"] = $labelName;
+			            	$tagAttributes["name"] = strtolower(removeSpecialChars($labelName));
 			            }
 			            if(!array_key_exists("id", $tagAttributes)){
-			            	$tagAttributes["id"] = $labelName;
+			            	$tagAttributes["id"] = strtolower(removeSpecialChars($labelName));
 			            }
 		            }
 	            }
