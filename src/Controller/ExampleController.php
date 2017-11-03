@@ -8,7 +8,7 @@
 			return $this->notAlowed($method, ["home"]);
 		}
 
-		public function home(){
+		public function home($id){
 			$this->viewTitle("Home");
 		}
 	}

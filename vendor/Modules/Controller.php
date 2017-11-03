@@ -46,26 +46,7 @@
         }
 
         public function setRequestData(array $requestData){
-            if(!empty($requestData)){
-                $formatedRequestData = [];
-
-                while($requestData){
-                    $key = array_shift($requestData);
-                    
-                    if(!empty($key) && is_string($key)){
-                        $value = array_shift($requestData);
-
-                        if(!empty($value)){
-                            $formatedRequestData[$key] = $value;
-                        }
-                    }
-                }
-
-                $this->requestData = $formatedRequestData;
-            }
-            else{
-        	   $this->requestData = $requestData;
-            }
+            $this->requestData = $requestData;
         }
         public function getRequestData(){
         	return (object) $this->requestData;

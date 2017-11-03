@@ -2,7 +2,7 @@
 	abstract class AppController{
 		private $viewTitle;
 		private $viewData;
-		private $RequestData;
+		protected $RequestData;
 
 		public function initialize(stdClass $requestData){
 			$this->loadModule("Session");
