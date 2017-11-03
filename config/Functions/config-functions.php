@@ -4,20 +4,16 @@
     function getDatabaseConfig(string $dbType, string $dbName){
         global $appConfiguration;
 
-        if(isset($appConfiguration["Databases"])){
-            if(array_key_exists($dbType, $appConfiguration["Databases"])){
-                if(array_key_exists($dbName, $appConfiguration["Databases"][$dbType])){
-                    $config = $appConfiguration["Databases"][$dbType][$dbName];
+        if(isset($appConfiguration["Databases"][$dbType][$dbName])){
+            $config = $appConfiguration["Databases"][$dbType][$dbName];
 
-                    return [
-                        "dsn" => "{$dbType}:dbname={$config['dbPath']}; charset={$config['charset']}",
-                        "user" => $config["dbUser"],
-                        "password" => $config["dbPassword"]
-                    ];
-                }
-            }
-            return false;
+            return [
+                "dsn" => "{$dbType}:dbname={$config['dbPath']}; charset={$config['charset']}",
+                "user" => $config["dbUser"],
+                "password" => $config["dbPassword"]
+            ];
         }
+        return false;
     }
 
     function getDefaultErrorPage(){
@@ -50,20 +46,17 @@
     function setDatabaseConfig(string $dbType, string $dbName, array $arrayConfig){
         global $appConfiguration;
 
-        if(!empty($arrayConfig) && is_array($arrayConfig) && isset($appConfiguration["Databases"])){ 
-            if(array_key_exists($dbType, $appConfiguration["Databases"])){
-                if(array_key_exists($dbName, $appConfiguration["Databases"][$dbType])){
-                    foreach($arrayConfig as $configColumn => $configValue){
-                        if(isset($appConfiguration["Databases"][$dbType][$dbName][$configColumn])){
-                            $appConfiguration["Databases"][$dbType][$dbName][$configColumn] = $configValue;
-                        }
+        if(!empty($arrayConfig)){
+            if(isset($appConfiguration["Databases"][$dbType][$dbname])){
+                foreach($arrayConfig as $configColumn => $configValue){
+                    if(isset($appConfiguration["Databases"][$dbType][$dbName][$configColumn])){
+                        $appConfiguration["Databases"][$dbType][$dbName][$configColumn] = $configValue;
                     }
                 }
+                return true;
             }
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
     function getClassesPath(){

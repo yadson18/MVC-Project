@@ -1,6 +1,6 @@
 <?php 
 	abstract class AppController{
-		private $pageTitle;
+		private $viewTitle;
 		private $viewData;
 		private $RequestData;
 
@@ -48,13 +48,13 @@
             return false;
         }
 
-        protected function pageTitle(string $title){
+        protected function viewTitle(string $title){
             if(!empty($title)){
-                $this->pageTitle = $title;
+                $this->viewTitle = $title;
             }
         }
-        public function getPageTitle(){
-        	return $this->pageTitle;
+        public function getViewTitle(){
+        	return $this->viewTitle;
         }
 
 		protected function loadModule(string $module){

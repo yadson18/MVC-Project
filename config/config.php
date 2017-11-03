@@ -12,7 +12,7 @@
 	 */
 
 	$appConfiguration = [
-		"AppName" => "Framework ILP - ",
+		"AppName" => "Example Name - ",
 		
 		"DefaultRoute" => [
 			"controller" => "Example",
@@ -24,18 +24,18 @@
 		"DefaultErrorPage" => "daniedAccess.php",
 
 		"Databases" => [
-			"firebird" => [
-				"sricash" => [
-					"dbPath" => "/BD/SRICASH.FDB",
-					"dbUser" => "SYSDBA",
-					"dbPassword" => "masterkey",
+			"database Type" => [
+				"database name" => [
+					"dbPath" => "/var/dbExample",
+					"dbUser" => "root",
+					"dbPassword" => "123",
 					"charset" => "UTF8"
 				]
 			]
 		],
 
 		"Webservice" => [
-			"url" => "url do webservice",
+			"url" => "urlExample.com/soap",
 			"options" => [
 				"soap_version" => "SOAP_1_2",
                 "exceptions" => true,

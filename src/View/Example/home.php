@@ -5,7 +5,7 @@
     </div>
     <div class="features">
         <?= $this->Flash->showMessage() ?>
-        <h1 class="features-title">Funcionalidades</h1>
+        <h1 class="features-title">Features</h1>
         <div class="row">
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
@@ -13,7 +13,7 @@
                         <i class="fa fa-bar-chart" aria-hidden="true"></i>
                     </div>
                     <div class="caption">
-                        <h3>Exemplo</h3>
+                        <h3>Example 1</h3>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat felis est, et sollicitudin nibh sollicitudin ac. Mauris non porttitor massa. Quisque ut lobortis augue, sit amet malesuada lacus. Etiam a dapibus elit.
                         </p>
@@ -30,7 +30,7 @@
                         <i class="fa fa-bar-chart" aria-hidden="true"></i>
                     </div>
                     <div class="caption">
-                        <h3>Exemplo</h3>
+                        <h3>Example 2</h3>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat felis est, et sollicitudin nibh sollicitudin ac. Mauris non porttitor massa. Quisque ut lobortis augue, sit amet malesuada lacus. Etiam a dapibus elit.
                         </p>
@@ -47,7 +47,7 @@
                         <i class="fa fa-bar-chart" aria-hidden="true"></i>
                     </div>
                     <div class="caption">
-                        <h3>Exemplo</h3>
+                        <h3>Example 3</h3>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat felis est, et sollicitudin nibh sollicitudin ac. Mauris non porttitor massa. Quisque ut lobortis augue, sit amet malesuada lacus. Etiam a dapibus elit.
                         </p>
@@ -66,7 +66,7 @@
         <a href="#" target="blank">
             <p>
                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-                Encontre-nos
+                Find Us
             </p> 
         </a>
     </div>

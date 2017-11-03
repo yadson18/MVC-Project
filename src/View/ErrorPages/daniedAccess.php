@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-	<title>Acesso negado</title>
+	<title>Danied Access</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="/css/pages.css">
@@ -12,7 +12,7 @@
         <h3>
         	<?= $message ?>
         </h3>
-        <p><button id="redirect-button">Clique aqui para fazer o login</button></p>
+        <p><button id="redirect-button">Click here to make login</button></p>
    	</div>
     <script type="text/javascript">
         window.onload = function(){

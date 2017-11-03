@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
-		<title><?= $this->getAppName() . $this->getPageTitle() ?></title>
+		<title><?= $this->getAppName() . $this->getViewTitle() ?></title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<?= $this->Html->css("bootstrap.min.css") ?>
@@ -30,9 +30,9 @@
 		        </div>
 		        <div class="collapse navbar-collapse" id="responsive-menu">
 		            <ul class="nav navbar-nav navbar-right">
-		                <li><a href="#">Ver Mais</a></li>
-		                <p class="navbar-text">ou</p>
-		                <li><a href="#">Nada Aqui</a></li>
+		                <li><a href="#">View More</a></li>
+		                <p class="navbar-text">or</p>
+		                <li><a href="#">Click Here</a></li>
 		            </ul>
 		        </div>
 		    </div>

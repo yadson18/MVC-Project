@@ -19,8 +19,11 @@
             if(is_file($this->Controller->getTemplate())){
                 ob_start();
 
-                foreach($this->Controller->getInstance()->getviewData() as $variableName => $value){
-                    $$variableName = $value;
+                $viewData = $this->Controller->getInstance()->getviewData();
+                if(!empty($viewData)){
+                    foreach($viewData as $variableName => $value){
+                        $$variableName = $value;
+                    }
                 }
 
                 include $this->Controller->getTemplate();
@@ -32,8 +35,8 @@
             return getAppName();
         }
 
-        public function getPageTitle(){
-            return $this->Controller->getInstance()->getPageTitle();
+        public function getViewTitle(){
+            return $this->Controller->getInstance()->getViewTitle();
         }
 
         protected function loadModule(string $module){
