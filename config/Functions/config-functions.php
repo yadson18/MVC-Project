@@ -8,7 +8,7 @@
             $config = $appConfiguration["Databases"][$dbType][$dbName];
 
             return [
-                "dsn" => "{$dbType}:dbname={$config['dbPath']}; charset={$config['charset']}",
+                "dsn" => "{$dbType}:dbname={$config['host']}:{$config['dbPath']}; charset={$config['charset']}",
                 "user" => $config["dbUser"],
                 "password" => $config["dbPassword"]
             ];
@@ -21,6 +21,15 @@
 
         if(isset($appConfiguration["DefaultErrorPage"])){
             return $appConfiguration["DefaultErrorPage"];
+        }
+        return false;
+    }
+
+    function getDisplayErrors(){
+        global $appConfiguration;
+
+        if(isset($appConfiguration["DisplayErrors"])){
+            return $appConfiguration["DisplayErrors"];
         }
         return false;
     }

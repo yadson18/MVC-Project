@@ -1,37 +1,33 @@
 <?php
     class Webservice{
-        private static $instance;
-        private $connection;
+        private static $Instance;
+        private $Connection;
 
-        private function __construct($webserviceConfig){
-            try {
-                if(!isset($this->connection)){
-                    $this->connection = new SoapClient($webserviceConfig["url"], $webserviceConfig["options"]);
+        private function __construct(array $webserviceConfig){
+            $this->Error = new ErrorHandling("Webservice");
+
+            try{
+                if(!isset($this->Connection)){
+                    $this->Connection = new SoapClient($webserviceConfig["url"], $webserviceConfig["options"]);
                 }
             } 
-            catch (Exception $e) {
-                echo "Não foi possível conectar-se ao Webservice.";
+            catch(Exception $Exception){
+                $this->Error->stopExecution(
+                    $Exception->getCode(), $Exception->getMessage(), 11
+                );
             }
         }
         
         public static function getInstance(){
-            if(!isset(self::$instance)){
-                self::$instance = new Webservice(getWebServiceConfig());
+            if(!isset(self::$Instance)){
+                self::$Instance = new Webservice(getWebServiceConfig());
             }
-            return self::$instance;
-        }
-
-        public function criaAmbiente($arguments){
-            return $this->callFunction("criaAmbiente", $arguments);
+            return self::$Instance;
         }
 
         public function callFunction($functionName, $arguments){
-            if(is_callable([$this->connection, $functionName], true)){
-                $result = $this->connection->$functionName($arguments);
-
-                if(empty($result["erro"]) && $result["return"] === 1){
-                    return true;
-                }
+            if(is_callable([$this->Connection, $functionName], true)){
+                return $this->Connection->$functionName($arguments);
             }
             return false;
         }

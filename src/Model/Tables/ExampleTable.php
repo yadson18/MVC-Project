@@ -1,10 +1,10 @@
 <?php  
 	class ExampleTable extends Table{
 		public function initialize(){
-			parent::database("database name", "database type");
+			parent::database("firebird", "SRICASH");
 
-			$this->table("example");
-			$this->primaryKey("example_id");
+			$this->table("CADASTRO");
+			$this->primaryKey("cod_cadastro");
 			$this->belongsTo("", []);
 		}
 	}

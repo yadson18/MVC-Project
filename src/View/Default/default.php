@@ -30,7 +30,7 @@
 		        </div>
 		        <div class="collapse navbar-collapse" id="responsive-menu">
 		            <ul class="nav navbar-nav navbar-right">
-		                <li><a href="#">View More</a></li>
+		            	<li><a href="#">View More</a></li>
 		                <p class="navbar-text">or</p>
 		                <li><a href="#">Click Here</a></li>
 		            </ul>

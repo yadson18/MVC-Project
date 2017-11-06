@@ -9,6 +9,13 @@
 		}
 
 		public function home($id){
+			$Cadastro = $this->newEntity("Example");
+
+			if($this->requestIs("GET")){
+				$Cadastro = $Cadastro->get($id);
+			}
+
 			$this->viewTitle("Home");
+			$this->set(["cadastro" => $Cadastro]);
 		}
 	}

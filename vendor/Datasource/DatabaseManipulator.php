@@ -1,6 +1,6 @@
 <?php  
 	class DatabaseManipulator{
-		private $connection;
+		private $Connection;
 		private $entityName;
 		private $table;
 		private $filterColumns;
@@ -9,10 +9,12 @@
 		private $returnType;
 
 		public function __construct(string $databaseType, string $database, string $entity){
+			$this->Error = new ErrorHandling("DatabaseManipulator");
+
 			$connectionConfig = getDatabaseConfig($databaseType, $database);
 			if(!empty($connectionConfig)){
 				$this->entityName = $entity;
-				$this->connection = Connection::getInstance(
+				$this->Connection = Connection::getInstance(
 					$connectionConfig["dsn"], 
 					$connectionConfig["user"], 
 					$connectionConfig["password"]
@@ -159,47 +161,86 @@
 		 *  (int) limit, quantidade de dados que o metodo retornará.
 		 */
 		protected function select($limit){
-			if(!empty($this->connection)){
+			if(!empty($this->Connection)){
 				if($this->getTable() && $this->getFilterColumns()){
 					if($this->getCondition() && $this->getColumnsAndvalues()){
-						$query = $this->connection->prepare(
-							"SELECT {$limit}{$this->getFilterColumns()} 
-							 FROM {$this->getTable()} 
-							 WHERE{$this->getCondition()}"
-						);
+						try{
+							$query = $this->Connection->prepare(
+								"SELECT {$limit}{$this->getFilterColumns()} 
+								 FROM {$this->getTable()} 
+								 WHERE{$this->getCondition()}"
+							);
+						}
+						catch(Exception $Exception){
+							$this->Error->stopExecution(
+								$Exception->getCode(), $Exception->getMessage(), 168
+							);
+						}
 
 						foreach($this->getColumnsAndvalues() as $column => $value){
 							$query->bindValue(++$column, $value);
 						}
 					}
 					else if($this->getCondition() && !$this->getColumnsAndvalues()){
-						$query = $this->connection->prepare(
-							"SELECT {$limit}{$this->getFilterColumns()} 
-							 FROM {$this->getTable()} 
-							 WHERE{$this->getCondition()}"
-						);
+						try{
+							$query = $this->Connection->prepare(
+								"SELECT {$limit}{$this->getFilterColumns()} 
+								 FROM {$this->getTable()} 
+								 WHERE{$this->getCondition()}"
+							);
+						}
+						catch(Exception $Exception){
+							$this->Error->stopExecution(
+								$Exception->getCode(), $Exception->getMessage(), 186
+							);
+						}
 					}
 					else if(!$this->getCondition() && !$this->getColumnsAndvalues()){
-						$query = $this->connection->prepare(
-							"SELECT {$limit}{$this->getFilterColumns()} FROM {$this->getTable()}"
-						);
+						try{
+							$query = $this->Connection->prepare(
+								"SELECT {$limit}{$this->getFilterColumns()} FROM {$this->getTable()}"
+							);
+						}
+						catch(Exception $Exception){
+							$this->Error->stopExecution(
+								$Exception->getCode(), $Exception->getMessage(), 200
+							);
+						}
 					}
 
-					if(!empty($query) && (get_class($query) === "PDOStatement")){
+					if(!empty($query) && isInstanceOf($query, "PDOStatement")){
 						$query->execute();	
 
 						if($this->getReturnType()){
 							if($this->getReturnType() === "object"){
 								$query->setFetchMode(PDO::FETCH_CLASS, $this->getModelName());
-								return $query->fetch();
+
+								try{
+									return $query->fetch();
+								}
+								catch(Exception $Exception){
+									$this->Error->stopExecution(
+										$Exception->getCode(), $Exception->getMessage(), 228
+									);
+								}
 							}
 						}
 						$query->setFetchMode(PDO::FETCH_ASSOC);
-						return $query->fetchAll();
+
+						try{
+							return $query->fetchAll();
+						}
+						catch(Exception $Exception){
+							$this->Error->stopExecution(
+								$Exception->getCode(), $Exception->getMessage(), 240
+							);
+						}
 					}
 				}
 			}
-			return false;
+			$this->Error->stopExecution(
+				"1", "Connection with database has not established.", 164
+			);
 		}
 
 		/*

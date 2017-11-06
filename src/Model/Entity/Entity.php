@@ -36,12 +36,12 @@
 
 		public function get($key, array $contain = null){
 			if($this->tableHasLoaded()){
-				if(strtolower($key) === "all" && empty($contain)){
+				if(is_string($key) && strtolower($key) === "all" && empty($contain)){
 					return self::$Table->getDBManipulator()
 						->find(self::$Table->getTable(), "*")
 						->limit("max");
 				}
-				else if(self::$Table->getPrimaryKey() && !empty($key) && strtolower($key) !== "all"){
+				else if(self::$Table->getPrimaryKey() && !empty($key) && !is_array($key)){
 					return self::$Table->getDBManipulator()
 						->find(self::$Table->getTable(), "*")
 						->where([self::$Table->getPrimaryKey()." =" => $key])

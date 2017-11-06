@@ -6,6 +6,7 @@
 	 *		[DefaultRoute] -> O primeiro Controller e View a serem carregados ao iniciar a aplicação.
 	 *		[Salt] -> String aleatória para criar hash de senha.
 	 *		[DefaultErrorPage] -> Página que sempre será exibida em caso de acesso não permitido ou url's inexistentes.
+	 		[DisplayErrors] -> Especificar se o projeto mostrará erros de execução.
 	 *		[Databases] -> Bases de dados que serão usadas pela aplicação.
 	 *		[ClassesPath] -> Diretórios onde encontram-se as classes do sistema, para que possam ser carregadas.
 	 *		[Webservice] -> Configuração para comunicação com webservices.
@@ -14,24 +15,34 @@
 	$appConfiguration = [
 		"AppName" => "Example Name - ",
 		
+		"Salt" => "759403333bb1ee9a773e97f4d1d1b29baab207b5",
+		
+		"DisplayErrors" => true,
+
 		"DefaultRoute" => [
 			"controller" => "Example",
 			"view" => "home"
 		],
 
-		"Salt" => "759403333bb1ee9a773e97f4d1d1b29baab207b5",
-
 		"DefaultErrorPage" => "daniedAccess.php",
 
 		"Databases" => [
-			"database Type" => [
-				"database name" => [
-					"dbPath" => "/var/dbExample",
-					"dbUser" => "root",
-					"dbPassword" => "123",
+			"firebird" => [
+				"SRICASH" => [
+					"host" => "localhost",
+					"dbPath" => "/BD/SRICASH.FDB",
+					"dbUser" => "SYSDBA",
+					"dbPassword" => "masterkey",
 					"charset" => "UTF8"
 				]
 			]
+		],
+
+		"EmailTransport" => [
+			"defaultEmail" => "example@email.com",
+			"port" => 25,
+			"emailName" => "user",
+			"emailPassword" => "secret"
 		],
 
 		"Webservice" => [

@@ -13,6 +13,13 @@
         return false;
 	}
 
+	function isInstanceOf($objectInstance, string $className){
+		if(is_object($objectInstance) && get_class($objectInstance) === $className){
+			return true;
+		}
+		return false;
+	}
+
 	function removeSpecialChars($string) {
 	    $string = str_replace(["á","à","â","ã","ä"], "a", $string);
 	    $string = str_replace(["Á","À","Â","Ã","Ä"], "A", $string);
