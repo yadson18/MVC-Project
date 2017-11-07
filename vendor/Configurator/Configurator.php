@@ -13,10 +13,12 @@
 		}
 
 		public function set(string $configName, $configValue){
-			if(!empty($configName) && !empty($configValue)){
-				$this->configs[$configName] = $configValue;
-
-				return $this;
+			if(!empty($configName)){
+				if(is_bool($configValue) || !empty($configValue)){
+					$this->configs[$configName] = $configValue;
+				
+					return $this;
+				}
 			}
 			return false;
 		}

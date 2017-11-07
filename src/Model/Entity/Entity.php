@@ -3,12 +3,13 @@
 		private static $Table;
 
 		public function __construct(){
-			self::$Table = $this->loadTable(get_class($this));
+			self::$Table = $this->loadSelfTable(get_class($this));
 		}
 
-		protected function loadTable(string $entityName){
-			if(!empty($entityName) && class_exists("{$entityName}Table")){
-				$tableToLoad = $entityName."Table";
+		protected function loadSelfTable(string $entityName){
+			$tableToLoad = "{$entityName}Table";
+			
+			if(!empty($entityName) && class_exists($tableToLoad)){
 				$tableToLoad = new $tableToLoad();
 
 				if(!empty($tableToLoad) && is_object($tableToLoad) && is_callable([$tableToLoad, "initialize"])){

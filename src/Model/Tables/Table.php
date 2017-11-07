@@ -16,6 +16,7 @@
 		protected function database(string $databaseType, string $database){
 			$this->QueryBuilder = new QueryBuilder($databaseType, $database, $this->getEntityName());
 		}
+		
 		public function queryBuilder(){
 			if(!empty($this->QueryBuilder)){
 				return $this->QueryBuilder;
