@@ -3,6 +3,8 @@
         private static $Instance;
 
         private function __construct(){
+            $this->Config = Configurator::getInstance();
+
             $this->loadModule("Controller");
             $this->loadModule("Html");
             $this->loadModule("Form");
@@ -33,7 +35,7 @@
         } 
 
         public function getAppName(){
-            return getAppName();
+            return $this->Config->get("AppName");
         }
 
         public function getViewTitle(){
@@ -75,9 +77,11 @@
                 $method = array_shift($methodArgs);
 
                 if(empty($method)){
-                    if(empty($controllerName) && !empty(getDefaultRoute())){
-                        $controllerName = getDefaultRoute()["controller"];
-                        $method = getDefaultRoute()["view"];
+                    if(empty($controllerName)){
+                        if(!empty($this->Config->get("DefaultRoute"))){
+                            $controllerName = $this->Config->get("DefaultRoute", "controller");
+                            $method = $this->Config->get("DefaultRoute", "view");
+                        }
                     }
                     else{
                         $method = "index";
@@ -94,15 +98,6 @@
                 return true;
             }
             return false;
-        }
-
-        protected function showDefaultPageError(string $messageToDisplay){
-            if(is_file(VIEW . "ErrorPages/" . getDefaultErrorPage())){
-                ob_start();
-                $message = $messageToDisplay;
-                include VIEW . "ErrorPages/" . getDefaultErrorPage();
-                return ob_get_clean();
-            }
         }
 
         protected function requestIs(string $requestMethod){
@@ -131,7 +126,8 @@
                         }
                     }
                     else{
-                        echo $this->showDefaultPageError("Acesso Negado");
+                        include $this->Config->get("DefaultErrorPage");
+                        exit();
                     }
                 }
             }

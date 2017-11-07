@@ -1,25 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-	<title>Danied Access</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="/css/pages.css">
-</head>
-<body id="danied-access">
-	<div id="content">
-        <img src="/img/logo.png">
-        <h3>
-        	<?= $message ?>
-        </h3>
-        <p><button id="redirect-button">Click here to make login</button></p>
-   	</div>
-    <script type="text/javascript">
-        window.onload = function(){
-            document.getElementById("redirect-button").addEventListener("click", function(){
-                window.location.href = "/User/login";
-            });
-        };
-    </script>
-</body>
+    <head>
+    	<title><?= $this->getAppName() ?> Danied Access</title>
+    	<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    	<?= $this->Html->css("bootstrap.min.css") ?>
+        <?= $this->Html->css("font-awesome.min.css") ?>
+        
+        <style type="text/css">
+            #danied-access{
+                background-color: #333;
+                padding-top: 10em;
+                text-align: center;
+            }
+            #info h1{
+                font-size: 5em;
+            }
+            #info h1 i{
+                color: #f9d821;
+            }
+            p{
+                color: white;
+                font-size: 2em; 
+            }
+            #action{
+                margin-top: 30px;
+            }
+        </style>
+    </head>
+    <body id="danied-access">
+    	<div>
+            <div id="info">
+                <h1>
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> 
+                </h1>
+                <p>You don't have permission to access this page.</p>
+            </div>
+            <p id="action">
+                Make sure the url you typed is correct or
+                <a href="/Example/home" class="btn btn-success btn-lg">Click here to make login</a>
+            </p>
+       	</div>
+    </body>
 </html>

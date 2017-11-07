@@ -3,7 +3,7 @@
 		private $table;
 		private $primaryKey;
 		private $belongsTo;
-		private $DBManipulator;
+		private $QueryBuilder;
 
 		public function __construct(){
 			$this->belongsTo = [];
@@ -14,11 +14,11 @@
 		}
 
 		protected function database(string $databaseType, string $database){
-			$this->DBManipulator = new DatabaseManipulator($databaseType, $database, $this->getEntityName());
+			$this->QueryBuilder = new QueryBuilder($databaseType, $database, $this->getEntityName());
 		}
-		public function getDBManipulator(){
-			if(!empty($this->DBManipulator)){
-				return $this->DBManipulator;
+		public function queryBuilder(){
+			if(!empty($this->QueryBuilder)){
+				return $this->QueryBuilder;
 			}
 			return false;
 		}

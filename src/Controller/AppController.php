@@ -29,6 +29,9 @@
                             }
                         }
                         else{
+                            if($this->Session->findData($variableName)){
+                             	$this->Session->removeData($variableName);
+                            }
                             $this->viewData[$variableName] = $value;
                         }
                     }

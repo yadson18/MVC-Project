@@ -3,15 +3,12 @@
 		private $currentClassName;
 
 		public function __construct(string $currentClassName){
+			$this->Config = Configurator::getInstance();
 			$this->currentClassName = $currentClassName;
 		}
 
-		protected function displayError(){
-			return getDisplayErrors();
-		}
-
 		public function stopExecution(string $code, string $message, int $line){
-			if($this->displayError()){
+			if($this->Config->get("DisplayErrors")){
 				if(!empty($message) && !empty($line)){
 					echo "<p>
 							<i>Error in</i> <strong>{$this->currentClassName}</strong>, 

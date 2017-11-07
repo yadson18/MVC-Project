@@ -25,6 +25,20 @@
 			}
 		}
 
+		public function findData(string $index){
+			if(isset($_SESSION["newSession"][$index])){
+				return true;
+			}
+			return false;
+		}
+
+		public function removeData(string $index){
+			if(isset($_SESSION["newSession"][$index])){
+				unset($_SESSION["newSession"][$index]);
+			}
+			return false;
+		}
+
 		public function getData(){
 			if(isset($_SESSION["newSession"])){
 				return array_map("unserialize", $_SESSION["newSession"]);

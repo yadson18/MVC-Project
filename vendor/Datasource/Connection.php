@@ -19,9 +19,12 @@
 		
 		private function __construct(){}
 
-		public static function getInstance(string $dsn, string $user, string $password){
+		public static function getInstance(string $dbType, array $dbConfig){
 			try{
-				self::$instance = new PDO($dsn, $user, $password);
+				self::$instance = new PDO(
+					"{$dbType}:dbname={$dbConfig['host']}:{$dbConfig['path']}; charset={$dbConfig['charset']}",
+					$dbConfig["user"], $dbConfig["password"]
+				);
 				self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				self::$instance->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
 

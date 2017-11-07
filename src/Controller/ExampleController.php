@@ -12,7 +12,7 @@
 			$Cadastro = $this->newEntity("Example");
 
 			if($this->requestIs("GET")){
-				$Cadastro = $Cadastro->get($id);
+				$Cadastro = $Cadastro->get(88);
 			}
 
 			$this->viewTitle("Home");

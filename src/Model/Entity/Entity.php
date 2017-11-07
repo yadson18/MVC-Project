@@ -28,7 +28,7 @@
 
 		public function find(string $columns){
 			if($this->tableHasLoaded()){
-				return self::$Table->getDBManipulator()
+				return self::$Table->queryBuilder()
 					->find(self::$Table->getTable(), $columns);
 			}
 			return false;
@@ -37,16 +37,17 @@
 		public function get($key, array $contain = null){
 			if($this->tableHasLoaded()){
 				if(is_string($key) && strtolower($key) === "all" && empty($contain)){
-					return self::$Table->getDBManipulator()
+					return self::$Table->queryBuilder()
 						->find(self::$Table->getTable(), "*")
-						->limit("max");
+						->getResult();
 				}
 				else if(self::$Table->getPrimaryKey() && !empty($key) && !is_array($key)){
-					return self::$Table->getDBManipulator()
+					return self::$Table->queryBuilder()
 						->find(self::$Table->getTable(), "*")
 						->where([self::$Table->getPrimaryKey()." =" => $key])
-						->toObject()
-						->limit(1);
+						->convertTo("object")
+						->limit(1)
+						->getResult();
 				}
 			}
 			return false;
