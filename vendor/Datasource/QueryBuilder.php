@@ -19,6 +19,13 @@
 			$this->DbManipulator = new DatabaseManipulator($databaseType, $database, $entityName);
 		}
 
+		protected function queryTypeIs(string $queryType){
+			if($this->queryType === $queryType){
+				return true;
+			}
+			return false;
+		}
+
 		protected function setTable(string $tableName){
 			if(!empty($tableName)){
 				$this->table = $tableName;
@@ -150,21 +157,21 @@
 		}
 
 		public function orderBy(array $columnsToOrder){
-			if($this->setOrderBy($columnsToOrder)){
+			if($this->setOrderBy($columnsToOrder) && $this->queryTypeIs("select")){
 				return $this;
 			}
 			return false;
 		}
 
 		public function convertTo(string $returnTypeData){
-			if($this->setReturnType($returnTypeData)){
+			if($this->setReturnType($returnTypeData) && $this->queryTypeIs("select")){
 				return $this;
 			}
 			return false;
 		}
 
 		public function limit(int $limitNumber){
-			if($this->setLimit($limitNumber)){
+			if($this->setLimit($limitNumber) && $this->queryTypeIs("select")){
 				return $this;
 			}
 			return false;

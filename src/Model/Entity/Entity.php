@@ -51,16 +51,16 @@
 						->where([self::$Table->getPrimaryKey()." =" => $key])
 						->convertTo("object")
 						->limit(1)
-						->getResult();
+						->getResult()[0];
 				}
 			}
 			return false;
 		}
 
-		public function save(array $dataToSave){
-			if(!empty($dataToSave)){
+		public function save($objectToSave){
+			if(!empty($objectToSave) && isInstanceOf($objectToSave, get_class($this))){
 				return self::$Table->queryBuilder()
-					->insert($dataToSave)
+					->insert(get_object_vars($objectToSave))
 					->from(self::$Table->getTable())
 					->getResult();
 			}
