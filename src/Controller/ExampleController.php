@@ -13,7 +13,7 @@
 
 			if($this->requestIs("GET") && !empty($id)){
 					$Cadastro = $Cadastro->get($id);
-					
+
 					/*$Email = new Email("default");
 	            	$Email->subject("test")
 	                	->messageTemplate("emailDefault.html")
@@ -23,7 +23,7 @@
 
 	                if($Email->send()){
 	                	$this->Flash->success("Email enviado");
-	                	return $this->reirect(["controller" => "Sri", "view" => "home"]);
+	                	return $this->redirect(["controller" => "Sri", "view" => "home"]);
 	                }*/
 			}
 

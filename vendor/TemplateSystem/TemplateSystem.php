@@ -2,14 +2,7 @@
     class TemplateSystem{
         private static $Instance;
 
-        private function __construct(){
-            $this->Config = Configurator::getInstance();
-
-            $this->loadModule("Controller");
-            $this->loadModule("Html");
-            $this->loadModule("Form");
-            $this->loadModule("Flash");
-        }
+        private function __construct(){}
 
         public static function getInstance(){
             if(!isset(self::$Instance)){
@@ -18,29 +11,123 @@
             return self::$Instance;
         }
 
-        protected function fetchAll(){ 
-            if(is_file($this->Controller->getTemplate())){
-                ob_start();
+        public function initialize(){
+            if($this->setUrlRewriteParameters($_SERVER["REQUEST_URI"])){
+                $this->loadModule("Html");
+                $this->loadModule("Form");
+                $this->loadModule("Flash");
 
-                $viewData = $this->Controller->getInstance()->getviewData();
-                if(!empty($viewData)){
-                    foreach($viewData as $variableName => $value){
-                        $$variableName = $value;
+                $this->loadTemplate();
+            }
+        }
+
+        protected function setUrlRewriteParameters(string $uri){
+            if(!empty($uri)){
+                $Configurator = Configurator::getInstance();
+                $TemplateControl = TemplateController::getInstance();
+
+                $controllerMethodArgs = explode("/", substr($uri, 1));
+                $controllerName = array_shift($controllerMethodArgs);
+                $controllerAction = array_shift($controllerMethodArgs);
+
+                if(empty($controllerAction)){
+                    if(empty($controllerName)){
+                        if(!empty($Configurator->get("DefaultRoute"))){
+                            $controllerName = ucfirst($Configurator->get("DefaultRoute", "controller"));
+                            $controllerAction = $Configurator->get("DefaultRoute", "view");
+                        }
+                    }
+                    else{
+                        $controllerAction = "index";
                     }
                 }
+                if(!empty($controllerMethodArgs) && sizeof($controllerMethodArgs) === 1){
+                    $controllerMethodArgs = array_shift($controllerMethodArgs);
+                }
 
-                include $this->Controller->getTemplate();
-                return ob_get_clean();
+                $TemplateControl->setMethodArgs($controllerMethodArgs);
+                $TemplateControl->setName($controllerName);
+                $TemplateControl->setMethod($controllerAction);
+
+                return true;
             }
+            return false;
+        }
+
+        protected function loadTemplate(){
+            $TemplateControl = TemplateController::getInstance();
+
+            if($this->requestIs("POST") || $this->requestIs("GET")){
+                $TemplateControl->deleteControllerInstance();
+
+                if($this->requestIs("POST")){
+                    $TemplateControl->setRequestData($_POST);
+                }
+                else if($this->requestIs("GET")){
+                    $TemplateControl->setRequestData($_GET);
+                }
+
+                if($this->callControllerMethod($TemplateControl->getName(), $TemplateControl->getMethod())){
+                    if($TemplateControl->getControllerInstance()->Ajax->notEmptyResponse()){
+                        echo $TemplateControl->getControllerInstance()->Ajax->getResponse();
+                    }
+                    else{
+                        include VIEW . "Default/default.php";
+                        exit();
+                    }
+                }
+                else{
+                    include Configurator::getInstance()->get("DefaultErrorPage");
+                    exit();
+                }
+            }
+        }
+
+        protected function callControllerMethod(string $controllerName, string $controllerMethod){
+            $TemplateControl = TemplateController::getInstance();
+
+            if($TemplateControl->setControllerInstance($controllerName, $TemplateControl->getRequestData())){
+                $Controller = $TemplateControl->getControllerInstance();
+
+                if($TemplateControl->callableMethodController("isAuthorized")){
+                    if($Controller->isAuthorized($controllerMethod)){
+                        if($TemplateControl->callableMethodController($controllerMethod)){
+                            $this->Flash = $Controller->Flash;
+                            $controllerReturn = $Controller->$controllerMethod(
+                                $TemplateControl->getMethodArgs()
+                            );
+
+                            if(!empty($controllerReturn)){
+                                if(isset($controllerReturn["redirectTo"])){
+                                    header("Location: {$controllerReturn['redirectTo']}");
+                                }
+                            }
+                            $TemplateControl->setTemplate("{$controllerName}/{$controllerMethod}");
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        protected function fetchAll(){ 
+            ob_start();
+
+            $viewData = TemplateController::getInstance()->getControllerInstance()->getviewData();
+            if(!empty($viewData)){
+                foreach($viewData as $variableName => $value){
+                    $$variableName = $value;
+                }
+            }
+            include TemplateController::getInstance()->getTemplate();
+
+            return ob_get_clean();
+        }
+
+        protected function requestIs(string $requestMethod){
+            return requestIs($requestMethod);
         } 
-
-        public function getAppName(){
-            return $this->Config->get("AppName");
-        }
-
-        public function getViewTitle(){
-            return $this->Controller->getInstance()->getViewTitle();
-        }
 
         protected function loadModule(string $module){
             if(file_exists(VENDOR . "Modules/{$module}.php") && class_exists($module)){
@@ -48,88 +135,11 @@
             }
         }
 
-        protected function callControllerMethod(string $controllerName, string $controllerMethod){
-            if($this->Controller->createInstance($controllerName, $this->Controller->getRequestData())){
-                $Controller = $this->Controller->getInstance();
-
-                if($this->Controller->callableMethod("isAuthorized") && $Controller->isAuthorized($controllerMethod)){
-                    if($this->Controller->callableMethod($controllerMethod)){
-                        $this->Flash = $Controller->Flash;
-                        $controllerReturn = $Controller->$controllerMethod($this->Controller->getMethodArgs());
-
-                        if(!empty($controllerReturn)){
-                            if(isset($controllerReturn["redirectTo"])){
-                                header("Location: {$controllerReturn['redirectTo']}");
-                            }
-                        }
-                        $this->Controller->setTemplate("{$controllerName}/{$controllerMethod}");
-                        return true;
-                    }
-                }
-            }
-            return false;
+        public function getAppName(){
+            return Configurator::getInstance()->get("AppName");
         }
 
-        protected function setUriConfig(string $uri){
-            if(!empty($uri)){
-                $methodArgs = explode("/", substr($uri, 1));
-                $controllerName = array_shift($methodArgs);
-                $method = array_shift($methodArgs);
-
-                if(empty($method)){
-                    if(empty($controllerName)){
-                        if(!empty($this->Config->get("DefaultRoute"))){
-                            $controllerName = $this->Config->get("DefaultRoute", "controller");
-                            $method = $this->Config->get("DefaultRoute", "view");
-                        }
-                    }
-                    else{
-                        $method = "index";
-                    }
-                }
-                $this->Controller->setName(ucfirst($controllerName));
-                $this->Controller->setMethod($method);
-                if(!empty($methodArgs)){
-                    if(sizeof($methodArgs) === 1){
-                        $methodArgs = array_shift($methodArgs);
-                    }
-                    $this->Controller->setMethodArgs($methodArgs);
-                }
-                return true;
-            }
-            return false;
-        }
-
-        protected function requestIs(string $requestMethod){
-            return requestIs($requestMethod);
-        }
-
-        public function loadTemplate(){
-            if($this->setUriConfig($_SERVER["REQUEST_URI"])){
-                if($this->requestIs("POST") || $this->requestIs("GET")){
-                    $this->Controller->deleteInstance();
-
-                    if($this->requestIs("POST")){
-                        $this->Controller->setRequestData($_POST);
-                    }
-                    else if($this->requestIs("GET")){
-                        $this->Controller->setRequestData($_GET);
-                    }
-
-                    if($this->callControllerMethod($this->Controller->getName(), $this->Controller->getMethod())){
-                        if($this->Controller->getInstance()->Ajax->notEmptyResponse()){
-                            echo $this->Controller->getInstance()->Ajax->getResponse();
-                        }
-                        else{
-                            include VIEW . "Default/default.php";  
-                            exit();
-                        }
-                    }
-                    else{
-                        include $this->Config->get("DefaultErrorPage");
-                        exit();
-                    }
-                }
-            }
+        public function getViewTitle(){
+            return TemplateController::getInstance()->getControllerInstance()->getViewTitle();
         }
     }
