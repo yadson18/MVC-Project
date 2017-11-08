@@ -3,12 +3,17 @@
 		private $DbManipulator;
 		private $queryType;
 		private $table;
+
 		private $filters;
 		private $condition;
 		private $conditionValues;
 		private $orderBy;
 		private $returnType = "array";
 		private $limit;
+
+		private $insertColumns;
+		private $formatedInsertColumns;
+		private $insertColumnsAndValues;
 
 		public function __construct(string $databaseType, string $database, string $entityName){
 			$this->DbManipulator = new DatabaseManipulator($databaseType, $database, $entityName);
@@ -21,6 +26,22 @@
 				return true;
 			}
 			return false;
+		}
+
+		protected function setInsertQuery(array $dataToInsert){
+			if(!empty($dataToInsert)){
+				$columns = sprintf(",%s", implode(",", array_keys($dataToInsert)));
+				$formatedColumns = sprintf(",:%s", implode(",:", array_keys($dataToInsert)));
+
+				if(!empty($columns) && !empty($formatedColumns)){
+					$this->insertColumns = substr($columns, 1);
+					$this->formatedInsertColumns = substr($formatedColumns, 1);
+					$this->insertColumnsAndValues = $dataToInsert;
+
+					return true;
+				}
+				return false;
+			}
 		}
 
 		protected function setOrderBy(array $columnsToOrder){
@@ -108,11 +129,16 @@
 		}
 
 
-		public function find(string $tableName, string $columnFilters){
+		public function find(string $columnFilters){
+			if($this->setFilters($columnFilters) && $this->setQueryType("select")){
+				return $this;
+			}
+			return false;
+		}
+
+		public function from(string $tableName){
 			if($this->setTable($tableName)){
-				if($this->setFilters($columnFilters) && $this->setQueryType("select")){
-					return $this;
-				}
+				return $this;
 			}
 			return false;
 		}
@@ -121,13 +147,6 @@
 			if($this->setCondition($queryCondition)){
 				return $this;
 			}
-		}
-
-		public function limit(int $limitNumber){
-			if($this->setLimit($limitNumber)){
-				return $this;
-			}
-			return false;
 		}
 
 		public function orderBy(array $columnsToOrder){
@@ -144,12 +163,32 @@
 			return false;
 		}
 
+		public function limit(int $limitNumber){
+			if($this->setLimit($limitNumber)){
+				return $this;
+			}
+			return false;
+		}
+
+		public function insert(array $dataToInsert){
+			if($this->setInsertQuery($dataToInsert) && $this->setQueryType("insert")){
+				return $this;
+			}
+			return false;
+		}
+
 		public function getResult(){
 			if($this->queryType === "select"){
 				return $this->DbManipulator->select(
 					$this->returnType,
 					"SELECT{$this->limit} {$this->filters} FROM {$this->table}{$this->condition}{$this->orderBy}",
 					$this->conditionValues
+				);
+			}
+			else if($this->queryType === "insert"){
+				return $this->DbManipulator->insert(
+					"INSERT INTO {$this->table}({$this->insertColumns}) VALUES({$this->formatedInsertColumns})",
+					$this->insertColumnsAndValues
 				);
 			}
 		}

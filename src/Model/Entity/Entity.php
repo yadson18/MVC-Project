@@ -30,7 +30,8 @@
 		public function find(string $columns){
 			if($this->tableHasLoaded()){
 				return self::$Table->queryBuilder()
-					->find(self::$Table->getTable(), $columns);
+					->find($columns)
+					->from(self::$Table->getTable());
 			}
 			return false;
 		}
@@ -39,17 +40,29 @@
 			if($this->tableHasLoaded()){
 				if(is_string($key) && strtolower($key) === "all" && empty($contain)){
 					return self::$Table->queryBuilder()
-						->find(self::$Table->getTable(), "*")
+						->find("*")
+						->from(self::$Table->getTable())
 						->getResult();
 				}
 				else if(self::$Table->getPrimaryKey() && !empty($key) && !is_array($key)){
 					return self::$Table->queryBuilder()
-						->find(self::$Table->getTable(), "*")
+						->find("*")
+						->from(self::$Table->getTable())
 						->where([self::$Table->getPrimaryKey()." =" => $key])
 						->convertTo("object")
 						->limit(1)
 						->getResult();
 				}
+			}
+			return false;
+		}
+
+		public function save(array $dataToSave){
+			if(!empty($dataToSave)){
+				return self::$Table->queryBuilder()
+					->insert($dataToSave)
+					->from(self::$Table->getTable())
+					->getResult();
 			}
 			return false;
 		}

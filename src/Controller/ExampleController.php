@@ -11,10 +11,10 @@
 		public function home($id){
 			$Cadastro = $this->newEntity("Example");
 
-			if($this->requestIs("GET")){
-				//$Cadastro = $Cadastro->get(88);
-				if(!empty($id)){
-					$Email = new Email("default");
+			if($this->requestIs("GET") && !empty($id)){
+					$Cadastro = $Cadastro->get($id);
+					
+					/*$Email = new Email("default");
 	            	$Email->subject("test")
 	                	->messageTemplate("emailDefault.html")
 	                	->from("yadsondev@gmail.com", "Sri")
@@ -23,9 +23,8 @@
 
 	                if($Email->send()){
 	                	$this->Flash->success("Email enviado");
-	                }
-				}
-
+	                	return $this->reirect(["controller" => "Sri", "view" => "home"]);
+	                }*/
 			}
 
 			$this->viewTitle("Home");
