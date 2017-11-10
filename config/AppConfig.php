@@ -1,4 +1,4 @@
-<?php  
+<?php 
 	Configurator::getInstance()
 		
 		->set("AppName", "Example Name - ")
@@ -15,13 +15,11 @@
 		])
 
 		->set("EmailTransport", [
-			"default" => [
-				"host" => "smtp.gmail.com",
-				"port" => 587,
-				"email" => "yadsondev@gmail.com",
-				"password" => "yadsondado12",
-				"security" => "tls"
-			]
+			"host" => "smtp.gmail.com",
+			"port" => 587,
+			"email" => "yadsondev@gmail.com",
+			"password" => "yadsondado12",
+			"security" => "tls"
 		])
 
 		->set("Databases", [

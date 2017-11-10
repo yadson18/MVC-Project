@@ -13,12 +13,10 @@
 		private $toName;
 		private $attachment;
 
-		public function __construct(string $emailProfileName){
-			$config = Configurator::getInstance();
+		public function __construct(){
+			if(Configurator::getInstance()->get("EmailTransport")){
+				$emailConfig = Configurator::getInstance()->get("EmailTransport");
 
-			if(!empty($emailProfileName) && !empty($config->get("EmailTransport", $emailProfileName))){
-				$emailConfig = $config->get("EmailTransport", $emailProfileName);
-				
 				$this->host = $emailConfig["host"];
 				$this->port = $emailConfig["port"];
 				$this->email = $emailConfig["email"];
