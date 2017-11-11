@@ -6,7 +6,7 @@
 	 * Para a lista completa de bancos de dados suportados, consulte o manual do PHP.
 	 */
 	abstract class Connection{
-		private static $instance;
+		private static $Instance;
 
 		/*
 		 * Para o construtor da classe devem ser passados,
@@ -21,14 +21,14 @@
 
 		public static function getInstance(string $dbType, array $dbConfig){
 			try{
-				self::$instance = new PDO(
+				self::$Instance = new PDO(
 					"{$dbType}:dbname={$dbConfig['host']}:{$dbConfig['path']}; charset={$dbConfig['charset']}",
 					$dbConfig["user"], $dbConfig["password"]
 				);
-				self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				self::$instance->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+				self::$Instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				self::$Instance->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
 
-				return self::$instance;
+				return self::$Instance;
 			}
 			catch(PDOException $e){
 				return false;

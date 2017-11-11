@@ -1,32 +1,21 @@
 <?php  
 	class QueryBuilder{
-		private $DbManipulator;
+		private $Connection;
 		private $Select;
-
-		private $insertColumns;
-		private $formatedInsertColumns;
-		private $insertColumnsAndValues;
+		private $Insert;
+		private $Delete;
 
 		public function __construct(string $databaseType, string $database, string $entityName){
-			$this->DbManipulator = new DatabaseManipulator($databaseType, $database, $entityName);
+			//$this->Error = new ErrorHandling("DatabaseManipulator");
 
+			$this->Connection = Connection::getInstance(
+				$databaseType, Configurator::getInstance()->get("Databases", $database)
+			);
+
+			Query::currentEntity($entityName);
 			$this->Select = new Select();
-		}
-
-		protected function setInsertQuery(array $dataToInsert){
-			if(!empty($dataToInsert)){
-				$columns = sprintf(",%s", implode(",", array_keys($dataToInsert)));
-				$formatedColumns = sprintf(",:%s", implode(",:", array_keys($dataToInsert)));
-
-				if(!empty($columns) && !empty($formatedColumns)){
-					$this->insertColumns = substr($columns, 1);
-					$this->formatedInsertColumns = substr($formatedColumns, 1);
-					$this->insertColumnsAndValues = $dataToInsert;
-
-					return true;
-				}
-				return false;
-			}
+			$this->Insert = new Insert();
+			$this->Delete = new Delete();
 		}
 
 		public function find(string $columnFilters){
@@ -37,18 +26,25 @@
 		}
 
 		public function from(string $tableName){
-			if($this->Select->setTable($tableName)){
+			if(
+				(Query::typeIs("select") && $this->Select->setTable($tableName)) ||
+				(Query::typeIs("delete") && $this->Delete->setTable($tableName))
+			){
 				return $this;
 			}
 			return false;
 		}
 
-		public function where(array $queryCondition){
-			if($this->Select->setCondition($queryCondition)){
+		public function where(array $whereCondition){
+			if(
+				(Query::typeIs("select") && $this->Select->setCondition($whereCondition)) ||
+				(Query::typeIs("delete") && $this->Delete->setCondition($whereCondition))
+			){
 				return $this;
 			}
+			return false;
 		}
-
+		
 		public function orderBy(array $columnsToOrder){
 			if($this->Select->setOrderBy($columnsToOrder) && Query::typeIs("select")){
 				return $this;
@@ -71,7 +67,21 @@
 		}
 
 		public function insert(array $dataToInsert){
-			if($this->setInsertQuery($dataToInsert) && $this->setQueryType("insert")){
+			if($this->Insert->setInsertQuery($dataToInsert) && Query::setType("insert")){
+				return $this;
+			}
+			return false;
+		}
+
+		public function into(string $tableName){
+			if($this->Insert->setTable($tableName) && Query::setType("insert")){
+				return $this;
+			}
+			return false;
+		}
+
+		public function delete(){
+			if(Query::setType("delete")){
 				return $this;
 			}
 			return false;
@@ -79,19 +89,31 @@
 
 		public function getResult(){
 			if(Query::typeIs("select")){
-				$returnType = $this->Select->getReturnType();
-				$conditionValues = $this->Select->getConditionValues();
-				$query = "SELECT{$this->Select->getLimit()} {$this->Select->getFilters()} 
-						  FROM {$this->Select->getTable()}
-						  {$this->Select->getCondition()}{$this->Select->getOrderBy()}";
-
-				return $this->DbManipulator->select($returnType, $query, $conditionValues);
+				return $this->Select->getResult($this->Connection);
 			}
 			else if(Query::typeIs("insert")){
-				return $this->DbManipulator->insert(
-					"INSERT INTO {$this->table}({$this->insertColumns}) VALUES({$this->formatedInsertColumns})",
-					$this->insertColumnsAndValues
-				);
+				return $this->Insert->getResult($this->Connection);
+			}
+			else if(Query::typeIs("delete")){
+				return $this->Delete->getResult($this->Connection);
 			}
 		}
+
+		/*public function delete($table, $condition, $values){
+			if(!empty(self::$connection)){
+				if(is_string($table) && is_string($condition) && is_array($values)){
+					
+
+					$query = "DELETE FROM {$table} {$condition}";
+					$query = self::$connection->prepare($query);
+					for($j = 0; $j < sizeof($columns); $j++){
+						$query->bindParam($columns[$j], $values[$j], PDO::PARAM_STR);
+					} 
+					$query->execute();
+					return true;
+				}
+			}
+			return false;
+		}*/
 	}
+

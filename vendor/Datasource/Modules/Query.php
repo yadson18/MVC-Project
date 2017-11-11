@@ -1,9 +1,19 @@
 <?php  
-	class Query{
+	abstract class Query{
+		private static $currentEntity;
+		private static $queryType;
 		private $table;
 		private $condition;
 		private $conditionValues;
-		private static $queryType;
+
+		public static function currentEntity(string $entityName){
+			if(!empty($entityName)){
+				self::$currentEntity = $entityName;
+			}
+		}
+		public function getCurrentEntity(){
+			return self::$currentEntity;
+		}
 
 		public static function typeIs(string $queryType){
 			if(self::$queryType === $queryType){

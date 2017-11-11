@@ -38,7 +38,7 @@
 
 		public function get($key, array $contain = null){
 			if($this->tableHasLoaded()){
-				if(is_string($key) && strtolower($key) === "all" && empty($contain)){
+				if($key === "all" && empty($contain)){
 					return self::$Table->queryBuilder()
 						->find("*")
 						->from(self::$Table->getTable())
@@ -51,7 +51,7 @@
 						->where([self::$Table->getPrimaryKey()." =" => $key])
 						->convertTo("object")
 						->limit(1)
-						->getResult()[0];
+						->getResult();
 				}
 			}
 			return false;
@@ -61,8 +61,26 @@
 			if(!empty($objectToSave) && isInstanceOf($objectToSave, get_class($this))){
 				return self::$Table->queryBuilder()
 					->insert(get_object_vars($objectToSave))
-					->from(self::$Table->getTable())
+					->into(self::$Table->getTable())
 					->getResult();
+			}
+			return false;
+		}
+
+		public function delete($key){
+			if(!empty($key)){
+				if($key === "all"){
+					return self::$Table->queryBuilder()
+						->delete()
+						->from(self::$Table->getTable());
+				}
+				else if(self::$Table->getPrimaryKey() && !empty($key) && !is_array($key)){
+					return self::$Table->queryBuilder()
+						->delete()
+						->from(self::$Table->getTable())
+						->where([self::$Table->getPrimaryKey()." =" => $key])
+						->getResult();
+				}
 			}
 			return false;
 		}

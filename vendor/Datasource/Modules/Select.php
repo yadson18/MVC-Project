@@ -61,7 +61,49 @@
 			}
 			return false;
 		}
-		public function getReturnType(){
-			return $this->returnType;
+		public function returnTypeIs(string $returnType){
+			if($this->returnType === $returnType){
+				return true;
+			}
+			return false;
+		}
+
+		public function getResult(PDO $Connection){
+			if(!empty($Connection)){
+				try{
+					$query = $Connection->prepare(
+						"SELECT{$this->getLimit()} {$this->getFilters()} 
+						 FROM {$this->getTable()}
+						 {$this->getCondition()}{$this->getOrderBy()}"
+					);
+
+					if(!empty($this->getConditionValues())){
+						foreach($this->getConditionValues() as $column => $value){
+							$query->bindValue(++$column, $value);
+						}
+					}
+
+					$query->execute();
+					if($this->returnTypeIs("object")){
+						$query->setFetchMode(PDO::FETCH_CLASS, $this->getCurrentEntity());
+						$result = $query->fetchAll();
+
+						if(!empty($result)){
+							return $result[0];
+						}
+						return false;
+					}
+					else if($this->returnTypeIs("array")){
+						$query->setFetchMode(PDO::FETCH_ASSOC);
+						return $query->fetchAll();
+					}
+				}
+				catch(Exception $Exception){
+					echo "Fail";
+					exit();
+				}
+			}
+			echo "Fail";
+			exit();
 		}
 	}
