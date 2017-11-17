@@ -138,12 +138,12 @@ function createControllerClass(){
 			\tnamespace Controller;\n\n
 			 
 			\tclass $1Controller extends AppController{\n
-				\t\tpublic function __construct(\$requestData){\n
-						\t\t\tparent::initialize(\$requestData);\n
+				\t\tpublic function __construct(){\n
+						\t\t\tparent::initialize();\n
 				\t\t}\n\n
 
 				\t\tpublic function isAuthorized(string \$method){\n
-					\t\t\treturn \$this->notAlowed(\$method, []);\n
+					\t\t\treturn \$this->alowedMethods(\$method, []);\n
 				\t\t}\n
 			\t}
 	";
