@@ -120,7 +120,7 @@ function createEntityClass(){
 
 	entityClass="
 		<?php\n
-			\tnamespace Model\Entity;\n\n
+			\tnamespace Model\\Entity;\n\n
 
 			\tclass $1 extends Entity{\n
 				\t\n
@@ -160,7 +160,7 @@ function createTableClass(){
 
 	tableClass="
 		<?php\n
-			\tnamespace Model\Tables;\n\n
+			\tnamespace Model\\Tables;\n\n
 
 			\tclass $1Table extends Table{\n
 				\t\tprotected \$attributes = [\n
