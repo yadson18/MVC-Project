@@ -1,7 +1,6 @@
 <?php 
 	namespace Controller;
 
-	use Controller\AppController;
 	use Simple\Mailer\Email;
 	
 	class ExampleController extends AppController{

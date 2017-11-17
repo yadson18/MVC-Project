@@ -1,5 +1,8 @@
 <?php
-    class Webservice{
+    namespace Simple\Webservice;
+    
+    class Webservice
+    {
         private static $Instance;
         private $Connection;
 

@@ -120,6 +120,8 @@ function createEntityClass(){
 
 	entityClass="
 		<?php\n
+			\tnamespace Model\Entity;\n\n
+
 			\tclass $1 extends Entity{\n
 				\t\n
 			\t}
@@ -132,7 +134,9 @@ function createControllerClass(){
 	# $1 - Nome da classe.
 
 	controllerClass="
-		<?php\n  
+		<?php\n 
+			\tnamespace Controller;\n\n
+			 
 			\tclass $1Controller extends AppController{\n
 				\t\tpublic function __construct(\$requestData){\n
 						\t\t\tparent::initialize(\$requestData);\n
@@ -156,6 +160,8 @@ function createTableClass(){
 
 	tableClass="
 		<?php\n
+			\tnamespace Model\Tables;\n\n
+
 			\tclass $1Table extends Table{\n
 				\t\tprotected \$attributes = [\n
 					$5\n
