@@ -82,8 +82,12 @@
                     if ($TemplateControl->getControllerInstance()->Ajax->notEmptyResponse()) {
                         echo $TemplateControl->getControllerInstance()->Ajax->getResponse();
                     }
-                    else {
+                    else if ($TemplateControl->getTemplate()) {
                         include VIEW . "Default/default.php";
+                        exit();
+                    }
+                    else {
+                        include Configurator::getInstance()->get("DefaultErrorPage");
                         exit();
                     }
                 }
