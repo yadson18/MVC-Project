@@ -9,7 +9,6 @@
         private $controllerName;
         private $methodName;
         private $methodArgs;
-        private $controllerRequestData;
         private $templateName;
 
         private function __construct(){}
@@ -21,11 +20,11 @@
             return self::$Instance;
         }
 
-        public function setControllerInstance(string $controllerName, $requestData){
+        public function setControllerInstance(string $controllerName){
             $Controller = "Controller\\{$controllerName}Controller";
 
             if(class_exists($Controller)){
-                $this->ControllerInstance = new $Controller($requestData);
+                $this->ControllerInstance = new $Controller();
 
                 if(!empty($this->ControllerInstance)){
                     return $this->ControllerInstance;
@@ -57,13 +56,6 @@
         }
         public function getMethod(){
         	return $this->methodName;
-        }
-
-        public function setRequestData(array $requestData){
-            $this->controllerRequestData = $requestData;
-        }
-        public function getRequestData(){
-        	return (object) $this->controllerRequestData;
         }
 
         public function setMethodArgs($args){

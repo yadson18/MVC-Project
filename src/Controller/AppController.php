@@ -5,16 +5,16 @@
 
 	class AppController extends Controller
     {
-		protected function initialize($requestData)
+		protected function initialize()
         {
-            parent::initialize($requestData);
+            parent::initialize();
 
             $this->loadComponent("Session");
             $this->loadComponent("Flash");
             $this->loadComponent("Ajax");
         }
 
-        protected function notAlowed(string $method, array $methods)
+        protected function alowedMethods(string $method, array $methods)
         {
             if(!empty($methods) && !empty($method)){
                 if(in_array($method, $methods)){

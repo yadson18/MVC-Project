@@ -2,6 +2,7 @@
 	namespace Simple\Controller;
 
 	use Simple\Components\Component;
+    use Simple\HttpRequest\HttpRequest;
 
 	abstract class Controller
 	{
@@ -9,9 +10,9 @@
 		private $viewTitle;
 		private $viewData;
 
-		protected function initialize($requestData)
+		protected function initialize()
 		{
-			$this->RequestData = $requestData;
+            $this->Request = new HttpRequest();
 		}
 
         protected function loadComponent(string $componentName)

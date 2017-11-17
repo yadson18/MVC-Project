@@ -5,20 +5,23 @@
     use Simple\Components\Component;
     use Simple\TemplateSystem\Component\TemplateController;
 
-    class TemplateSystem{
+    class TemplateSystem
+    {
         private static $Instance;
 
         private function __construct(){}
 
-        public static function getInstance(){
-            if(!isset(self::$Instance)){
+        public static function getInstance()
+        {
+            if (!isset(self::$Instance)) {
                 self::$Instance = new TemplateSystem();
             }
             return self::$Instance;
         }
 
-        public function initialize(){
-            if($this->setUrlRewriteParameters($_SERVER["REQUEST_URI"])){
+        public function initialize()
+        {
+            if ($this->setUrlRewriteParameters($_SERVER["REQUEST_URI"])) {
                 $this->loadComponent("Html");
                 $this->loadComponent("Form"); 
                 $this->loadComponent("Flash");
@@ -27,13 +30,15 @@
             }
         }
 
-        protected function loadComponent(string $componentName){
+        protected function loadComponent(string $componentName)
+        {
             $Component = new Component($componentName);
 
             $this->$componentName = $Component->load();
         }
 
-        protected function setUrlRewriteParameters(string $uri){
+        protected function setUrlRewriteParameters(string $uri)
+        {
             if(!empty($uri)){
                 $Configurator = Configurator::getInstance();
                 $TemplateControl = TemplateController::getInstance();
@@ -42,18 +47,18 @@
                 $controllerName = array_shift($controllerMethodArgs);
                 $controllerAction = array_shift($controllerMethodArgs);
 
-                if(empty($controllerAction)){
-                    if(empty($controllerName)){
-                        if(!empty($Configurator->get("DefaultRoute"))){
+                if (empty($controllerAction)) {
+                    if (empty($controllerName)) {
+                        if (!empty($Configurator->get("DefaultRoute"))) {
                             $controllerName = ucfirst($Configurator->get("DefaultRoute", "controller"));
                             $controllerAction = $Configurator->get("DefaultRoute", "view");
                         }
                     }
-                    else{
+                    else {
                         $controllerAction = "index";
                     }
                 }
-                if(!empty($controllerMethodArgs) && sizeof($controllerMethodArgs) === 1){
+                if (!empty($controllerMethodArgs) && sizeof($controllerMethodArgs) === 1) {
                     $controllerMethodArgs = array_shift($controllerMethodArgs);
                 }
 
@@ -66,50 +71,45 @@
             return false;
         }
 
-        protected function loadTemplate(){
+        protected function loadTemplate()
+        {
             $TemplateControl = TemplateController::getInstance();
 
-            if($this->requestIs("POST") || $this->requestIs("GET")){
+            if ($this->requestIs("POST") || $this->requestIs("GET")) {
                 $TemplateControl->deleteControllerInstance();
 
-                if($this->requestIs("POST")){
-                    $TemplateControl->setRequestData($_POST);
-                }
-                else if($this->requestIs("GET")){
-                    $TemplateControl->setRequestData($_GET);
-                }
-
-                if($this->callControllerMethod($TemplateControl->getName(), $TemplateControl->getMethod())){
-                    if($TemplateControl->getControllerInstance()->Ajax->notEmptyResponse()){
+                if ($this->callControllerMethod($TemplateControl->getName(), $TemplateControl->getMethod())) {
+                    if ($TemplateControl->getControllerInstance()->Ajax->notEmptyResponse()) {
                         echo $TemplateControl->getControllerInstance()->Ajax->getResponse();
                     }
-                    else{
+                    else {
                         include VIEW . "Default/default.php";
                         exit();
                     }
                 }
-                else{
+                else {
                     include Configurator::getInstance()->get("DefaultErrorPage");
                     exit();
                 }
             }
         }
 
-        protected function callControllerMethod(string $controllerName, string $controllerMethod){
+        protected function callControllerMethod(string $controllerName, string $controllerMethod)
+        {
             $TemplateControl = TemplateController::getInstance();
 
-            if($TemplateControl->setControllerInstance($controllerName, $TemplateControl->getRequestData())){
+            if ($TemplateControl->setControllerInstance($controllerName)) {
                 $Controller = $TemplateControl->getControllerInstance();
 
-                if($TemplateControl->callableMethodController("isAuthorized")){
-                    if($Controller->isAuthorized($controllerMethod)){
-                        if($TemplateControl->callableMethodController($controllerMethod)){
+                if ($TemplateControl->callableMethodController("isAuthorized")) {
+                    if ($Controller->isAuthorized($controllerMethod)) {
+                        if ($TemplateControl->callableMethodController($controllerMethod)) {
                             $this->Flash = $Controller->Flash;
                             $controllerReturn = $Controller->$controllerMethod(
                                 $TemplateControl->getMethodArgs()
                             );
 
-                            if(!empty($controllerReturn)){
+                            if (!empty($controllerReturn)) {
                                 if(isset($controllerReturn["redirectTo"])){
                                     header("Location: {$controllerReturn['redirectTo']}");
                                 }
@@ -123,12 +123,13 @@
             return false;
         }
 
-        protected function fetchAll(){ 
+        protected function fetchAll()
+        { 
             ob_start();
 
             $viewData = TemplateController::getInstance()->getControllerInstance()->getviewData();
-            if(!empty($viewData)){
-                foreach($viewData as $variableName => $value){
+            if (!empty($viewData)) {
+                foreach ($viewData as $variableName => $value) {
                     $$variableName = $value;
                 }
             }
@@ -137,21 +138,18 @@
             return ob_get_clean();
         }
 
-        protected function requestIs(string $requestMethod){
+        protected function requestIs(string $requestMethod)
+        {
             return requestIs($requestMethod);
         } 
 
-        protected function loadModule(string $module){
-            if(file_exists(VENDOR . "Modules/{$module}.php") && class_exists($module)){
-                $this->$module = new $module();
-            }
-        }
-
-        public function getAppName(){
+        public function getAppName()
+        {
             return Configurator::getInstance()->get("AppName");
         }
 
-        public function getViewTitle(){
+        public function getViewTitle()
+        {
             return TemplateController::getInstance()->getControllerInstance()->getViewTitle();
         }
     }

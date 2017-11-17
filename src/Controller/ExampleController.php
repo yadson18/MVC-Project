@@ -5,20 +5,24 @@
 	use Simple\Mailer\Email;
 	
 	class ExampleController extends AppController{
-		public function __construct($requestData){
-			parent::initialize($requestData);
+		public function __construct()
+		{
+			parent::initialize();
 		}
 
-		public function isAuthorized(string $method){
-			return $this->notAlowed($method, ["home"]);
+		public function isAuthorized(string $method)
+		{
+			return $this->alowedMethods($method, ["home"]);
 		}
 
-		public function home($id){
+		public function home($id)
+		{
 			$Cadastro = $this->newEntity("Example");
+			
 			if($this->requestIs("GET") && !empty($id)){
 					$Cadastro = $Cadastro->get($id);
 					
-					
+
 					/*$Email = new Email();
 		        	$Email->subject("Mensagem de Iza")
 		            	->messageTemplate("emailDefault.html")
