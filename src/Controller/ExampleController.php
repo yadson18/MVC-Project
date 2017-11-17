@@ -1,4 +1,9 @@
-<?php  
+<?php 
+	namespace Controller;
+
+	use Controller\AppController;
+	use Simple\Mailer\Email;
+	
 	class ExampleController extends AppController{
 		public function __construct($requestData){
 			parent::initialize($requestData);
@@ -10,9 +15,9 @@
 
 		public function home($id){
 			$Cadastro = $this->newEntity("Example");
-
 			if($this->requestIs("GET") && !empty($id)){
-					$Cadastro = $Cadastro->delete($id);
+					$Cadastro = $Cadastro->get($id);
+					
 					
 					/*$Email = new Email();
 		        	$Email->subject("Mensagem de Iza")

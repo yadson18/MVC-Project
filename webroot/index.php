@@ -1,6 +1,11 @@
 <?php 
-	// Incluíndo o arquivo "routes", que contém as constantes de rotas para os diretórios do sistema. 
-	include "../config/routes.php";
+	// Incluindo o arquivo "routes", que contém as constantes de rotas para os diretórios do sistema. 
+	include "../config/AppRoutes.php";
+
+	// Incluindo a classe AutoLoad, que carrega os namespaces baseados nos diretórios. 
+	require_once VENDOR."AutoLoad/AutoLoad.php";
+
+	AutoLoad::getInstance()->loadNameSpaces();
 	
-	// Incluíndo o arquivo "index.php", que encontra-se na raiz do projeto.
+	// Incluindo o arquivo "index.php", que encontra-se na raiz do projeto.
 	include ROOT . DS . "index.php";

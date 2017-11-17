@@ -1,4 +1,6 @@
 <?php  
+	namespace Model\Entity;
+
 	abstract class Entity{
 		private static $Table;
 
@@ -7,14 +9,14 @@
 		}
 
 		protected function loadSelfTable(string $entityName){
-			$tableToLoad = "{$entityName}Table";
-			
-			if(!empty($entityName) && class_exists($tableToLoad)){
-				$tableToLoad = new $tableToLoad();
+			$Table = str_replace("Entity", "Tables", "{$entityName}Table");
 
-				if(!empty($tableToLoad) && is_object($tableToLoad) && is_callable([$tableToLoad, "initialize"])){
-					$tableToLoad->initialize();
-					return $tableToLoad;
+			if(class_exists($Table)){
+				$TableToLoad = new $Table;
+
+				if(is_object($TableToLoad) && is_callable([$TableToLoad, "initialize"])){
+					$TableToLoad->initialize();
+					return $TableToLoad;
 				}
 			}
 			return false;
@@ -57,10 +59,10 @@
 			return false;
 		}
 
-		public function save($objectToSave){
-			if(!empty($objectToSave) && isInstanceOf($objectToSave, get_class($this))){
+		public function save(){
+			if(!empty($this)){
 				return self::$Table->queryBuilder()
-					->insert(get_object_vars($objectToSave))
+					->insert(get_object_vars($this))
 					->into(self::$Table->getTable())
 					->getResult();
 			}

@@ -1,4 +1,6 @@
 <?php 
+	use Simple\Configurator\Configurator;
+
 	Configurator::getInstance()
 		
 		->set("AppName", "Example Name - ")

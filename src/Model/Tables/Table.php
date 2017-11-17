@@ -1,4 +1,9 @@
-<?php  
+<?php
+	namespace Model\Tables;
+
+	use Model\Tables\Interfaces\TableInterface;
+	use Simple\ORM\QueryBuilder;
+
 	abstract class Table implements TableInterface{
 		private $table;
 		private $primaryKey;
@@ -10,7 +15,9 @@
 		}
 
 		public function getEntityName(){
-			return str_replace("Table", "", get_class($this));
+			return str_replace(
+				"Table", "", str_replace("Tables", "Entity", get_class($this))
+			);
 		}
 
 		protected function database(string $databaseType, string $database){

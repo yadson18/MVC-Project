@@ -1,4 +1,6 @@
 <?php  
+	namespace Model\Tables;
+
 	class ExampleTable extends Table{
 		public function initialize(){
 			parent::database("firebird", "SRICASH");
