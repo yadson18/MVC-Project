@@ -59,8 +59,16 @@
 
 				foreach ($queryCondition as $column => $value) {
 					if(is_string($column)){
-						$condition .= " {$column} ?";
-						$values[] = $value;
+						if(self::typeIs("update")){
+							$removeSignal = substr($column, 0, (strlen($column) - 2));
+							
+							$condition .= " {$column} :{$removeSignal}";
+							$values[$removeSignal] = $value;
+						}
+						else{
+							$condition .= " {$column} ?";
+							$values[] = $value;
+						}
 					}
 					else{
 						$condition .= " {$value}";

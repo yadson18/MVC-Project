@@ -86,4 +86,23 @@
 			}
 			return false;
 		}
+
+		public function update(){
+			if(!empty($this)){
+				$dataToUpdate = get_object_vars($this);
+
+				if(isset($dataToUpdate[self::$Table->getPrimaryKey()])){
+					$key = $dataToUpdate[self::$Table->getPrimaryKey()];
+					unset($dataToUpdate[self::$Table->getPrimaryKey()]);
+
+					return self::$Table->queryBuilder()
+						->update($dataToUpdate)
+						->from(self::$Table->getTable())
+						->where([self::$Table->getPrimaryKey()." =" => $key])
+						->getResult();
+				}
+
+			}
+			return false;
+		}
 	}

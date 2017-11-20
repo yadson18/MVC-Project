@@ -16,10 +16,24 @@
 
 		public function home($id)
 		{
-			$Cadastro = $this->newEntity("Example");
+			$this->Cadastro = $this->newEntity("Example");
 			
 			if($this->requestIs("GET") && !empty($id)){
-					$Cadastro = $Cadastro->get($id);
+					$cadastro = $this->Cadastro->get($id);
+					
+					if($cadastro){
+						$cadastro->razao = "ATUALIZADO";
+
+						if($cadastro->update()){
+							$this->Flash->success("O cadastro foi modificado com sucesso.");
+						}
+						else{
+							$this->Flash->error("Não foi possível modificar.");
+						}
+					}
+					else{
+						$this->Flash->error("Não foi possível encontrar o cadastro.");
+					}
 					
 
 					/*$Email = new Email();
@@ -39,6 +53,6 @@
 			}
 
 			$this->viewTitle("Home");
-			$this->set(["cadastro" => $Cadastro]);
+			$this->set(["cadastro" => $cadastro]);
 		}
 	}
