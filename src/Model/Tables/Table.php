@@ -22,13 +22,23 @@
 
 		protected function database(string $databaseType, string $database){
 			$this->QueryBuilder = new QueryBuilder($databaseType, $database, $this->getEntityName());
+			if (!empty($this->getTableColumns())) {
+				$this->QueryBuilder->setTableValidAttributes($this->getTableColumns());
+			}
 		}
 		
 		public function queryBuilder(){
-			if(!empty($this->QueryBuilder)){
+			if (!empty($this->QueryBuilder)) {
 				return $this->QueryBuilder;
 			}
 			return false;
+		}
+
+		protected function getTableColumns()
+		{
+			if (isset($this->attributes)) {
+				return $this->attributes;
+			}
 		}
 
 		protected function belongsTo(string $fieldName, array $arrayConfig){

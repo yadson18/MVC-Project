@@ -1,6 +1,6 @@
 <?php  
 	namespace Simple\ORM\Component\Query;
-
+	
 	use Simple\ORM\Component\PDO\Connection;
 
 	abstract class Query

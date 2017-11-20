@@ -19,24 +19,8 @@
 			$this->Cadastro = $this->newEntity("Example");
 			
 			if($this->requestIs("GET") && !empty($id)){
-					$cadastro = $this->Cadastro->get(8002);
-					$cadastro->razao = "ATUALIZADO";
-
-
-					debug($cadastro->update());
-					/*if($cadastro){
-						$cadastro->razao = "ATUALIZADO";
-
-						if($cadastro->update()){
-							$this->Flash->success("O cadastro foi modificado com sucesso.");
-						}
-						else{
-							$this->Flash->error("Não foi possível modificar.");
-						}
-					}
-					else{
-						$this->Flash->error("Não foi possível encontrar o cadastro.");
-					}*/
+					$cadastro = $this->Cadastro->get($id);
+					
 					
 
 					/*$Email = new Email();

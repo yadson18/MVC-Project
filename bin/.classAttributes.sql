@@ -5,20 +5,20 @@ SELECT DISTINCT LOWER(R.RDB$FIELD_NAME) AS COLUMNS,
     END AS IS_NULL,
     F.RDB$FIELD_LENGTH AS SIZE,
   	CASE F.RDB$FIELD_TYPE
-	    WHEN 7 THEN 'smallint'
-	    WHEN 8 THEN 'integer'
-	    WHEN 9 THEN 'quad'
+	    WHEN 7 THEN 'int'
+	    WHEN 8 THEN 'int'
+	    WHEN 9 THEN 'string'
 	    WHEN 10 THEN 'float'
-	    WHEN 11 THEN 'd_float'
-	    WHEN 12 THEN 'date'
-	    WHEN 13 THEN 'time'
-	    WHEN 14 THEN 'char'
-	    WHEN 16 THEN 'int64'
+	    WHEN 11 THEN 'float'
+	    WHEN 12 THEN 'string'
+	    WHEN 13 THEN 'string'
+	    WHEN 14 THEN 'string'
+	    WHEN 16 THEN 'int'
 	    WHEN 27 THEN 'double'
-	    WHEN 35 THEN 'timestamp'
-	    WHEN 37 THEN 'varchar'
-	    WHEN 40 THEN 'cstring'
-	    WHEN 261 THEN 'blob'
+	    WHEN 35 THEN 'string'
+	    WHEN 37 THEN 'string'
+	    WHEN 40 THEN 'string'
+	    WHEN 261 THEN 'string'
 	    ELSE 'unknown'
   	END AS TYPE
 FROM RDB$RELATION_FIELDS R

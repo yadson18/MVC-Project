@@ -9,6 +9,7 @@
 	
 	class QueryBuilder
 	{
+		private $tableValidAttributes;
 		private $Select;
 		private $Insert;
 		private $Delete;
@@ -21,6 +22,11 @@
 			$this->Insert = new Insert();
 			$this->Delete = new Delete();
 			$this->Update = new Update();
+		}
+
+		public function setTableValidAttributes(array $attributes)
+		{
+			$this->tableValidAttributes = $attributes;
 		}
 
 		public function find(string $columnFilters)

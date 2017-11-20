@@ -60,7 +60,7 @@
 		}
 
 		public function save(){
-			if(!empty($this)){
+			if($this->tableHasLoaded() && !empty($this)){
 				return self::$Table->queryBuilder()
 					->insert(get_object_vars($this))
 					->into(self::$Table->getTable())
@@ -70,7 +70,7 @@
 		}
 
 		public function delete($key){
-			if(!empty($key)){
+			if($this->tableHasLoaded() && !empty($key)){
 				if($key === "all"){
 					return self::$Table->queryBuilder()
 						->delete()
@@ -88,7 +88,7 @@
 		}
 
 		public function update(){
-			if(!empty($this)){
+			if($this->tableHasLoaded() && !empty($this)){
 				$dataToUpdate = get_object_vars($this);
 
 				if(isset($dataToUpdate[self::$Table->getPrimaryKey()])){
