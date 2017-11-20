@@ -1,29 +1,22 @@
 <?php 
 	namespace Simple\ORM;
 
-	use Simple\Configurator\Configurator;
-	use Simple\ORM\Component\Connection;
-	use Simple\ORM\Component\Query;
-	use Simple\ORM\Component\Insert;
-	use Simple\ORM\Component\Select;
-	use Simple\ORM\Component\Delete;
-	use Simple\ORM\Component\Update;
+	use Simple\ORM\Component\Query\Query;
+	use Simple\ORM\Component\Query\Insert;
+	use Simple\ORM\Component\Query\Select;
+	use Simple\ORM\Component\Query\Delete;
+	use Simple\ORM\Component\Query\Update;
 	
 	class QueryBuilder
 	{
-		private $Connection;
 		private $Select;
 		private $Insert;
 		private $Delete;
 		private $Update;
 
-		public function __construct(string $databaseType, string $database, string $entityName)
+		public function __construct(string $dbType, string $dbName, string $entityName)
 		{
-			$this->Connection = Connection::getInstance(
-				$databaseType, Configurator::getInstance()->get("Databases", $database)
-			);
-
-			Query::currentEntity($entityName);
+			Query::initialize($dbType, $dbName, $entityName);
 			$this->Select = new Select();
 			$this->Insert = new Insert();
 			$this->Delete = new Delete();
@@ -120,16 +113,16 @@
 		public function getResult()
 		{
 			if(Query::typeIs("select")){
-				return $this->Select->getResult($this->Connection);
+				return $this->Select->getResult();
 			}
 			else if(Query::typeIs("insert")){
-				return $this->Insert->getResult($this->Connection);
+				return $this->Insert->getResult();
 			}
 			else if(Query::typeIs("delete")){
-				return $this->Delete->getResult($this->Connection);
+				return $this->Delete->getResult();
 			}
 			else if(Query::typeIs("update")){
-				return $this->Update->getResult($this->Connection);
+				return $this->Update->getResult();
 			}
 		}
 	}

@@ -19,9 +19,12 @@
 			$this->Cadastro = $this->newEntity("Example");
 			
 			if($this->requestIs("GET") && !empty($id)){
-					$cadastro = $this->Cadastro->get($id);
-					
-					if($cadastro){
+					$cadastro = $this->Cadastro->get(8002);
+					$cadastro->razao = "ATUALIZADO";
+
+
+					debug($cadastro->update());
+					/*if($cadastro){
 						$cadastro->razao = "ATUALIZADO";
 
 						if($cadastro->update()){
@@ -33,7 +36,7 @@
 					}
 					else{
 						$this->Flash->error("Não foi possível encontrar o cadastro.");
-					}
+					}*/
 					
 
 					/*$Email = new Email();
