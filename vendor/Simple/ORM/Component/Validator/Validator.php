@@ -3,16 +3,17 @@
 
 	class Validator
 	{
-		private $tableAttributes;
-		
-		public function __construct(array $tableAttributes)
-		{
-			$this->tableAttributes = $tableAttributes;
+		private $tableValidAttributes;
+
+		public function initialize(array $tableValidAttributes){
+			if(!empty($tableValidAttributes)){
+				$this->tableValidAttributes = $tableValidAttributes;
+			}
 		}
 
 		public function isValid(string $column, $value){
-			if(!empty($column) && isset($this->tableAttributes[$column])){
-				$attribute = $this->tableAttributes[$column];
+			if(!empty($column) && isset($this->tableValidAttributes[$column])){
+				$attribute = $this->tableValidAttributes[$column];
 
 				if(isset($attribute["type"]) && isset($attribute["null"]) && isset($attribute["size"])){
 					$attribute["type"] = strtolower($attribute["type"]);
@@ -28,11 +29,12 @@
 					return false;
 				}
 			}
+			return false;
 		}
 
 		protected function validateSizeValue(string $column, $value){
-			if(isset($this->tableAttributes[$column]) && !empty($value)){
-				if($this->tableAttributes[$column]["size"] >= strlen(trim($value))){
+			if(isset($this->tableValidAttributes[$column]) && !empty($value)){
+				if($this->tableValidAttributes[$column]["size"] >= strlen(trim($value))){
 					return true;
 				}
 			}

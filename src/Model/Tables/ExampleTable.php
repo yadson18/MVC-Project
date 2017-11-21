@@ -2,6 +2,8 @@
 	namespace Model\Tables;
 
 	class ExampleTable extends Table{
+		protected $attributes = [];
+
 		public function initialize(){
 			parent::database("firebird", "SRICASH");
 

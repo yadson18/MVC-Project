@@ -5,14 +5,10 @@
 	use Simple\ORM\QueryBuilder;
 
 	abstract class Table implements TableInterface{
+		private $belongsTo = [];
 		private $table;
 		private $primaryKey;
-		private $belongsTo;
 		private $QueryBuilder;
-
-		public function __construct(){
-			$this->belongsTo = [];
-		}
 
 		public function getEntityName(){
 			return str_replace(
@@ -22,9 +18,7 @@
 
 		protected function database(string $databaseType, string $database){
 			$this->QueryBuilder = new QueryBuilder($databaseType, $database, $this->getEntityName());
-			if (!empty($this->getTableColumns())) {
-				$this->QueryBuilder->setTableValidAttributes($this->getTableColumns());
-			}
+			$this->QueryBuilder->attributesValidator($this->getTableColumns());
 		}
 		
 		public function queryBuilder(){

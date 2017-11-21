@@ -1,6 +1,7 @@
 <?php 
 	namespace Simple\ORM;
 
+	use Simple\ORM\Component\Validator\Validator;
 	use Simple\ORM\Component\Query\Query;
 	use Simple\ORM\Component\Query\Insert;
 	use Simple\ORM\Component\Query\Select;
@@ -9,7 +10,7 @@
 	
 	class QueryBuilder
 	{
-		private $tableValidAttributes;
+		private $Validator;
 		private $Select;
 		private $Insert;
 		private $Delete;
@@ -22,11 +23,12 @@
 			$this->Insert = new Insert();
 			$this->Delete = new Delete();
 			$this->Update = new Update();
+			$this->Validator = new Validator();
 		}
 
-		public function setTableValidAttributes(array $attributes)
+		public function attributesValidator(array $attributes)
 		{
-			$this->tableValidAttributes = $attributes;
+			$this->Validator->initialize($attributes);
 		}
 
 		public function find(string $columnFilters)

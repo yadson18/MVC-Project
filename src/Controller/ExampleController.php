@@ -14,12 +14,13 @@
 			return $this->alowedMethods($method, ["home"]);
 		}
 
-		public function home($id)
+		public function home()
 		{
 			$this->Cadastro = $this->newEntity("Example");
-			
-			if($this->requestIs("GET") && !empty($id)){
-					$cadastro = $this->Cadastro->get($id);
+				
+			$cadastro = $this->Cadastro->get(88);
+			//if($this->requestIs("GET") && !empty($id)){
+
 					
 					
 
@@ -37,7 +38,7 @@
 		            else{
 		            	$this->Flash->error("Não enviado");
 		            }*/
-			}
+			//}
 
 			$this->viewTitle("Home");
 			$this->set(["cadastro" => $cadastro]);
