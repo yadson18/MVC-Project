@@ -11,29 +11,53 @@
 			}
 		}
 
-		public function isValid(string $column, $value){
-			if(!empty($column) && isset($this->tableValidAttributes[$column])){
-				$attribute = $this->tableValidAttributes[$column];
+		public function isValid(array $columnsAndValues){
+			if(!empty($columnsAndValues)){
+				foreach ($columnsAndValues as $column => $value) {
+					if (isset($this->tableValidAttributes[$column])) {
+						$attribute = $this->tableValidAttributes[$column];
 
-				if(isset($attribute["type"]) && isset($attribute["null"]) && isset($attribute["size"])){
-					$attribute["type"] = strtolower($attribute["type"]);
+						if(isset($attribute["type"]) && isset($attribute["null"]) && isset($attribute["size"])){
+							$attribute["type"] = strtolower($attribute["type"]);
 
-					$function = "return is_{$attribute['type']}(\$value);";
+							$function = "return is_{$attribute['type']}(\$value);";
 
-					if(is_null($value) || empty($value) && $this->canBeNull($attribute["null"])){
-						return true;
+							if (!$this->canBeNull($attribute["null"])) {
+								if ($this->isNull($value)) {
+									return false;
+								}
+								else if (!eval($function) || !$this->validateSizeValue($column, $value)) {
+									return false;
+								}
+							}
+							else if ($this->canBeNull($attribute["null"])) {
+								if (
+									!$this->isNull($value) && !eval($function) || 
+									!$this->validateSizeValue($column, $value)
+								) {
+									return false;
+								}
+							}
+						}
 					}
-					else if(eval($function) && $this->validateSizeValue($column, $value)){
-						return true;
-					}
-					return false;
+				}
+				return true;
+			}
+			return false;
+		}
+
+		protected function isNull($value)
+		{
+			if(is_string($value) || is_null($value)){
+				if(empty($value) || is_null($value) || !isset($value)){
+					return true;
 				}
 			}
 			return false;
 		}
 
 		protected function validateSizeValue(string $column, $value){
-			if(isset($this->tableValidAttributes[$column]) && !empty($value)){
+			if(isset($this->tableValidAttributes[$column])){
 				if($this->tableValidAttributes[$column]["size"] >= strlen(trim($value))){
 					return true;
 				}

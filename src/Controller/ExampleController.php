@@ -16,9 +16,10 @@
 
 		public function home()
 		{
-			$this->Cadastro = $this->newEntity("Example");
+			$this->Cadastro = $this->newEntity("Cadastro");
 				
 			$cadastro = $this->Cadastro->get(88);
+
 			//if($this->requestIs("GET") && !empty($id)){
 
 					
