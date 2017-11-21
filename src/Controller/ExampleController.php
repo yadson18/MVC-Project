@@ -16,7 +16,7 @@
 
 		public function home()
 		{
-			$this->Cadastro = $this->newEntity("Cadastro");
+			$this->Cadastro = $this->newEntity("Example");
 				
 			$cadastro = $this->Cadastro->get(88);
 
