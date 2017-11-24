@@ -3,7 +3,7 @@
 	include "../config/AppRoutes.php";
 
 	// Incluindo a classe AutoLoad, que carrega os namespaces baseados nos diretórios. 
-	require_once VENDOR."AutoLoad/AutoLoad.php";
+	require_once VENDOR."AutoLoad.php";
 
 	AutoLoad::getInstance()->loadNameSpaces();
 	
