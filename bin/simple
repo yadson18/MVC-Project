@@ -87,7 +87,7 @@ function makeClassTable(){
 		className=$(getClassName $1);
 
 		if [ $className != 0 ]; then 
-			table=$(sed -e "s/%table_name%/$className/g" -e "s/%table_attributes%/$2/g" -e "s/%db_type%/$3/g" -e "s/%db_name%/$4/g" -e "s/%table%/$1/g" -e "s/%primary_key%/$5/g" $TEMPLATES_PATH/Table.php > $MODEL_PATH/TableClass/$className'Table.php');
+			table=$(sed -e "s/%table_name%/$className/g" -e "s/%table_attributes%/$2/g" -e "s/%db_type%/$3/g" -e "s/%db_name%/$4/g" -e "s/%table%/$1/g" -e "s/%primary_key%/$5/g" $TEMPLATES_PATH/Table.php > $MODEL_PATH/Tables/$className'Table.php');
 			
 			if [ $? -ne 1 ]; then
 				echo 1;
