@@ -30,8 +30,8 @@
 
 		protected function getTableColumns()
 		{
-			if (isset($this->attributes)) {
-				return $this->attributes;
+			if (isset($this->tableAttributes)) {
+				return $this->tableAttributes;
 			}
 		}
 
