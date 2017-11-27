@@ -7,7 +7,7 @@
 	abstract class Table implements TableInterface{
 		private $belongsTo = [];
 		private $table;
-		private $primaryKeys;
+		private $primaryKey;
 		private $QueryBuilder;
 
 		public function getEntityName(){
@@ -52,14 +52,14 @@
 			return false;
 		}
 
-		protected function primaryKeys(array $primaryKeys){
-			if(!empty($primaryKeys)){
-				$this->primaryKeys = $primaryKeys;
+		protected function primaryKey(string $primaryKey){
+			if(!empty($primaryKey)){
+				$this->primaryKey = $primaryKey;
 			}
 		}
-		public function getPrimaryKeys(){
-			if(!empty($this->primaryKeys)){
-				return $this->primaryKeys;
+		public function getPrimaryKey(){
+			if(!empty($this->primaryKey)){
+				return $this->primaryKey;
 			}
 			return false;
 		}

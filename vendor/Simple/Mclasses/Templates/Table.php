@@ -9,7 +9,7 @@
 
 			$this->table("%table%");
 
-			$this->primaryKeys(["%primary_key%"]);
+			$this->primaryKey("%primary_key%");
 
 			$this->belongsTo("", []);
 		}
