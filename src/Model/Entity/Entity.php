@@ -46,11 +46,17 @@
 						->from(self::$Table->getTable())
 						->getResult();
 				}
-				else if(self::$Table->getPrimaryKey() && !empty($key) && !is_array($key)){
+				else if(self::$Table->getPrimaryKeys() && !empty($key) && !is_array($key)){
+					foreach (self::$Table->getPrimaryKeys() as $primaryKey) {
+						$condition["{$primaryKey} ="] = $key;
+						$condition[] = "OR";
+					}
+					array_pop($condition);
+
 					return self::$Table->queryBuilder()
 						->find("*")
 						->from(self::$Table->getTable())
-						->where([self::$Table->getPrimaryKey()." =" => $key])
+						->where($condition)
 						->convertTo("object")
 						->limit(1)
 						->getResult();

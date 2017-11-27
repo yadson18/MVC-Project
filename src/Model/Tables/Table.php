@@ -7,7 +7,7 @@
 	abstract class Table implements TableInterface{
 		private $belongsTo = [];
 		private $table;
-		private $primaryKey;
+		private $primaryKeys;
 		private $QueryBuilder;
 
 		public function getEntityName(){
@@ -18,7 +18,6 @@
 
 		protected function database(string $databaseType, string $database){
 			$this->QueryBuilder = new QueryBuilder($databaseType, $database, $this->getEntityName());
-			$this->QueryBuilder->attributesValidator($this->getTableColumns());
 		}
 		
 		public function queryBuilder(){
@@ -26,13 +25,6 @@
 				return $this->QueryBuilder;
 			}
 			return false;
-		}
-
-		protected function getTableColumns()
-		{
-			if (isset($this->tableAttributes)) {
-				return $this->tableAttributes;
-			}
 		}
 
 		protected function belongsTo(string $fieldName, array $arrayConfig){
@@ -60,14 +52,14 @@
 			return false;
 		}
 
-		protected function primaryKey(string $primaryKey){
-			if(!empty($primaryKey)){
-				$this->primaryKey = $primaryKey;
+		protected function primaryKeys(array $primaryKeys){
+			if(!empty($primaryKeys)){
+				$this->primaryKeys = $primaryKeys;
 			}
 		}
-		public function getPrimaryKey(){
-			if(!empty($this->primaryKey)){
-				return $this->primaryKey;
+		public function getPrimaryKeys(){
+			if(!empty($this->primaryKeys)){
+				return $this->primaryKeys;
 			}
 			return false;
 		}

@@ -77,19 +77,21 @@ function makeClassEntity(){
 }
 
 function makeClassTable(){
-	# $1 - Table name.
-	# $2 - Table attributes.
-	# $3 - Database type.
-	# $4 - Database name.
-	# $5 - Primary key.
-
 	if [ $# -eq 5 ]; then
-		className=$(getClassName $1);
+		tableName=$1;
+		tableAttributes=$2;
+		databaseType=$3;
+		databaseName=$4;
+		primaryKeys=$5;
+		className=$(getClassName $tableName);
 
 		if [ $className != 0 ]; then 
-			table=$(sed -e "s/%table_name%/$className/g" -e "s/%table_attributes%/$2/g" -e "s/%db_type%/$3/g" -e "s/%db_name%/$4/g" -e "s/%table%/$1/g" -e "s/%primary_key%/$5/g" $TEMPLATES_PATH/Table.php > $MODEL_PATH/Tables/$className'Table.php');
+			if [ "$primaryKeys" == "<null>" ]; then
+				primaryKeys="";
+			fi
+
+			table=$(sed -e "s/%table_name%/$className/g" -e "s/%table_attributes%/$tableAttributes/g" -e "s/%db_type%/$databaseType/g" -e "s/%db_name%/$databaseName/g" -e "s/%table%/$tableName/g" -e "s/%primary_key%/$primaryKeys/g" $TEMPLATES_PATH/Table.php > $MODEL_PATH/Tables/$className'Table.php');
 			
-			echo $table;
 			if [ $? -ne 1 ]; then
 				echo 1;
 			else
@@ -238,6 +240,8 @@ elif [ $# -eq 3 ] && [ "$1" == mclasses ] && [ "$2" != "" ] && [ "$3" != "" ]; t
 							echo "ok";
 						fi
 					fi
+				else
+					echo "fail";
 				fi
 			fi
 		fi

@@ -26,11 +26,6 @@
 			$this->Validator = new Validator();
 		}
 
-		public function attributesValidator(array $attributes)
-		{
-			$this->Validator->initialize($attributes);
-		}
-
 		public function find(string $columnFilters)
 		{
 			if ($this->Select->setFilters($columnFilters) && Query::setType("select")) {
