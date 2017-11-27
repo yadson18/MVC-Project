@@ -1,14 +1,21 @@
 <?php  
 	namespace Model\Tables;
 
-	class ExampleTable extends Table{
-		protected $tableAttributes = [];
-
-		public function initialize(){
+	class ExampleTable extends Table
+	{
+		public function initialize()
+		{
 			parent::database("firebird", "SRICASH");
 
 			$this->table("CADASTRO");
-			$this->primaryKey("cod_cadastro");
+
+			$this->primaryKeys("cod_cadastro");
+
 			$this->belongsTo("", []);
+		}
+
+		public function defaultValidator(Validator $validator)
+		{
+			return $validator;
 		}
 	}

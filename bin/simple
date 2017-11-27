@@ -89,6 +89,7 @@ function makeClassTable(){
 		if [ $className != 0 ]; then 
 			table=$(sed -e "s/%table_name%/$className/g" -e "s/%table_attributes%/$2/g" -e "s/%db_type%/$3/g" -e "s/%db_name%/$4/g" -e "s/%table%/$1/g" -e "s/%primary_key%/$5/g" $TEMPLATES_PATH/Table.php > $MODEL_PATH/Tables/$className'Table.php');
 			
+			echo $table;
 			if [ $? -ne 1 ]; then
 				echo 1;
 			else
@@ -144,7 +145,7 @@ function findFile(){
 	fi
 }
 
-function setFileTableName(){
+function getFileQuery(){
 	# $1 - Table name.
 	# $2 - File name.
 
@@ -152,10 +153,10 @@ function setFileTableName(){
 		fileExists=$(findFile $2);
 
 		if [ $fileExists -eq 1 ]; then
-			verifyChange=$(sed -i "s/=.*ORDER/= '$1' ORDER/g" bin/$2);
+			fileContent=$(sed -r "s/%table_name%/$1/g" bin/$2);
 
-			if [ $? -ne 1 ]; then
-				echo 1;
+			if [ "$fileContent" != 0 ]; then
+				echo $fileContent;
 			else
 				echo 0;
 			fi
@@ -167,40 +168,17 @@ function setFileTableName(){
 	fi
 }
 
-function getTablePrimaryKey(){
-	# $1 - Database name.
-	# $2 - Temporary file name.
-
-	if [ $# -eq 2 ]; then
-		queryResult=$(/opt/firebird/bin/isql "localhost:/BD/$1.FDB" -ch 'UTF-8' -i 'bin/.classInitialize.sql' -o $2 -u SYSDBA -p masterkey -page 1000000);
-	
-		if [ $? -ne 1 ]; then
-			sed -i -e "s/=//g" -e "s/[[:space:]]\+/|/g" -e "s/|$//" -e "/^$/d" -e "s/PK//g" $2;
-			result=$(cat $2);
-
-			if [ "$result" != "" ]; then
-				echo 1;
-			else
-				echo 0;
-			fi
-		else
-			echo 0;
-		fi
-	else
-		echo 0;
-	fi
-}
-
 function getTableAttributes(){
 	# $1 - Database name.
-	# $2 - Temporary file name.
+	# $2 - File content name.
+	# $3 - File query name.
 
-	if [ $# -eq 2 ]; then
-		queryResult=$(/opt/firebird/bin/isql "localhost:/BD/$1.FDB" -ch 'UTF-8' -i 'bin/.classAttributes.sql' -o $2 -u SYSDBA -p masterkey -page 1000000);
+	if [ $# -eq 3 ]; then
+		queryResult=$(/opt/firebird/bin/isql "localhost:/BD/$1.FDB" -ch 'UTF-8' -i $2 -o $3 -u SYSDBA -p masterkey -page 1000000);
 
 		if [ $? -ne 1 ]; then
-			sed -i -e "s/=//g" -e "s/[[:space:]]\+/|/g" -e "s/|$//" -e "s/COLUMNS.*\|=//g" $2;
-			result=$(cat $2);
+			sed -i -e '/^$\|METHOD\|0:\|=/d' $3;
+			result=$(cat $3);
 
 			if [ "$result" != "" ]; then
 				echo 1;
@@ -212,62 +190,6 @@ function getTableAttributes(){
 		fi
 	else
 		echo 0;
-	fi
-}
-
-function getFileContents(){
-	# $1 - First file name.
-	# $2 - Second file name.
-
-	if [ $# -eq 2 ]; then
-		newFile=$(mktemp);
-
-		cat $1 >> $newFile;
-		cat $2 >> $newFile;
-
-		cat $newFile;
-	else
-		echo 0;
-	fi
-}
-
-function getTableClassAttributeLine(){
-	# $1 - File attribute line.
-
-	if [ $# -eq 1 ]; then
-		IFS='|';
-		array=($1);
-		for key in "${!array[@]}"; do
-			if [ ${#array[@]} -eq 4 ]; then
-				if [ $key -eq 0 ]; then
-					echo "\t\t\t'${array[$key]}' => [";
-				elif [ $key -eq 1 ]; then
-					echo "'null' => '${array[$key]}',";
-				elif [ $key -eq 2 ]; then
-					echo "'size' => ${array[$key]},";
-				elif [ $key -eq 3 ]; then
-					echo "'type' => '${array[$key]}' ],\n";
-				fi
-			fi
-		done
-	else
-		echo 0;
-	fi
-}
-
-function getTableClassPrimaryKey(){
-	# $1 - File attribute line.
-
-	if [ $# -eq 1 ]; then
-		IFS='|';
-		array=($1);
-		
-		for key in "${!array[@]}"; do
-			if [ ${#array[@]} -ne 4 ]; then
-				echo "${array[$key]}";
-				break;
-			fi
-		done
 	fi
 }
 
@@ -276,50 +198,44 @@ if [ $# -eq 1 ] && [ "$1" == start ]; then
    	php -S localhost:9000
 
 elif [ $# -eq 3 ] && [ "$1" == mclasses ] && [ "$2" != "" ] && [ "$3" != "" ]; then
-	primaryKeyFile=$(mktemp);
-	attributesFile=$(mktemp);
+	fileContent=$(mktemp);
+	fileQuery=$(mktemp);
 
 	databaseName=$2;
-	tableName=$3;
-	
-	changeTableName=$(setFileTableName $tableName .classInitialize.sql);
-	
-	if [ $changeTableName -eq 1 ]; then
-		changeTableName=$(setFileTableName $tableName .classAttributes.sql);
-		
-		if [ $changeTableName -eq 1 ]; then
-			primaryKeyExists=$(getTablePrimaryKey $databaseName $primaryKeyFile);
+	tableName=$3;  
+
+	content=$(getFileQuery $tableName .classAttributes.sql);
+
+	if [ "$content" != 0 ]; then
+		echo $content > $fileContent;
+
+		attributesExists=$(getTableAttributes $databaseName $fileContent $fileQuery);
+
+		if [ "$attributesExists" != 0 ]; then
+			arrayTop=0;
+			attributes="";
+			primaryKeys="";
+			result=$(cat $fileQuery);
+
+			for line in `echo $result`; do
+				if [ $arrayTop -eq 0 ]; then
+					primaryKeys=$line;
+					arrayTop=`expr $arrayTop + 1`;
+				else
+					attributes="$attributes\n\t\t\t$line";
+				fi
+			done
 			
-			if [ $primaryKeyExists -eq 1 ]; then
-				attributesExists=$(getTableAttributes $databaseName $attributesFile);
+			ControllerClass=$(makeClassController $tableName);
+			TableClass=$(makeClassTable $tableName "$attributes" firebird $databaseName $primaryKeys);
+			EntityClass=$(makeClassEntity $tableName);
+			ViewDirectoryClass=$(makeViewDir $tableName);
 
-				if [ $attributesExists -eq 1 ]; then
-					attributes="";
-					primaryKey="";
-
-					result=$(getFileContents $primaryKeyFile $attributesFile);
-
-					for line in `echo $result`; do
-						 if [ "$primaryKey" == "" ]; then
-						 	primaryKey=$(getTableClassPrimaryKey $line);
-						 fi
-						attributes="$attributes$(getTableClassAttributeLine $line)";
-					done
-
-					attributes=$(echo $attributes | sed 's/...$//');
-
-					ControllerClass=$(makeClassController $tableName);
-					TableClass=$(makeClassTable $tableName  "\n$attributes" firebird $databaseName $primaryKey);
-					EntityClass=$(makeClassEntity $tableName);
-					ViewDirectoryClass=$(makeViewDir $tableName);
-					
-					if [ "$ControllerClass" -eq 1 ]; then 
-						if [ "$TableClass" -eq 1 ]; then
-							if [ "$EntityClass" -eq 1 ]; then
-								if [ "$ViewDirectoryClass" -eq 1 ]; then
-									echo "ok";
-								fi
-							fi
+			if [ "$ControllerClass" -eq 1 ]; then 
+				if [ "$TableClass" -eq 1 ]; then
+					if [ "$EntityClass" -eq 1 ]; then
+						if [ "$ViewDirectoryClass" -eq 1 ]; then
+							echo "ok";
 						fi
 					fi
 				fi
