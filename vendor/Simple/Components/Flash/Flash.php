@@ -15,8 +15,9 @@
 		 *	(string) messageType, o tipo do flash que deseja guardar a mensagem Ex: success.
 		 *	(string) messageText, mensagem que será exibida ao usuário.
 		 */
-		public function setMessage(string $messageType, string $messageText){
-			if(!empty($messageType) && !empty($messageText)){
+		public function setMessage(string $messageType, string $messageText)
+		{
+			if (!empty($messageType) && !empty($messageText)) {
 				$this->messageType = $messageType;
 				$this->messageText = $messageText;
 			}
@@ -27,11 +28,12 @@
 		 * se existir, o buffer de saída do PHP é usado para capturar o conteúdo do template e 
 		 * exibir a mensagem ao usuário, caso não exista, o retorno será false.
 		 */
-		public function showMessage(){
+		public function showMessage()
+		{
 			ob_start();
 
-			if(isset($this->messageType) && isset($this->messageText)){
-				if(file_exists(APP . "View/Flash/{$this->messageType}.php")){
+			if (isset($this->messageType) && isset($this->messageText)) {
+				if (file_exists(APP . "View/Flash/{$this->messageType}.php")) {
 					$message = $this->messageText;
 					include APP . "View/Flash/{$this->messageType}.php";
 					$this->clearMessage();
@@ -41,7 +43,8 @@
 		}
 
 		// Este método limpa as mensagens mostradas ao usuário, após elas serem exibidas.
-		public function clearMessage(){
+		public function clearMessage()
+		{
 			unset($this->messageType);
 			unset($this->messageText);
 		}
@@ -51,7 +54,8 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function error(string $messageText){
+		public function error(string $messageText)
+		{
 			$this->setMessage("error", $messageText);
 		}
 
@@ -60,7 +64,8 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function info(string $messageText){
+		public function info(string $messageText)
+		{
 			$this->setMessage("info", $messageText);
 		}
 
@@ -69,7 +74,8 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function success(string $messageText){
+		public function success(string $messageText)
+		{
 			$this->setMessage("success", $messageText);
 		}
 
@@ -78,7 +84,8 @@
 		 *
 		 * (string) message, mensagem a ser exibida ao usuário.
 		 */
-		public function warning(string $messageText){
+		public function warning(string $messageText)
+		{
 			$this->setMessage("warning", $messageText);
 		}
 	}

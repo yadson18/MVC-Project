@@ -1,27 +1,29 @@
 <?php
-	function debug($data){
+	function debug($data)
+	{
 		echo "<pre id='debug-screen'>";
 		var_dump($data);
 		echo "</pre>";
 	}
 
-	function requestIs(string $requestMethod){
-		if(!empty($requestMethod)){
-			if($_SERVER["REQUEST_METHOD"] === strtoupper($requestMethod)){
-	            return true;
-	        }
-		}
+	function requestIs(string $requestMethod)
+	{
+		if ($_SERVER["REQUEST_METHOD"] === strtoupper($requestMethod)) {
+	        return true;
+	    }
         return false;
 	}
 
-	function isInstanceOf($objectInstance, string $className){
-		if(is_object($objectInstance) && get_class($objectInstance) === $className){
+	function isInstanceOf($objectInstance, string $className)
+	{
+		if (is_object($objectInstance) && get_class($objectInstance) === $className) {
 			return true;
 		}
 		return false;
 	}
 
-	function removeSpecialChars($string) {
+	function removeSpecialChars($string) 
+	{
 	    $string = str_replace(["á","à","â","ã","ä"], "a", $string);
 	    $string = str_replace(["Á","À","Â","Ã","Ä"], "A", $string);
 	    $string = str_replace(["é","è","ê"], "e", $string);

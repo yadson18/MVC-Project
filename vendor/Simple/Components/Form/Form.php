@@ -16,48 +16,47 @@
             ]
         ];
 
-        protected function getAvaliableAtts(string $tagName){
-            if(isset($this->avaliableAttributes[$tagName])){
+        protected function getAvaliableAtts(string $tagName)
+        {
+            if (isset($this->avaliableAttributes[$tagName])) {
                 return $this->avaliableAttributes[$tagName];
             }
         }
 
-        protected function getTagAttributes(string $tagName, array $attributes = null, string $labelName = null){
-            if(!empty($tagName)){
+        protected function getTagAttributes(string $tagName, array $attributes = null, string $labelName = null)
+        {
+            if (!empty($tagName)) {
                 $avaliableAttrs = $this->getAvaliableAtts($tagName);
                 $tagAttributes = [];
 
-                if(!empty($attributes)){
-                    foreach($attributes as $attribute => $value){
-                        if(is_string($attribute)){
-                            if(in_array($attribute, $avaliableAttrs)){
+                if (!empty($attributes)) {
+                    foreach ($attributes as $attribute => $value) {
+                        if (is_string($attribute)) {
+                            if (in_array($attribute, $avaliableAttrs)) {
                                 $tagAttributes[$attribute] = $value;
                             }
-                            else if(isset($avaliableAttrs[$attribute])){
-                                if(in_array($value, $avaliableAttrs[$attribute])){
+                            else if (isset($avaliableAttrs[$attribute])) {
+                                if (in_array($value, $avaliableAttrs[$attribute])) {
                                     $tagAttributes[$attribute] = $value;
                                 }
                             }
                         }
-                        else{
+                        else {
                             $tagAttributes[$value] = "";
                         }
                     }
                 }
 
-                if(
-                    $tagName === "input" ||
-                    $tagName === "select" ||
-                    $tagName === "button"
-                ){
-                    if(!array_key_exists("class", $tagAttributes)){
+                if ($tagName === "input" || $tagName === "select" || $tagName === "button") {
+                    if (!array_key_exists("class", $tagAttributes)) {
                         $tagAttributes["class"] = "form-control ".strtolower(removeSpecialChars($labelName));
-                        if($tagName === "button"){
+                        
+                        if ($tagName === "button") {
                             $tagAttributes["class"] .= " btn btn-default";
                         }
                     }
-                    if($tagName === "input" || $tagName === "select"){
-                        if(!array_key_exists("name", $tagAttributes)){
+                    if ($tagName === "input" || $tagName === "select") {
+                        if (!array_key_exists("name", $tagAttributes)) {
                             $tagAttributes["name"] = strtolower(removeSpecialChars($labelName));
                         }
                     }
@@ -73,24 +72,28 @@
             return false;
         }
 
-        public function start(array $config){
+        public function start(array $config)
+        {
             $form = "<form";
 
-            foreach ($config as $attribute => $value){
+            foreach ($config as $attribute => $value) {
                 $form.= " {$attribute}='{$value}'";
             }
 
             return "{$form}>";
         }
 
-        public function end(){
+        public function end()
+        {
             return "</form>";
         }
 
-        public function input(string $name, array $attributes = null){
-            if(!empty($name)){
+        public function input(string $name, array $attributes = null)
+        {
+            if (!empty($name)) {
                 $inputAttributes = $this->getTagAttributes("input", $attributes, $name);
-                if(!empty($inputAttributes)){
+                
+                if (!empty($inputAttributes)) {
                     return "
                         <div class='form-group'>
                             <label>{$name}</label>
@@ -101,10 +104,12 @@
             }
         }
 
-        public function buttonSubmit(string $text, array $attributes = null){
-            if(!empty($text)){
+        public function buttonSubmit(string $text, array $attributes = null)
+        {
+            if (!empty($text)) {
                 $buttonAttributes = $this->getTagAttributes("button", $attributes);
-                if(!empty($buttonAttributes)){
+                
+                if (!empty($buttonAttributes)) {
                     return "
                         <div class='form-group'>
                             <button {$buttonAttributes}>{$text}</button>

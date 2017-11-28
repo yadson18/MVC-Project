@@ -1,14 +1,16 @@
 <?php  
 	namespace Simple\Components\Ajax;
 	
-	class Ajax{
+	class Ajax
+	{
 		private $responseData;
 
-		public function response($data){
-			if(!empty($data) && !is_resource($data)){
+		public function response($data)
+		{
+			if (!empty($data) && !is_resource($data)) {
 				$this->responseData = $data;
 			}
-			else{
+			else {
 				$this->responseData = [
 					"status" => "error",
 					"message" => "Ajax response cannot be empty or resource type"
@@ -16,14 +18,16 @@
 			}
 		}
 
-		public function notEmptyResponse(){
-			if(!empty($this->responseData)){
+		public function notEmptyResponse()
+		{
+			if (isset($this->responseData)) {
 				return true;
 			}
 			return false;
 		}
 
-		public function getResponse(){
+		public function getResponse()
+		{
 			return json_encode($this->responseData);
 		}
 	}

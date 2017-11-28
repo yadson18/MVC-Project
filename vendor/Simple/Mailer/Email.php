@@ -19,8 +19,9 @@
 		private $toName;
 		private $attachment;
 
-		public function __construct(){
-			if(Configurator::getInstance()->get("EmailTransport")){
+		public function __construct()
+		{
+			if (Configurator::getInstance()->get("EmailTransport")) {
 				$emailConfig = Configurator::getInstance()->get("EmailTransport");
 
 				$this->host = $emailConfig["host"];
@@ -31,8 +32,9 @@
 			}
 		}
 
-		public function subject(string $subjectText){
-			if(!empty($subjectText)){
+		public function subject(string $subjectText)
+		{
+			if (!empty($subjectText)) {
 				$this->subject = $subjectText;
 
 				return $this;
@@ -40,8 +42,9 @@
 			return false;
 		}
 
-		public function messageTemplate(string $messageTemplate){
-			if(!empty($messageTemplate) && file_exists(VIEW."Email".DS.$messageTemplate)){
+		public function messageTemplate(string $messageTemplate)
+		{
+			if (!empty($messageTemplate) && file_exists(VIEW."Email".DS.$messageTemplate)) {
 				$this->message = VIEW."Email".DS.$messageTemplate;
 
 				return $this;
@@ -49,8 +52,9 @@
 			return false;
 		}
 
-		public function from(string $fromEmail, string $fromName){
-			if(!empty($fromEmail) && !empty($fromName)){
+		public function from(string $fromEmail, string $fromName)
+		{
+			if (!empty($fromEmail) && !empty($fromName)) {
 				$this->from = $fromEmail;
 				$this->fromName = $fromName;
 
@@ -59,8 +63,9 @@
 			return false;
 		}
 
-		public function attachment(string $fileName){
-			if(!empty($fileName) && file_exists(WWW_ROOT.$fileName)){
+		public function attachment(string $fileName)
+		{
+			if (!empty($fileName) && file_exists(WWW_ROOT.$fileName)) {
 				$this->attachment = WWW_ROOT.$fileName;
 
 				return $this;
@@ -68,8 +73,9 @@
 			return false;
 		}
 
-		public function to(string $toEmail, string $toName){
-			if(!empty($toEmail) && !empty($toName)){
+		public function to(string $toEmail, string $toName)
+		{
+			if (!empty($toEmail) && !empty($toName)) {
 				$this->to = $toEmail;
 				$this->toName = $toName;
 
@@ -78,7 +84,8 @@
 			return false;
 		}
 
-		public function send(){
+		public function send()
+		{
 			$Email = new PHPMailer();
 			$Email->isSMTP();
 			$Email->SMTPDebug = false;
@@ -94,7 +101,8 @@
 			$Email->Subject = $this->subject;
 			$Email->msgHTML(file_get_contents($this->message));
 			$Email->AltBody = 'This is a plain-text message body';
-			if(!empty($this->attachment)){
+			
+			if (!empty($this->attachment)) {
 				$Email->addAttachment($this->attachment);
 			}
 

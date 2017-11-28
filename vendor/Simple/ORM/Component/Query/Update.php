@@ -1,7 +1,8 @@
 <?php  
 	namespace Simple\ORM\Component\Query;
 
-	class Update extends Query{
+	class Update extends Query
+	{
 		private $columns;
 		private $formatedColumns;
 		private $columnsAndValues;

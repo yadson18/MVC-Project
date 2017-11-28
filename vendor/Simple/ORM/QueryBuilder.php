@@ -115,16 +115,16 @@
 
 		public function getResult()
 		{
-			if(Query::typeIs("select")){
+			if (Query::typeIs("select")) {
 				return $this->Select->getResult();
 			}
-			else if(Query::typeIs("insert")){
+			else if (Query::typeIs("insert")) {
 				return $this->Insert->getResult();
 			}
-			else if(Query::typeIs("delete")){
+			else if (Query::typeIs("delete")) {
 				return $this->Delete->getResult();
 			}
-			else if(Query::typeIs("update")){
+			else if (Query::typeIs("update")) {
 				return $this->Update->getResult();
 			}
 		}

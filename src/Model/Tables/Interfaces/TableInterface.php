@@ -1,6 +1,7 @@
 <?php 
 	namespace Model\Tables\Interfaces;
 
-	interface TableInterface{
+	interface TableInterface
+	{
 		public function initialize();
 	}

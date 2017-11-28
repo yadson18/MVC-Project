@@ -34,7 +34,8 @@
 			return $this->orderBy;
 		}
 
-		public function setFilters(string $columnFilters){
+		public function setFilters(string $columnFilters)
+		{
 			if (!empty($columnFilters)) {
 				$this->filters = $columnFilters;
 
@@ -82,7 +83,7 @@
 
 		public function getResult()
 		{
-			if($this->connected()){
+			if ($this->connected()) {
 				$query = $this->getConnection()->prepare(
 					"SELECT{$this->getLimit()} {$this->getFilters()} 
 					FROM {$this->getTable()}

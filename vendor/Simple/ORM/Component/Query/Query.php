@@ -77,7 +77,7 @@
 
 				foreach ($queryCondition as $column => $value) {
 					if (is_string($column)) {
-						if(self::typeIs("update")){
+						if (self::typeIs("update")) {
 							$removeSignal = substr($column, 0, (strlen($column) - 2));
 							
 							$condition .= " {$column} :{$removeSignal}";

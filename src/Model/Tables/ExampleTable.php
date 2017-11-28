@@ -3,7 +3,7 @@
 
 	class ExampleTable extends Table
 	{
-		public function initialize(){ }
+		public function initialize(){}
 
 		public function defaultValidator(Validator $validator)
 		{

@@ -3,7 +3,8 @@
 
     use Controller;
 
-    class TemplateController{
+    class TemplateController
+    {
         private static $Instance;
         private $ControllerInstance;
         private $controllerName;
@@ -13,77 +14,90 @@
 
         private function __construct(){}
 
-        public static function getInstance(){
-            if(!isset(self::$Instance)){
+        public static function getInstance()
+        {
+            if (!isset(self::$Instance)) {
                 self::$Instance = new TemplateController();
             }
             return self::$Instance;
         }
 
-        public function setControllerInstance(string $controllerName){
+        public function setControllerInstance(string $controllerName)
+        {
             $Controller = "Controller\\{$controllerName}Controller";
 
-            if(class_exists($Controller)){
+            if (class_exists($Controller)) {
                 $this->ControllerInstance = new $Controller();
 
-                if(!empty($this->ControllerInstance)){
+                if (isset($this->ControllerInstance)) {
                     return $this->ControllerInstance;
                 }  
             }
             return false;
         }
-        public function getControllerInstance(){
+        public function getControllerInstance()
+        {
         	return $this->ControllerInstance;
         }
 
-        public function deleteControllerInstance(){
+        public function deleteControllerInstance()
+        {
             $this->ControllerInstance = NULL;
         }
 
-        public function setName(string $controllerName){
-        	if(!empty($controllerName)){
+        public function setName(string $controllerName)
+        {
+        	if (!empty($controllerName)) {
         		$this->controllerName = $controllerName;
         	}
         }
-        public function getName(){
+        public function getName()
+        {
         	return $this->controllerName;
         }
 
-        public function setMethod(string $methodName){
-        	if(!empty($methodName)){
+        public function setMethod(string $methodName)
+        {
+        	if (!empty($methodName)) {
         		$this->methodName = $methodName;
         	}
         }
-        public function getMethod(){
+        public function getMethod()
+        {
         	return $this->methodName;
         }
 
-        public function setMethodArgs($args){
-            if(!empty($args)){
+        public function setMethodArgs($args)
+        {
+            if (!empty($args)) {
                 $this->methodArgs = $args;
             }
         }
-        public function getMethodArgs(){
+        public function getMethodArgs()
+        {
             return $this->methodArgs;
         }
 
-        public function setTemplate(string $template){
-            if(!empty($template) && file_exists(VIEW . "{$template}.php")){
+        public function setTemplate(string $template)
+        {
+            if (!empty($template) && file_exists(VIEW . "{$template}.php")) {
                 $this->templateName = VIEW . "{$template}.php";
                 return true;
             }
             return false;
         }
-        public function getTemplate(){
-            if(!empty($this->templateName)){
+        public function getTemplate()
+        {
+            if (isset($this->templateName)) {
                 return $this->templateName;
             }
             return false;
         }
 
-        public function callableMethodController(string $methodName){
-            if(!empty($this->ControllerInstance)){
-                if(!empty($methodName) && is_callable([$this->ControllerInstance, $methodName])){
+        public function callableMethodController(string $methodName)
+        {
+            if (isset($this->ControllerInstance)) {
+                if (!empty($methodName) && is_callable([$this->ControllerInstance, $methodName])) {
                     return true;
                 }
             }

@@ -6,7 +6,8 @@
 		private $requestType;
 		private $requestData;
 
-		public function __construct(){
+		public function __construct()
+		{
 			$this->setRequestType($_SERVER["REQUEST_METHOD"]);
 
 			if ($this->is("POST")) {

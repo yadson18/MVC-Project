@@ -39,7 +39,7 @@
 
         protected function setUrlRewriteParameters(string $uri)
         {
-            if(!empty($uri)){
+            if (!empty($uri)) {
                 $Configurator = Configurator::getInstance();
                 $TemplateControl = TemplateController::getInstance();
 
@@ -114,7 +114,7 @@
                             );
 
                             if (!empty($controllerReturn)) {
-                                if(isset($controllerReturn["redirectTo"])){
+                                if (isset($controllerReturn["redirectTo"])) {
                                     header("Location: {$controllerReturn['redirectTo']}");
                                 }
                             }

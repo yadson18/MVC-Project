@@ -1,6 +1,7 @@
 <?php 
 	namespace Model\Entity;
 
-	class Example extends Entity{
+	class Example extends Entity
+	{
 		
 	}

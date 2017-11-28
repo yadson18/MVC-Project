@@ -1,6 +1,7 @@
 <?php 
 	//A classe AutoLoad serve para carregar classes automaticamente no projeto.
-	class AutoLoad{
+	class AutoLoad
+	{
 		private static $Instance;
 		private static $paths;
 
@@ -11,19 +12,22 @@
 		 * 	classes, será o src.
 		 */
 
-		private function __construct(){
+		private function __construct()
+		{
 			self::$paths = ["src", "vendor"];
 		}
 
-		public static function getInstance(){
-			if(!isset(self::$Instance)){
+		public static function getInstance()
+		{
+			if (!isset(self::$Instance)) {
 				self::$Instance = new AutoLoad();
 			}
 			return self::$Instance;
 		}
 
-		public function loadNameSpaces(){
-            spl_autoload_register(function($className) {
+		public function loadNameSpaces()
+		{
+            spl_autoload_register( function($className) {
             	$className = ucfirst(str_replace("\\", DS, $className ).".php"); 
 
             	foreach (self::$paths as $path) {

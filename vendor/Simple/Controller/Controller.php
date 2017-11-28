@@ -24,23 +24,23 @@
 
 		protected function set(array $variables, array $variablesToSerialize = null)
 		{
-            if(!empty($variables)){
-                foreach($variables as $variableName => $value){
-                    if(!empty($variableName) && is_string($variableName)){
-                        if(!empty($variablesToSerialize)){
-                            if(isset($variablesToSerialize["_serialize"])){
-                                if(in_array($variableName, $variablesToSerialize["_serialize"])){
-                                    if(!empty($value)){
+            if (!empty($variables)) {
+                foreach ($variables as $variableName => $value) {
+                    if (!empty($variableName) && is_string($variableName)) {
+                        if (!empty($variablesToSerialize)) {
+                            if (isset($variablesToSerialize["_serialize"])) {
+                                if (in_array($variableName, $variablesToSerialize["_serialize"])) {
+                                    if (!empty($value)) {
                                         $this->Session->setData($variableName, $value);
                                     }
                                 }
-                                else{
+                                else {
                                     $this->viewData[$variableName] = $value;
                                 }
                             }
                         }
-                        else{
-                            if($this->Session->findData($variableName)){
+                        else {
+                            if ($this->Session->findData($variableName)) {
                              	$this->Session->removeData($variableName);
                             }
                             $this->viewData[$variableName] = $value;
@@ -51,13 +51,13 @@
         }
         public function getviewData()
         {
-            if(!empty($this->viewData) && !empty($this->Session->getData())){
+            if (!empty($this->viewData) && !empty($this->Session->getData())) {
                 return array_merge($this->viewData, $this->Session->getData());
             }
-            else if(!empty($this->viewData) && empty($this->Session->getData())){
+            else if (!empty($this->viewData) && empty($this->Session->getData())) {
                 return $this->viewData;
             }
-            else if(empty($this->viewData) && !empty($this->Session->getData())){
+            else if (empty($this->viewData) && !empty($this->Session->getData())) {
                 return $this->Session->getData();
             }
             return false;
@@ -65,7 +65,7 @@
 
         protected function viewTitle(string $title)
         {
-            if(!empty($title)){
+            if (!empty($title)) {
                 $this->viewTitle = $title;
             }
         }
@@ -76,31 +76,33 @@
 
 		protected function newEntity(string $className)
 		{
-            if(!empty($className)){
+            if (!empty($className)) {
                 $Entity = "Model\\Entity\\{$className}";
 
-                if(class_exists($Entity)){
+                if (class_exists($Entity)) {
                     return new $Entity();
                 }
 	      	}
 	      	return false;
 	    }
 
-		protected function requestIs(string $requestMethod){
+		protected function requestIs(string $requestMethod)
+        {
 			return requestIs($requestMethod);
 	    }
 
-		protected function redirect(array $url){
-			if(!empty($url)){
-				if(!isset($url["controller"]) && isset($url["view"]) && !empty($url["view"])){
-					if(self::$TemplateSystem->Controller->getMethod() !== $url["view"]){
+		protected function redirect(array $url)
+        {
+			if (!empty($url)) {
+				if (!isset($url["controller"]) && isset($url["view"]) && !empty($url["view"])) {
+					if (self::$TemplateSystem->Controller->getMethod() !== $url["view"]) {
 						return [
 							"redirectTo" => "/".self::$TemplateSystem->Controller->getName()."/{$url['view']}"
 						];
 					}
 				}
-				else if(isset($url["controller"]) && isset($url["view"])){
-					if(!empty($url["controller"]) && !empty($url["view"])){
+				else if (isset($url["controller"]) && isset($url["view"])) {
+					if (!empty($url["controller"]) && !empty($url["view"])) {
 						return ["redirectTo" => "/{$url['controller']}/{$url['view']}"];
 					}
 				}

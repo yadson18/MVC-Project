@@ -9,7 +9,8 @@
          *
          *  (string) scriptName, nome do script que deverá ser retornado e carregado.
          */
-		public function script(string $scriptName){
+		public function script(string $scriptName)
+        {
       		return "<script type='text/javascript' src='/js/{$scriptName}'></script>";
     	}
 
@@ -18,7 +19,8 @@
          *  
          *  (string) cssName, nome da folha de estilo que deverá ser retornado e carregado.
          */
-    	public function css(string $cssName){
+    	public function css(string $cssName)
+        {
       		return "<link rel='stylesheet' type='text/css' href='/css/{$cssName}'>";
     	}
 
@@ -27,7 +29,8 @@
          *  
          *  (string) lessName, nome do arquivo less que deverá ser retornado e carregado.
          */
-        public function less(string $lessName){
+        public function less(string $lessName)
+        {
             return "<link rel='stylesheet/less' type='text/css' href='/less/{$lessName}'/>";
         }
 	}
