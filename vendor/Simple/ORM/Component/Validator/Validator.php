@@ -3,74 +3,79 @@
 
 	class Validator
 	{
-		private $tableValidAttributes;
+		private $rules = [];
 
-		public function initialize(array $tableValidAttributes){
-			if(!empty($tableValidAttributes)){
-				$this->tableValidAttributes = $tableValidAttributes;
-			}
-		}
-
-		public function isValid(array $columnsAndValues){
-			if(!empty($columnsAndValues)){
-				foreach ($columnsAndValues as $column => $value) {
-					if (isset($this->tableValidAttributes[$column])) {
-						$attribute = $this->tableValidAttributes[$column];
-
-						if(isset($attribute["type"]) && isset($attribute["null"]) && isset($attribute["size"])){
-							$attribute["type"] = strtolower($attribute["type"]);
-
-							$function = "return is_{$attribute['type']}(\$value);";
-
-							if (!$this->canBeNull($attribute["null"])) {
-								if ($this->isNull($value)) {
-									return false;
-								}
-								else if (!eval($function) || !$this->validateSizeValue($column, $value)) {
-									return false;
-								}
-							}
-							else if ($this->canBeNull($attribute["null"])) {
-								if (
-									!$this->isNull($value) && !eval($function) || 
-									!$this->validateSizeValue($column, $value)
-								) {
-									return false;
-								}
-							}
-						}
-					}
-				}
-				return true;
-			}
-			return false;
-		}
-
-		protected function isNull($value)
+		protected function getLastKeyRule()
 		{
-			if(is_string($value) || is_null($value)){
-				if(empty($value) || is_null($value) || !isset($value)){
-					return true;
-				}
-			}
-			return false;
+			end($this->rules);
+            return key($this->rules);
 		}
 
-		protected function validateSizeValue(string $column, $value){
-			if(isset($this->tableValidAttributes[$column])){
-				if($this->tableValidAttributes[$column]["size"] >= strlen(trim($value))){
-					return true;
-				}
-			}
-			return false;
+		public function getRules()
+		{
+			return $this->rules;
 		}
 
-		protected function canBeNull(string $null){
-			if(!empty($null)){
-				if($null === "y"){
-					return true;
-				}
-			}
-			return false;
+		public function addRule(string $column)
+		{
+			$this->rules[$column] = [];
+
+			return $this;
+		}
+
+		public function notEmpty()
+		{
+			$this->rules[$this->getLastKeyRule()]["null"] = false;
+
+			return $this;
+		}
+		public function empty()
+		{
+			$this->rules[$this->getLastKeyRule()]["null"] = true;
+
+			return $this;
+		}
+
+		public function integer()
+		{
+			$this->rules[$this->getLastKeyRule()]["type"] = "integer";
+
+			return $this;
+		}
+		public function string()
+		{
+			$this->rules[$this->getLastKeyRule()]["type"] = "string";
+
+			return $this;
+		}
+		public function float()
+		{
+			$this->rules[$this->getLastKeyRule()]["type"] = "float";
+
+			return $this;
+		}
+		public function double()
+		{
+			$this->rules[$this->getLastKeyRule()]["type"] = "double";
+
+			return $this;
+		}
+		public function unknown()
+		{
+			$this->rules[$this->getLastKeyRule()]["type"] = "unknown";
+
+			return $this;
+		}
+
+		public function size(int $size)
+		{
+			$this->rules[$this->getLastKeyRule()]["size"] = $size;
+
+			return $this;
+		}
+
+		public function defaultValue($value)
+		{
+			$this->rules[$this->getLastKeyRule()]["defaultValue"] = $value;
 		}
 	}
